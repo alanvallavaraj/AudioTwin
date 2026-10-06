@@ -1,0 +1,24 @@
+[project]
+name = "audiotwin"
+version = "0.1.0"
+description = "Digital-twin framework for simulated-listener hearing calibration"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "scipy",
+  "pandas",
+  "pyarrow",
+  "hydra-core",
+  "pystoi",
+  "pytest",
+]
+
+[project.optional-dependencies]
+bo = ["torch", "botorch", "gpytorch"]
+metrics = ["pesq", "pyclarity"]
+
+[tool.setuptools]
+packages = ["twin", "dsp", "oracle", "baselines", "eval"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
