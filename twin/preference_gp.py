@@ -24,6 +24,7 @@ class PairwisePreferenceGP:
     X_train: np.ndarray | None = None
     f_map: np.ndarray | None = None
     alpha: np.ndarray | None = None
+    K_inv: np.ndarray | None = None
 
     def _kernel(self, xa: np.ndarray, xb: np.ndarray) -> np.ndarray:
         xa = np.atleast_2d(np.asarray(xa, dtype=float))
@@ -61,6 +62,7 @@ class PairwisePreferenceGP:
             raise RuntimeError(f"preference GP fit failed: {res.message}")
         self.X_train = X
         self.f_map = np.asarray(res.x, dtype=float)
+        self.K_inv = K_inv
         self.alpha = K_inv @ self.f_map
         return self
 
@@ -71,3 +73,13 @@ class PairwisePreferenceGP:
         if X.ndim == 1:
             X = X[None, :]
         return self._kernel(X, self.X_train) @ self.alpha
+
+    def predict_variance(self, X: np.ndarray) -> np.ndarray:
+        if self.X_train is None or self.K_inv is None:
+            raise RuntimeError("fit the model before prediction")
+        X = np.asarray(X, dtype=float)
+        if X.ndim == 1:
+            X = X[None, :]
+        k_x = self._kernel(X, self.X_train)
+        var = self.prior_var - np.sum((k_x @ self.K_inv) * k_x, axis=1)
+        return np.maximum(var, 0.0)

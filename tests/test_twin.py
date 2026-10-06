@@ -3,17 +3,20 @@ import numpy as np
 from dsp import Z_DIM
 from dsp.safety import is_feasible
 from oracle import CONTEXTS, observe_audiogram, sample_population, utility
-from twin import PairwisePreferenceGP, run_random_preference_twin, sample_feasible
+from twin import PairwisePreferenceGP, run_active_preference_twin, run_random_preference_twin, sample_feasible
 
 
-def test_pairwise_gp_ranks_observed_winner_higher():
+def test_pairwise_gp_ranks_observed_winner_higher_and_has_variance():
     X = np.zeros((4, Z_DIM))
     X[:, 0] = [-0.8, -0.2, 0.2, 0.8]
     comparisons = np.array([[3, 0], [3, 1], [2, 0], [2, 1]])
     gp = PairwisePreferenceGP(lengthscale=1.0).fit(X, comparisons)
     pred = gp.predict_mean(X)
+    var = gp.predict_variance(X)
     assert pred[3] > pred[1]
     assert pred[2] > pred[0]
+    assert np.all(var >= 0.0)
+    assert np.max(var) < gp.prior_var
 
 
 def test_sample_feasible_returns_safe_points():
@@ -44,6 +47,17 @@ def test_random_preference_twin_run_is_reproducible_and_safe():
     assert is_feasible(run1.z_rec, listener.audiogram)
     assert np.isfinite(run1.u_rec)
     assert run1.u_rec == utility(run1.z_rec, listener, ctx, "balanced", listener.audiogram)
+
+
+def test_active_preference_twin_run_is_reproducible_and_safe():
+    listener = sample_population(1, seed=42)[0]
+    ctx = CONTEXTS["noisy_conversation"]
+    run1 = run_active_preference_twin(listener, ctx, "balanced", listener.audiogram, n_queries=8, seed=43, n_candidates=64)
+    run2 = run_active_preference_twin(listener, ctx, "balanced", listener.audiogram, n_queries=8, seed=43, n_candidates=64)
+    assert run1.comparisons.shape == (8, 2)
+    assert np.allclose(run1.z_rec, run2.z_rec)
+    assert is_feasible(run1.z_rec, listener.audiogram)
+    assert np.isfinite(run1.u_rec)
 
 
 def test_random_preference_twin_handles_task_21_seed():
