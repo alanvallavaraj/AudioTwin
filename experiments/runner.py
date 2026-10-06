@@ -52,6 +52,13 @@ def _method_setting(method: str, listener, ctx, family: str, a_hat: np.ndarray, 
             n_queries=int(cfg.n_queries), seed=seed, n_candidates=int(cfg.n_candidates),
         )
         return run.z_rec, run.u_rec
+    if method == "audiotwin_exploit":
+        run = run_active_preference_twin(
+            listener, ctx, family, a_hat,
+            n_queries=int(cfg.n_queries), seed=seed, n_candidates=int(cfg.n_candidates),
+            n_initial=3, kappa=0.05,
+        )
+        return run.z_rec, run.u_rec
     raise ValueError(f"unknown method: {method}")
 
 
