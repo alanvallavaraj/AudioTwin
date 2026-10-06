@@ -19,6 +19,15 @@ def _pen(x: float) -> float:
     return 1.0 - np.exp(-x)
 
 
+def _fast_compression_factor(attack_ms: float, cfg: DSPConfig) -> float:
+    """1 near the original fast attack, 0 near the slow-compression setting."""
+    lo = np.log10(cfg.attack_ms)
+    hi = np.log10(cfg.slow_attack_ms)
+    if hi <= lo:
+        return 1.0
+    return float(np.clip((hi - np.log10(attack_ms)) / (hi - lo), 0.0, 1.0))
+
+
 def utility(z, listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
             cfg: DSPConfig = DSPConfig()) -> float:
     """Utility of latent setting z when the DSP was fitted from audiogram a_dsp
@@ -43,10 +52,14 @@ def utility(z, listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
     D = float(np.mean(((s.gains_db - g_ideal) / 10.0) ** 2))
 
     art_w = 1.0 if ctx.speech_like else 2.0
+    mean_log_cr = float(np.log2(np.mean(s.cr)))
+    fast_factor = _fast_compression_factor(s.attack_ms, cfg)
+    noise_factor = float(np.clip((15.0 - ctx.snr_db) / 15.0, 0.0, 1.0))
+    speed_artifact = 1.5 * noise_factor * fast_factor * mean_log_cr**2
     Q = float(art_w * (0.5 * s.nr**2 + 0.7 * s.se**2)
-              + (np.log2(np.mean(s.cr)) - listener.cr_pref) ** 2)
+              + (mean_log_cr - listener.cr_pref) ** 2
+              + speed_artifact)
     if family == "noise_sensitive":  # post-hoc: compression artefacts matter more in noise
-        noise_factor = float(np.clip((15.0 - ctx.snr_db) / 15.0, 0.0, 1.0))
-        Q += 3.0 * noise_factor * float(np.log2(np.mean(s.cr))) ** 2
+        Q += 3.0 * noise_factor * mean_log_cr**2
 
     return float(wA * A - wC * _pen(comfort) - wD * _pen(D) - wQ * _pen(Q))

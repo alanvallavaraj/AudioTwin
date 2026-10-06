@@ -32,12 +32,21 @@ def test_static_baselines():
     assert np.array_equal(fixed_eq().gains_db, fixed_eq(CFG).gains_db)   # audiogram-independent
 
 
+def test_slow_compression_reduces_speed_artifact_in_noise():
+    L = sample_population(1, seed=12)[0]
+    a = L.audiogram
+    fast = np.zeros(Z_DIM); fast[2] = 0.8
+    slow = fast.copy(); slow[5] = 1.0
+    ctx = CONTEXTS["noisy_conversation"]
+    assert utility(slow, L, ctx, "balanced", a) > utility(fast, L, ctx, "balanced", a)
+
+
 def test_post_hoc_family_registered_and_penalises_compression_only_in_noise():
     assert "noise_sensitive" in FAMILIES and POST_HOC_FAMILIES == {"noise_sensitive"}
     L = sample_population(1, seed=11)[0]
     L.weights["noise_sensitive"] = L.weights["balanced"].copy()   # identical weights: isolate the new term
     a = L.audiogram
-    hi_cr = np.array([0, 0, 1.0, -1, -1])
+    hi_cr = np.zeros(Z_DIM); hi_cr[2] = 1.0; hi_cr[3] = -1.0; hi_cr[4] = -1.0
     for ctx_name in ("noisy_conversation", "outdoor", "quiet", "music"):
         ctx = CONTEXTS[ctx_name]
         extra = (utility(hi_cr, L, ctx, "balanced", a) - utility(hi_cr, L, ctx, "noise_sensitive", a))
@@ -46,7 +55,7 @@ def test_post_hoc_family_registered_and_penalises_compression_only_in_noise():
         else:                       # noisy: strictly lower utility for high compression
             assert extra > 1e-6, (ctx_name, extra)
     # and low compression is not penalised by the extra term (log2(CR)=0 when CR=1)
-    lo_cr = np.array([0, 0, -1.0, -1, -1])
+    lo_cr = np.zeros(Z_DIM); lo_cr[2] = -1.0; lo_cr[3] = -1.0; lo_cr[4] = -1.0
     ctx = CONTEXTS["noisy_conversation"]
     assert utility(lo_cr, L, ctx, "balanced", a) == pytest.approx(
         utility(lo_cr, L, ctx, "noise_sensitive", a), abs=1e-12)

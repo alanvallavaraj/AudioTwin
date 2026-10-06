@@ -11,7 +11,7 @@ import numpy as np
 
 BANDS_HZ = np.array([250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000], dtype=float)
 AUDIOGRAM_HZ = np.array([250, 500, 1000, 2000, 4000, 6000, 8000], dtype=float)
-Z_DIM = 5  # gain offset, tilt, compression scale, noise reduction, speech enhancement
+Z_DIM = 6  # gain offset, tilt, compression scale, NR, SE, compression speed
 
 
 @dataclass(frozen=True)
@@ -30,8 +30,10 @@ class DSPConfig:
     ref_input_db_spl: float = 65.0        # reference band level for safety checks
     smooth_delta_db: float = 12.0         # max gain difference between adjacent bands
     change_rate_delta: float = 0.5        # max |z - z_prev|_inf
-    attack_ms: float = 5.0
-    release_ms: float = 50.0
+    attack_ms: float = 5.0                # z6=0 baseline attack time
+    release_ms: float = 50.0              # z6=0 baseline release time
+    slow_attack_ms: float = 50.0          # z6=1 slow-compression attack time
+    slow_release_ms: float = 500.0        # z6=1 slow-compression release time
     nr_max: float = 1.0
     se_max: float = 1.0
     cal_db: float = 100.0                 # dB SPL of a full-scale-RMS signal
@@ -69,6 +71,12 @@ def prescription_cr(audiogram_db_hl: np.ndarray, cfg: DSPConfig = DSPConfig()) -
     return 1.0 + 1.5 * np.clip((thr - 20.0) / 40.0, 0.0, 1.0)
 
 
+def _time_from_z(z6: float, fast_ms: float, slow_ms: float) -> float:
+    # z6=0 keeps the original fast baseline; z6=1 reaches the slow-compression variant.
+    exponent = np.clip(z6, -1.0, 1.0)
+    return float(fast_ms * (slow_ms / fast_ms) ** exponent)
+
+
 def z_to_settings(z: np.ndarray, audiogram_db_hl: np.ndarray, cfg: DSPConfig = DSPConfig()) -> DSPSettings:
     z = np.clip(np.asarray(z, dtype=float), -1.0, 1.0)
     if z.shape != (Z_DIM,):
@@ -86,7 +94,7 @@ def z_to_settings(z: np.ndarray, audiogram_db_hl: np.ndarray, cfg: DSPConfig = D
         cr=cr,
         nr=cfg.nr_max * (z[3] + 1.0) / 2.0,
         se=cfg.se_max * (z[4] + 1.0) / 2.0,
-        attack_ms=cfg.attack_ms,
-        release_ms=cfg.release_ms,
+        attack_ms=_time_from_z(z[5], cfg.attack_ms, cfg.slow_attack_ms),
+        release_ms=_time_from_z(z[5], cfg.release_ms, cfg.slow_release_ms),
         mpo_db_spl=np.full(len(BANDS_HZ), cfg.mpo_db_spl),
     )

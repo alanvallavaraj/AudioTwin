@@ -27,9 +27,9 @@ def feasible_anchor(a_dsp: np.ndarray, cfg: DSPConfig = DSPConfig()) -> np.ndarr
     """Return a safe anchor even when the prescription z=0 violates safety limits."""
     anchors = [
         np.zeros(Z_DIM),
-        np.array([-1.0, 0.0, -1.0, -1.0, -1.0]),
-        np.array([-1.0, -1.0, -1.0, -1.0, -1.0]),
-        np.array([-1.0, 1.0, -1.0, -1.0, -1.0]),
+        np.array([-1.0, 0.0, -1.0, -1.0, -1.0, 0.0]),
+        np.array([-1.0, -1.0, -1.0, -1.0, -1.0, 0.0]),
+        np.array([-1.0, 1.0, -1.0, -1.0, -1.0, 0.0]),
     ]
     for anchor in anchors:
         if is_feasible(anchor, a_dsp, None, cfg):

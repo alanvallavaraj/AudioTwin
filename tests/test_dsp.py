@@ -59,8 +59,18 @@ def test_limiter():
 def test_z0_is_prescription_and_bounds():
     s = z_to_settings(np.zeros(Z_DIM), AUD, CFG)
     assert np.all(s.gains_db >= 0) and np.all(s.cr >= 1) and np.all(s.cr <= CFG.cr_max)
+    assert s.attack_ms == pytest.approx(CFG.attack_ms)
+    assert s.release_ms == pytest.approx(CFG.release_ms)
     s2 = z_to_settings(np.ones(Z_DIM) * 5.0, AUD, CFG)  # out-of-range z is clipped
     assert np.all(s2.gains_db <= 50.0 + 1e-9)
+
+
+def test_z6_reaches_slow_compression_times():
+    z = np.zeros(Z_DIM)
+    z[5] = 1.0
+    s = z_to_settings(z, AUD, CFG)
+    assert s.attack_ms == pytest.approx(CFG.slow_attack_ms)
+    assert s.release_ms == pytest.approx(CFG.slow_release_ms)
 
 
 def test_prescription_is_feasible_and_projection_works():

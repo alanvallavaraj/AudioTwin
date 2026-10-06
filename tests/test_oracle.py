@@ -47,7 +47,7 @@ def test_preference_probabilities():
     L = sample_population(1, seed=2)[0]
     a = L.audiogram
     ctx = CONTEXTS["noisy_conversation"]
-    zA, zB = np.zeros(Z_DIM), np.array([0.9, 0.9, 0.9, -0.9, -0.9])
+    zA, zB = np.zeros(Z_DIM), np.array([0.9, 0.9, 0.9, -0.9, -0.9, 0.0])
     rng = np.random.default_rng(3)
     n = 2000
     emp = np.mean([query(zA, zB, L, ctx, "balanced", a, rng) for _ in range(n)])

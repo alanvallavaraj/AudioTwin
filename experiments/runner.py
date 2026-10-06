@@ -18,7 +18,8 @@ from twin import run_active_preference_twin, run_random_preference_twin, sample_
 
 STATIC_Z = {
     "prescription": np.zeros(Z_DIM),
-    "prescription_linear": np.array([0.0, 0.0, -1.0, -1.0, -1.0]),
+    "prescription_linear": np.r_[0.0, 0.0, -1.0, -1.0, -1.0, 0.0],
+    "prescription_slow": np.r_[0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
 }
 
 
