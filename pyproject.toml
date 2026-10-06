@@ -18,7 +18,7 @@ bo = ["torch", "botorch", "gpytorch"]
 metrics = ["pesq", "pyclarity"]
 
 [tool.setuptools]
-packages = ["twin", "dsp", "oracle", "baselines", "eval"]
+packages = ["twin", "dsp", "oracle", "baselines", "eval", "experiments"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

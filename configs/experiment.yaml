@@ -1,0 +1,37 @@
+# AudioTwin oracle-regret experiment config.
+# Override task_id from Slurm: python -m experiments.runner task_id=$SLURM_ARRAY_TASK_ID
+seed: 20261006
+task_id: 0
+out_dir: results/audiotwin
+overwrite: false
+
+n_listeners: 8
+sigma_a: 5.0
+contexts:
+  - noisy_conversation
+  - lecture
+  - music
+families:
+  - intelligibility
+  - comfort
+  - balanced
+  - noise_sensitive
+methods:
+  - prescription
+  - prescription_linear
+  - random_feasible
+  - audiotwin_random
+
+n_queries: 12
+n_candidates: 512
+compute_optimum: true
+optimum:
+  n_random: 400
+  maxiter: 60
+  popsize: 12
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}

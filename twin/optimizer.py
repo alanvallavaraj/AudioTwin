@@ -51,7 +51,7 @@ def recommend_from_model(model: PairwisePreferenceGP | None, a_dsp: np.ndarray,
 
 
 def run_random_preference_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
-                               n_queries: int, seed: int,
+                               n_queries: int, seed: int, n_candidates: int = 512,
                                cfg: DSPConfig = DSPConfig()) -> PreferenceRun:
     """Run a first AudioTwin variant with random safe pair queries.
 
@@ -68,6 +68,6 @@ def run_random_preference_twin(listener: Listener, ctx: Context, family: str, a_
 
     comp = np.asarray(comparisons, dtype=int)
     model = PairwisePreferenceGP().fit(X, comp)
-    z_rec = recommend_from_model(model, a_dsp, rng, cfg=cfg)
+    z_rec = recommend_from_model(model, a_dsp, rng, n_candidates=n_candidates, cfg=cfg)
     u_rec = utility(z_rec, listener, ctx, family, a_dsp, cfg)
     return PreferenceRun(X=X, comparisons=comp, z_rec=z_rec, u_rec=float(u_rec), model=model)

@@ -46,11 +46,12 @@ def _penalised(z, listener, ctx, family, a_dsp, cfg):
 
 
 def find_optimum(listener: Listener, ctx: Context, family: str, a_dsp, seed: int = 0,
-                 cfg: DSPConfig = DSPConfig(), n_random: int = 400) -> OracleOptimum:
+                 cfg: DSPConfig = DSPConfig(), n_random: int = 400,
+                 maxiter: int = 60, popsize: int = 12) -> OracleOptimum:
     """Optimum of u* within the safety set S(a_dsp); expensive, so cache the result."""
     res = differential_evolution(
         _penalised, bounds=[(-1.0, 1.0)] * Z_DIM, args=(listener, ctx, family, a_dsp, cfg),
-        seed=seed, maxiter=60, popsize=12, tol=1e-6, polish=False,
+        seed=seed, maxiter=maxiter, popsize=popsize, tol=1e-6, polish=False,
     )
     z_opt = np.clip(res.x, -1.0, 1.0)
     rng = np.random.default_rng(seed + 1)
