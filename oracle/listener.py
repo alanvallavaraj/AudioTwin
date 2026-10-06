@@ -16,7 +16,11 @@ FAMILIES = {  # Dirichlet alphas over weights (audibility, comfort, ideal-curve,
     "intelligibility": np.array([6.0, 1.0, 1.0, 1.0]),
     "comfort": np.array([1.0, 5.0, 2.0, 1.0]),
     "balanced": np.array([3.0, 3.0, 2.0, 2.0]),
+    # POST-HOC family (added after seeing that fast compression lowers HASPI in noise; see
+    # docs/findings.md). Report separately and label as a post-hoc robustness check.
+    "noise_sensitive": np.array([4.0, 2.0, 1.0, 3.0]),
 }
+POST_HOC_FAMILIES = frozenset({"noise_sensitive"})
 
 
 @dataclass

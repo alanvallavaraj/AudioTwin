@@ -23,6 +23,7 @@ class DSPConfig:
     gmax_offset_db: float = 5.0
     gmax_cap_db: float = 50.0
     cr_max: float = 4.0
+    cr_exponent_scale: float = 2.0   # CR = CR_rx * 2^(scale*z3); scale 2 lets z3=-1 reach CR=1
     comp_threshold_db_spl: float = 45.0   # compression kneepoint (band level)
     ucl_db_spl: float = 100.0             # predicted-output ceiling per band
     mpo_db_spl: float = 105.0             # hard output limiter per band
@@ -79,7 +80,7 @@ def z_to_settings(z: np.ndarray, audiogram_db_hl: np.ndarray, cfg: DSPConfig = D
         0.0,
         g_max,
     )
-    cr = np.clip(prescription_cr(audiogram_db_hl, cfg) * 2.0 ** z[2], 1.0, cfg.cr_max)
+    cr = np.clip(prescription_cr(audiogram_db_hl, cfg) * 2.0 ** (cfg.cr_exponent_scale * z[2]), 1.0, cfg.cr_max)
     return DSPSettings(
         gains_db=gains,
         cr=cr,

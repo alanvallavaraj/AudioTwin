@@ -23,3 +23,18 @@ These are SANITY numbers only (one clip, one audiogram), not results.
 4. **Cost:** ~5 s per condition (HASPI+HASQI+ESTOI, 6 s clip) on this laptop. Evaluate only the
    final recommended settings, not every query step. Example grid
    60 listeners x 8 methods x 7 contexts x 4 SNRs x 5 utterances = 67,200 evals ~ 93 CPU-hours.
+
+## Decision record (2026-10-06): how finding 3 was handled
+- **Main oracle unchanged (option b).** The 3 pre-registered families (intelligibility, comfort,
+  balanced) are NOT modified in response to the HASPI/compression result. This keeps the oracle
+  independent of the reported metrics. A gap between oracle regret and HASPI in noise is reported
+  as a finding, not engineered away.
+- **Post-hoc family added:** `noise_sensitive` (extra compression-in-noise penalty). Added AFTER
+  seeing the metric behaviour; must be labelled "post-hoc robustness check" and reported separately
+  (`oracle.POST_HOC_FAMILIES`).
+- **Baselines strengthened:** `prescription_linear` (CR=1, no NR/SE) and `prescription_slow`
+  (50/500 ms) added next to `prescription`. AudioTwin must beat the BEST of the three.
+- **Search space fix:** compression mapping now CR = CR_rx * 2^(2*z3), so z3=-1 reaches CR=1 for
+  every prescribed CR (was only reaching ~1.25 for the most severe listeners). Compression
+  time constants are still fixed, not a latent control (optional 6th control, not implemented).
+- Non-vacuous tests added for each change (tests/test_baselines_and_changes.py).

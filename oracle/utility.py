@@ -45,5 +45,8 @@ def utility(z, listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
     art_w = 1.0 if ctx.speech_like else 2.0
     Q = float(art_w * (0.5 * s.nr**2 + 0.7 * s.se**2)
               + (np.log2(np.mean(s.cr)) - listener.cr_pref) ** 2)
+    if family == "noise_sensitive":  # post-hoc: compression artefacts matter more in noise
+        noise_factor = float(np.clip((15.0 - ctx.snr_db) / 15.0, 0.0, 1.0))
+        Q += 3.0 * noise_factor * float(np.log2(np.mean(s.cr))) ** 2
 
     return float(wA * A - wC * _pen(comfort) - wD * _pen(D) - wQ * _pen(Q))
