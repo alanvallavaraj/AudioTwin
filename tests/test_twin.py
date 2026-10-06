@@ -2,7 +2,7 @@ import numpy as np
 
 from dsp import Z_DIM
 from dsp.safety import is_feasible
-from oracle import CONTEXTS, sample_population, utility
+from oracle import CONTEXTS, observe_audiogram, sample_population, utility
 from twin import PairwisePreferenceGP, run_random_preference_twin, sample_feasible
 
 
@@ -22,6 +22,16 @@ def test_sample_feasible_returns_safe_points():
     X = sample_feasible(listener.audiogram, rng, 16)
     assert X.shape == (16, Z_DIM)
     assert all(is_feasible(z, listener.audiogram) for z in X)
+
+
+def test_sample_feasible_handles_unsafe_prescription_anchor():
+    listener = sample_population(1, seed=20261006 + 1009 * 11)[0]
+    rng = np.random.default_rng(20261006 + 1009 * 11)
+    a_hat = observe_audiogram(listener, 5.0, rng)
+    assert not is_feasible(np.zeros(Z_DIM), a_hat)
+    X = sample_feasible(a_hat, np.random.default_rng(123), 8)
+    assert X.shape == (8, Z_DIM)
+    assert all(is_feasible(z, a_hat) for z in X)
 
 
 def test_random_preference_twin_run_is_reproducible_and_safe():

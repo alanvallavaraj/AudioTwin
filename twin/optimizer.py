@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from dsp.params import DSPConfig, Z_DIM
-from dsp.safety import is_feasible, project_to_S
+from dsp.safety import is_feasible
 from oracle.contexts import Context
 from oracle.listener import Listener
 from oracle.preference import query
@@ -23,15 +23,50 @@ class PreferenceRun:
     model: PairwisePreferenceGP | None
 
 
+def feasible_anchor(a_dsp: np.ndarray, cfg: DSPConfig = DSPConfig()) -> np.ndarray:
+    """Return a safe anchor even when the prescription z=0 violates safety limits."""
+    anchors = [
+        np.zeros(Z_DIM),
+        np.array([-1.0, 0.0, -1.0, -1.0, -1.0]),
+        np.array([-1.0, -1.0, -1.0, -1.0, -1.0]),
+        np.array([-1.0, 1.0, -1.0, -1.0, -1.0]),
+    ]
+    for anchor in anchors:
+        if is_feasible(anchor, a_dsp, None, cfg):
+            return anchor.copy()
+    raise ValueError("no feasible low-gain anchor found; check DSPConfig / audiogram")
+
+
+def project_from_anchor(z: np.ndarray, anchor: np.ndarray, a_dsp: np.ndarray,
+                        cfg: DSPConfig = DSPConfig(), iters: int = 40) -> np.ndarray:
+    """Shrink z toward a known-safe anchor without imposing a change-rate constraint."""
+    z = np.clip(np.asarray(z, dtype=float), -1.0, 1.0)
+    anchor = np.asarray(anchor, dtype=float)
+    if not is_feasible(anchor, a_dsp, None, cfg):
+        raise ValueError("anchor point is not feasible")
+    if is_feasible(z, a_dsp, None, cfg):
+        return z
+    lo, hi = 0.0, 1.0
+    for _ in range(iters):
+        mid = 0.5 * (lo + hi)
+        cand = anchor + mid * (z - anchor)
+        if is_feasible(cand, a_dsp, None, cfg):
+            lo = mid
+        else:
+            hi = mid
+    return anchor + lo * (z - anchor)
+
+
 def sample_feasible(a_dsp: np.ndarray, rng: np.random.Generator, n: int,
                     cfg: DSPConfig = DSPConfig()) -> np.ndarray:
     """Sample feasible settings by projecting random draws into S(a_dsp)."""
+    anchor = feasible_anchor(a_dsp, cfg)
     zs = []
     seen = set()
     attempts = 0
     while len(zs) < n and attempts < 50 * n:
         attempts += 1
-        z = project_to_S(rng.uniform(-1.0, 1.0, Z_DIM), a_dsp, None, cfg)
+        z = project_from_anchor(rng.uniform(-1.0, 1.0, Z_DIM), anchor, a_dsp, cfg)
         key = tuple(np.round(z, 8))
         if key not in seen and is_feasible(z, a_dsp, None, cfg):
             seen.add(key)
@@ -46,7 +81,7 @@ def recommend_from_model(model: PairwisePreferenceGP | None, a_dsp: np.ndarray,
                          cfg: DSPConfig = DSPConfig()) -> np.ndarray:
     candidates = sample_feasible(a_dsp, rng, n_candidates, cfg)
     if model is None:
-        return project_to_S(np.zeros(Z_DIM), a_dsp, None, cfg)
+        return feasible_anchor(a_dsp, cfg)
     return candidates[int(np.argmax(model.predict_mean(candidates)))]
 
 
