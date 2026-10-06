@@ -40,3 +40,41 @@ def pesq_wb(ref: np.ndarray, proc: np.ndarray, fs: int) -> float:
         raise ValueError("PESQ wide-band requires fs=16000; resample first")
     r, p = _align(ref, proc)
     return float(pesq(fs, r, p, "wb"))
+
+
+# ---------------------------------------------------------------------------------------
+# HASPI / HASQI via pyclarity (Kates & Arehart models). Audiogram-aware, so these are the
+# PRIMARY reported metrics. Conventions (from pyclarity docs):
+#   * reference = CLEAN speech, no amplification, no noise (HASQI can add NAL-R itself)
+#   * processed = hearing-aid output (including any noise / distortion)
+#   * level1 = dB SPL that corresponds to signal RMS = 1  -> must equal DSPConfig.cal_db
+#   * audiogram: 6 audiometric frequencies 250..6000 Hz (8 kHz is NOT used by these metrics;
+#     state this in the paper)
+# ---------------------------------------------------------------------------------------
+_METRIC_FREQS_HZ = np.array([250.0, 500.0, 1000.0, 2000.0, 4000.0, 6000.0])
+
+
+def _audiogram6(audiogram_db_hl_7):
+    from clarity.utils.audiogram import Audiogram
+
+    a = np.asarray(audiogram_db_hl_7, dtype=float)
+    if a.shape != (7,):
+        raise ValueError("expected the 7-point AUDIOGRAM_HZ audiogram (250..8000 Hz)")
+    return Audiogram(levels=a[:6], frequencies=_METRIC_FREQS_HZ)
+
+
+def haspi(ref: np.ndarray, proc: np.ndarray, fs: int, audiogram_db_hl_7, level1: float) -> float:
+    from clarity.evaluator.haspi import haspi_v2
+
+    r, p = _align(ref, proc)
+    score, _ = haspi_v2(r, fs, p, fs, _audiogram6(audiogram_db_hl_7), level1=level1)
+    return float(score)
+
+
+def hasqi(ref: np.ndarray, proc: np.ndarray, fs: int, audiogram_db_hl_7, level1: float) -> float:
+    """Combined HASQI v2 (NAL-R equalisation added to the reference by the model)."""
+    from clarity.evaluator.hasqi import hasqi_v2
+
+    r, p = _align(ref, proc)
+    combined, _, _, _ = hasqi_v2(r, fs, p, fs, _audiogram6(audiogram_db_hl_7), equalisation=1, level1=level1)
+    return float(combined)

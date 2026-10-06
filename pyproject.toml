@@ -22,3 +22,4 @@ packages = ["twin", "dsp", "oracle", "baselines", "eval"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["slow: slow metric sanity tests (need data/sanity_speech_24k.wav)"]
