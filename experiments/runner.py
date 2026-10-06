@@ -12,6 +12,7 @@ from omegaconf import DictConfig, OmegaConf
 
 from dsp.params import Z_DIM
 from oracle import CONTEXTS, FAMILIES, find_optimum, observe_audiogram, sample_population, utility
+from oracle.preference import OracleOptimum
 from twin import run_random_preference_twin, sample_feasible
 
 
@@ -48,20 +49,26 @@ def _method_setting(method: str, listener, ctx, family: str, a_hat: np.ndarray, 
     raise ValueError(f"unknown method: {method}")
 
 
+def _optimum_for(listener, ctx, family: str, a_hat: np.ndarray, seed: int, cfg: DictConfig) -> OracleOptimum | None:
+    if not bool(cfg.compute_optimum):
+        return None
+    return find_optimum(
+        listener, ctx, family, a_hat, seed=seed,
+        n_random=int(cfg.optimum.n_random), maxiter=int(cfg.optimum.maxiter),
+        popsize=int(cfg.optimum.popsize),
+    )
+
+
 def compute_row(listener, global_listener_id: int, context_name: str, family: str, method: str,
-                a_hat: np.ndarray, seed: int, cfg: DictConfig, commit: str, config_json: str) -> dict:
+                a_hat: np.ndarray, seed: int, cfg: DictConfig, commit: str, config_json: str,
+                opt: OracleOptimum | None = None) -> dict:
     ctx = CONTEXTS[context_name]
     z, u = _method_setting(method, listener, ctx, family, a_hat, seed, cfg)
     u_opt = np.nan
     u_lo = np.nan
     regret = np.nan
     z_opt = np.full(Z_DIM, np.nan)
-    if bool(cfg.compute_optimum):
-        opt = find_optimum(
-            listener, ctx, family, a_hat, seed=seed + 10_000,
-            n_random=int(cfg.optimum.n_random), maxiter=int(cfg.optimum.maxiter),
-            popsize=int(cfg.optimum.popsize),
-        )
+    if opt is not None:
         u_opt, u_lo, regret, z_opt = opt.u_opt, opt.u_lo, opt.regret(u), opt.z_opt
 
     row = {
@@ -111,14 +118,17 @@ def run_task(cfg: DictConfig) -> Path:
         for context_name in list(cfg.contexts):
             if context_name not in CONTEXTS:
                 raise ValueError(f"unknown context: {context_name}")
+            ctx = CONTEXTS[context_name]
             for family in list(cfg.families):
                 if family not in FAMILIES:
                     raise ValueError(f"unknown family: {family}")
+                opt_seed = base_seed + 10_000 + 193 * global_listener_id + 29 * len(rows)
+                opt = _optimum_for(listener, ctx, family, a_hat, opt_seed, cfg)
                 for method in list(cfg.methods):
                     method_seed = base_seed + 17 * global_listener_id + 101 * len(rows)
                     rows.append(compute_row(
                         listener, global_listener_id, context_name, family, method,
-                        a_hat, method_seed, cfg, commit, config_json,
+                        a_hat, method_seed, cfg, commit, config_json, opt,
                     ))
 
     df = pd.DataFrame(rows)
