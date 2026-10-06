@@ -44,3 +44,14 @@ def test_random_preference_twin_run_is_reproducible_and_safe():
     assert is_feasible(run1.z_rec, listener.audiogram)
     assert np.isfinite(run1.u_rec)
     assert run1.u_rec == utility(run1.z_rec, listener, ctx, "balanced", listener.audiogram)
+
+
+def test_random_preference_twin_handles_task_21_seed():
+    seed = 20261006 + 1009 * 21
+    listener = sample_population(1, seed=seed)[0]
+    rng = np.random.default_rng(seed)
+    a_hat = observe_audiogram(listener, 5.0, rng)
+    ctx = CONTEXTS["noisy_conversation"]
+    run = run_random_preference_twin(listener, ctx, "balanced", a_hat, n_queries=12, seed=seed, n_candidates=64)
+    assert is_feasible(run.z_rec, a_hat)
+    assert np.isfinite(run.u_rec)

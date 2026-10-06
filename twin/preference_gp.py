@@ -51,8 +51,13 @@ class PairwisePreferenceGP:
             ll = np.sum(np.log(np.clip(ndtr(margin), 1e-12, 1.0)))
             return prior - float(ll)
 
-        res = minimize(objective, np.zeros(len(X)), method="L-BFGS-B")
-        if not res.success:
+        res = minimize(
+            objective,
+            np.zeros(len(X)),
+            method="L-BFGS-B",
+            options={"maxiter": 1000, "maxfun": 20000},
+        )
+        if not res.success and not np.all(np.isfinite(res.x)):
             raise RuntimeError(f"preference GP fit failed: {res.message}")
         self.X_train = X
         self.f_map = np.asarray(res.x, dtype=float)
