@@ -10,6 +10,10 @@ set -euo pipefail
 
 cd "${SLURM_SUBMIT_DIR:-$PWD}"
 
+export PATH="/opt/slurm/bin:${PATH}"
+source /etc/profile 2>/dev/null || true
+module load python/3.11.7-gcc-12.2.0
+
 if [ -d .venv ]; then
   # shellcheck disable=SC1091
   source .venv/bin/activate
