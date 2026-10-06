@@ -1,0 +1,16 @@
+numpy
+scipy
+pandas
+pyarrow
+hydra-core
+pystoi
+pytest
+
+[bo]
+torch
+botorch
+gpytorch
+
+[metrics]
+pesq
+pyclarity

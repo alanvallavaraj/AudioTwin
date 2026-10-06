@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: audiotwin
+Version: 0.1.0
+Summary: Digital-twin framework for simulated-listener hearing calibration
+Requires-Python: >=3.10
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: pyarrow
+Requires-Dist: hydra-core
+Requires-Dist: pystoi
+Requires-Dist: pytest
+Provides-Extra: bo
+Requires-Dist: torch; extra == "bo"
+Requires-Dist: botorch; extra == "bo"
+Requires-Dist: gpytorch; extra == "bo"
+Provides-Extra: metrics
+Requires-Dist: pesq; extra == "metrics"
+Requires-Dist: pyclarity; extra == "metrics"
