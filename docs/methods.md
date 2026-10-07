@@ -32,7 +32,7 @@ Planned full model: f: Z x C -> R, GP prior; mean m = -gamma*||z||^2; kernel = M
 Probit pairwise likelihood (Chu & Ghahramani); Laplace posterior (BoTorch PairwiseGP).
 
 ## Query selection
-Implemented baselines: random safe pair queries, mean-plus-uncertainty active queries, and exploitative active queries.
+Implemented baselines: random safe pair queries, prior-seeded clinical-anchor queries, mean-plus-uncertainty active queries, and exploitative active queries.
 Planned: qEUBO (default) | BALD (ablation) | random pairs (ablation). Acquisition uses GP only; audio rendered only to query oracle.
 Recommendation z*_T = argmax_{z in S} E[f(z,c)].
 
@@ -44,4 +44,4 @@ Stats: paired Wilcoxon, bootstrap CIs, Holm correction.
 ## Baselines (same parameterisation and stimulus budget)
 no correction | fixed EQ | prescription (z=0) | prescription-linear (CR=1) | prescription-slow (z6=1 / 50/500 ms) |
 simulated manual self-adjust | in-situ audiometry fit |
-AudioTwin-random | AudioTwin-active | AudioTwin-exploit | AudioTwin-BALD | AudioTwin-qEUBO.
+AudioTwin-random | AudioTwin-prior | AudioTwin-active | AudioTwin-exploit | AudioTwin-BALD | AudioTwin-qEUBO.

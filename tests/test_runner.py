@@ -14,7 +14,7 @@ def _cfg(tmp_path):
         "sigma_a": 5.0,
         "contexts": ["noisy_conversation"],
         "families": ["balanced"],
-        "methods": ["prescription", "prescription_linear", "audiotwin_random"],
+        "methods": ["prescription", "prescription_linear", "audiotwin_random", "audiotwin_prior"],
         "n_queries": 3,
         "n_candidates": 32,
         "compute_optimum": False,
@@ -27,8 +27,9 @@ def test_runner_writes_idempotent_parquet(tmp_path):
     path = run_task(cfg)
     assert path.exists()
     df = pd.read_parquet(path)
-    assert set(df["method"]) == {"prescription", "prescription_linear", "audiotwin_random"}
-    assert len(df) == 3
+    assert set(df["method"]) == {"prescription", "prescription_linear", "audiotwin_random", "audiotwin_prior"}
+    assert len(df) == 4
     assert {"git_hash", "config_json", "utility", "regret", "z1", "z5"}.issubset(df.columns)
     assert df.loc[df["method"] == "audiotwin_random", "n_queries"].item() == 3
+    assert df.loc[df["method"] == "audiotwin_prior", "n_queries"].item() == 3
     assert run_task(cfg) == path
