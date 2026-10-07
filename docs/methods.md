@@ -1,4 +1,4 @@
-# AudioTwin: methods spec (v0.3)
+# AudioTwin: methods spec (v0.4)
 
 ## Listener and context
 - True audiogram a in R^7 (dB HL: 250, 500, 1k, 2k, 4k, 6k, 8k Hz); comfort limits u per band.
@@ -21,7 +21,7 @@ Applied to every candidate in acquisition and recommendation. If z=0 is unsafe f
 ## Oracle (evaluation only)
 Hidden utility u*(z; listener, context). P(A>B) = lam/2 + (1-lam)*Phi((u*(zA)-u*(zB))/(sqrt2*sigma_n)).
 u* = weighted sum: intelligibility term + quality term + loudness-comfort penalty + distance to ideal gain curve.
-The quality term now includes a compression-speed artefact in noise, motivated by the HASPI sanity check where fast compression reduced predicted intelligibility.
+Compression artefacts in noise (including a compression-speed artefact) are confined to the POST-HOC noise_sensitive family. They had leaked into the shared quality term (commit 466e0b6); restored 2026-10-07 so the 3 pre-registered families are independent of the HASPI/compression observation again. z6 (compression speed) is therefore a no-op for the pre-registered oracle and only matters for the noise_sensitive family and for reported HASPI/HASQI.
 Weights sampled per listener; 3 pre-registered families (intelligibility, comfort, balanced) plus 1 POST-HOC
 family (noise_sensitive: extra compression-in-noise penalty, added after the HASPI/compression finding). Keep oracle components disjoint from reported metrics.
 

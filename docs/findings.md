@@ -38,3 +38,15 @@ These are SANITY numbers only (one clip, one audiogram), not results.
   every prescribed CR (was only reaching ~1.25 for the most severe listeners). Compression
   time constants are still fixed, not a latent control (optional 6th control, not implemented).
 - Non-vacuous tests added for each change (tests/test_baselines_and_changes.py).
+
+## Correction (2026-10-07): oracle leak reverted; pilots are not comparable
+- Commit 466e0b6 added a HASPI-motivated compression-speed penalty to the SHARED quality term, so it applied to the
+  3 pre-registered families too. This contradicted the decision record above. Reverted: the penalty now exists only
+  in `noise_sensitive` (post-hoc). Tests guard this (tests/test_baselines_and_changes.py).
+- All seven pilot sets in results_hpc/ (code 4bdf2a9 ... 360def2) were produced under the LEAKED oracle (and the
+  early ones under an older parameterisation). They are development data only, are not comparable with new runs,
+  and must not be reported as results. Pilot readout (32 listeners, 12 queries, regret lower=better): the static
+  prescription_linear (~0.35 pre-registered, ~0.22 noise_sensitive) was as good as or better than every
+  AudioTwin variant; active/exploit acquisition scored worse than random queries.
+- The hand-seeded 'prior' / 'local_prior' variants encode the linear/slow finding into the search and are NOT
+  headline methods; keep only as clearly-labelled post-hoc ablations.

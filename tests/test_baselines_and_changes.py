@@ -32,13 +32,14 @@ def test_static_baselines():
     assert np.array_equal(fixed_eq().gains_db, fixed_eq(CFG).gains_db)   # audiogram-independent
 
 
-def test_slow_compression_reduces_speed_artifact_in_noise():
+def test_slow_compression_helps_in_noise_for_post_hoc_family_only():
     L = sample_population(1, seed=12)[0]
     a = L.audiogram
-    fast = np.zeros(Z_DIM); fast[2] = 0.8
-    slow = fast.copy(); slow[5] = 1.0
+    fast = np.zeros(Z_DIM)                 # prescribed compression, fast times
+    slow = fast.copy(); slow[5] = 1.0      # same, slow attack/release
     ctx = CONTEXTS["noisy_conversation"]
-    assert utility(slow, L, ctx, "balanced", a) > utility(fast, L, ctx, "balanced", a)
+    assert utility(slow, L, ctx, "noise_sensitive", a) > utility(fast, L, ctx, "noise_sensitive", a) + 1e-4
+    assert utility(slow, L, ctx, "balanced", a) == pytest.approx(utility(fast, L, ctx, "balanced", a), abs=1e-12)
 
 
 def test_post_hoc_family_registered_and_penalises_compression_only_in_noise():
@@ -67,3 +68,19 @@ def test_post_hoc_family_optimum_prefers_lower_compression_in_noise():
     z3 = {f: np.mean([find_optimum(L, ctx, f, L.audiogram, seed=L.id).z_opt[2] for L in pop])
           for f in ("balanced", "noise_sensitive")}
     assert z3["noise_sensitive"] < z3["balanced"] - 0.05, z3
+
+
+def test_preregistered_families_do_not_depend_on_compression_speed():
+    """Guard against re-introducing the HASPI-motivated speed term into the pre-registered oracle."""
+    L = sample_population(1, seed=31)[0]
+    a = L.audiogram
+    z_fast = np.array([0.2, 0.0, 0.0, -1.0, -1.0, 0.0])
+    z_slow = np.array([0.2, 0.0, 0.0, -1.0, -1.0, 1.0])
+    for fam in ("intelligibility", "comfort", "balanced"):
+        for ctx_name in ("noisy_conversation", "outdoor", "quiet", "music"):
+            u_f = utility(z_fast, L, CONTEXTS[ctx_name], fam, a)
+            u_s = utility(z_slow, L, CONTEXTS[ctx_name], fam, a)
+            assert u_f == pytest.approx(u_s, abs=1e-12), (fam, ctx_name)
+    # the post-hoc family DOES care: slow beats fast when compressing in noise
+    ctx = CONTEXTS["noisy_conversation"]
+    assert utility(z_slow, L, ctx, "noise_sensitive", a) > utility(z_fast, L, ctx, "noise_sensitive", a) + 1e-4

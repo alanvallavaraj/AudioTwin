@@ -55,11 +55,14 @@ def utility(z, listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
     mean_log_cr = float(np.log2(np.mean(s.cr)))
     fast_factor = _fast_compression_factor(s.attack_ms, cfg)
     noise_factor = float(np.clip((15.0 - ctx.snr_db) / 15.0, 0.0, 1.0))
-    speed_artifact = 1.5 * noise_factor * fast_factor * mean_log_cr**2
     Q = float(art_w * (0.5 * s.nr**2 + 0.7 * s.se**2)
-              + (mean_log_cr - listener.cr_pref) ** 2
-              + speed_artifact)
-    if family == "noise_sensitive":  # post-hoc: compression artefacts matter more in noise
+              + (mean_log_cr - listener.cr_pref) ** 2)
+    if family == "noise_sensitive":
+        # POST-HOC family only (docs/findings.md): compression artefacts, including a
+        # compression-speed artefact, matter more in noise. The three pre-registered families
+        # (intelligibility, comfort, balanced) deliberately do NOT contain these terms, so they
+        # stay independent of the HASPI/compression observation.
         Q += 3.0 * noise_factor * mean_log_cr**2
+        Q += 1.5 * noise_factor * fast_factor * mean_log_cr**2
 
     return float(wA * A - wC * _pen(comfort) - wD * _pen(D) - wQ * _pen(Q))
