@@ -270,7 +270,7 @@ def run_prior_preference_twin(listener: Listener, ctx: Context, family: str, a_d
 
 def run_local_prior_preference_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
                                     n_queries: int, seed: int, n_candidates: int = 512,
-                                    kappa: float = 0.10, recommend_margin: float = 0.03,
+                                    kappa: float = 0.05, recommend_margin: float = 0.10,
                                     cfg: DSPConfig = DSPConfig()) -> PreferenceRun:
     """Run a conservative local search around the linear/slow clinical priors."""
     rng = np.random.default_rng(seed)
