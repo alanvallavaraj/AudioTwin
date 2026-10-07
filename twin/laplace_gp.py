@@ -146,7 +146,11 @@ class LaplacePreferenceGP:
         return mean, cov
 
     def predict_mean(self, Zs) -> np.ndarray:
-        return self.posterior(Zs)[0]
+        """Posterior mean only (no covariance): cheap enough for large candidate pools."""
+        Zs = np.atleast_2d(np.asarray(Zs, dtype=float))
+        if self.X is None or len(self.comps) == 0:
+            return self.prior_mean(Zs)
+        return self.prior_mean(Zs) + self.kernel(Zs, self.X) @ (self.K_inv @ (self.f_map - self.mu_X))
 
 
 def fit_with_selection(X, comparisons, base: LaplacePreferenceGP | None = None,
