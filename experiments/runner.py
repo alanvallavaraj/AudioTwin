@@ -13,7 +13,7 @@ from omegaconf import DictConfig, OmegaConf
 from dsp.params import Z_DIM
 from oracle import CONTEXTS, FAMILIES, find_optimum, observe_audiogram, sample_population, utility
 from oracle.preference import OracleOptimum
-from twin import run_active_preference_twin, run_prior_preference_twin, run_random_preference_twin, sample_feasible
+from twin import run_active_preference_twin, run_local_prior_preference_twin, run_prior_preference_twin, run_random_preference_twin, sample_feasible
 
 
 STATIC_Z = {
@@ -43,6 +43,12 @@ def _method_setting(method: str, listener, ctx, family: str, a_hat: np.ndarray, 
         return z, utility(z, listener, ctx, family, a_hat)
     if method == "audiotwin_random":
         run = run_random_preference_twin(
+            listener, ctx, family, a_hat,
+            n_queries=int(cfg.n_queries), seed=seed, n_candidates=int(cfg.n_candidates),
+        )
+        return run.z_rec, run.u_rec
+    if method == "audiotwin_local_prior":
+        run = run_local_prior_preference_twin(
             listener, ctx, family, a_hat,
             n_queries=int(cfg.n_queries), seed=seed, n_candidates=int(cfg.n_candidates),
         )

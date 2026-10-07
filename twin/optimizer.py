@@ -138,6 +138,46 @@ def prior_augmented_pool(a_dsp: np.ndarray, rng: np.random.Generator, n: int,
     return np.asarray(zs[:n])
 
 
+def local_prior_pool(a_dsp: np.ndarray, rng: np.random.Generator, n: int,
+                     cfg: DSPConfig = DSPConfig(), jitter_scale: float = 0.12) -> np.ndarray:
+    """Build a local feasible pool around the strongest clinical prior anchors."""
+    priors = prior_candidates(a_dsp, cfg)
+    safe_anchor = feasible_anchor(a_dsp, cfg)
+    bases = priors[1:] if len(priors) > 1 else priors
+    seeds = [z.copy() for z in priors]
+
+    linear = project_from_anchor(np.r_[0.0, 0.0, -1.0, -1.0, -1.0, 0.0], safe_anchor, a_dsp, cfg)
+    for z3 in [-1.0, -0.85, -0.7, -0.5]:
+        for z6 in [0.0, 0.5, 1.0]:
+            seeds.append(project_from_anchor(np.r_[0.0, 0.0, z3, -1.0, -1.0, z6], safe_anchor, a_dsp, cfg))
+    slow = project_from_anchor(np.r_[0.0, 0.0, 0.0, 0.0, 0.0, 1.0], safe_anchor, a_dsp, cfg)
+    for z3 in [-0.8, -0.5, -0.2, 0.0]:
+        for z4z5 in [-1.0, -0.5, 0.0]:
+            seeds.append(project_from_anchor(np.r_[0.0, 0.0, z3, z4z5, z4z5, 1.0], safe_anchor, a_dsp, cfg))
+
+    zs = []
+    seen = set()
+    for z in seeds:
+        key = tuple(np.round(z, 8))
+        if key not in seen and is_feasible(z, a_dsp, None, cfg):
+            seen.add(key)
+            zs.append(z)
+
+    attempts = 0
+    while len(zs) < n and attempts < 80 * n:
+        attempts += 1
+        base = bases[int(rng.integers(len(bases)))]
+        scale = jitter_scale * (0.5 + rng.random())
+        cand = project_from_anchor(base + rng.normal(0.0, scale, Z_DIM), safe_anchor, a_dsp, cfg)
+        key = tuple(np.round(cand, 8))
+        if key not in seen and is_feasible(cand, a_dsp, None, cfg):
+            seen.add(key)
+            zs.append(cand)
+    if len(zs) < n:
+        zs.extend(sample_feasible(a_dsp, rng, n - len(zs), cfg))
+    return np.asarray(zs[:n])
+
+
 def run_random_preference_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
                                n_queries: int, seed: int, n_candidates: int = 512,
                                cfg: DSPConfig = DSPConfig()) -> PreferenceRun:
@@ -223,6 +263,74 @@ def run_prior_preference_twin(listener: Listener, ctx: Context, family: str, a_d
 
     rec_pool = prior_augmented_pool(a_dsp, rng, n_candidates, cfg)
     z_rec = rec_pool[int(np.argmax(model.predict_mean(rec_pool)))]
+    u_rec = utility(z_rec, listener, ctx, family, a_dsp, cfg)
+    return PreferenceRun(X=np.asarray(X), comparisons=np.asarray(comparisons, dtype=int),
+                         z_rec=z_rec, u_rec=float(u_rec), model=model)
+
+
+def run_local_prior_preference_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
+                                    n_queries: int, seed: int, n_candidates: int = 512,
+                                    kappa: float = 0.10, recommend_margin: float = 0.03,
+                                    cfg: DSPConfig = DSPConfig()) -> PreferenceRun:
+    """Run a conservative local search around the linear/slow clinical priors."""
+    rng = np.random.default_rng(seed)
+    safe_anchor = feasible_anchor(a_dsp, cfg)
+    incumbent = project_from_anchor(np.r_[0.0, 0.0, -1.0, -1.0, -1.0, 0.0], safe_anchor, a_dsp, cfg)
+    priors = prior_candidates(a_dsp, cfg)
+    pool = local_prior_pool(a_dsp, rng, max(n_candidates, 2 * n_queries + len(priors) + 16), cfg)
+
+    X: list[np.ndarray] = []
+    index: dict[tuple[float, ...], int] = {}
+    comparisons: list[tuple[int, int]] = []
+    used_pairs: set[tuple[int, int]] = set()
+    inc_idx = _add_point(incumbent, X, index)
+
+    warm_starts = [z for z in priors if not np.allclose(z, incumbent)]
+    warm_starts.extend(pool[:max(0, n_queries - len(warm_starts))])
+    for challenger in warm_starts:
+        if len(comparisons) >= n_queries:
+            break
+        ch_idx = _add_point(challenger, X, index)
+        pair = tuple(sorted((inc_idx, ch_idx)))
+        if inc_idx == ch_idx or pair in used_pairs:
+            continue
+        chose_incumbent = query(incumbent, challenger, listener, ctx, family, a_dsp, rng, cfg)
+        comparisons.append((inc_idx, ch_idx) if chose_incumbent else (ch_idx, inc_idx))
+        used_pairs.add(pair)
+
+    if not comparisons:
+        challenger = pool[0]
+        ch_idx = _add_point(challenger, X, index)
+        chose_incumbent = query(incumbent, challenger, listener, ctx, family, a_dsp, rng, cfg)
+        comparisons.append((inc_idx, ch_idx) if chose_incumbent else (ch_idx, inc_idx))
+        used_pairs.add(tuple(sorted((inc_idx, ch_idx))))
+
+    model = _fit_model(X, comparisons)
+    while len(comparisons) < n_queries:
+        mean = model.predict_mean(pool)
+        std = np.sqrt(model.predict_variance(pool))
+        score = mean + kappa * std
+        selected = None
+        for cand_idx in np.argsort(score)[::-1]:
+            challenger = pool[int(cand_idx)]
+            ch_idx = _add_point(challenger, X, index)
+            pair = tuple(sorted((inc_idx, ch_idx)))
+            if inc_idx != ch_idx and pair not in used_pairs:
+                selected = challenger, ch_idx, pair
+                break
+        if selected is None:
+            break
+        challenger, ch_idx, pair = selected
+        chose_incumbent = query(incumbent, challenger, listener, ctx, family, a_dsp, rng, cfg)
+        comparisons.append((inc_idx, ch_idx) if chose_incumbent else (ch_idx, inc_idx))
+        used_pairs.add(pair)
+        model = _fit_model(X, comparisons)
+
+    rec_pool = local_prior_pool(a_dsp, rng, n_candidates, cfg)
+    rec_pool = np.vstack([incumbent, rec_pool])
+    mean = model.predict_mean(rec_pool)
+    best_idx = int(np.argmax(mean))
+    z_rec = rec_pool[best_idx] if mean[best_idx] >= mean[0] + recommend_margin else incumbent
     u_rec = utility(z_rec, listener, ctx, family, a_dsp, cfg)
     return PreferenceRun(X=np.asarray(X), comparisons=np.asarray(comparisons, dtype=int),
                          z_rec=z_rec, u_rec=float(u_rec), model=model)
