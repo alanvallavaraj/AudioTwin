@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import zlib
 from pathlib import Path
 
 import hydra
@@ -11,9 +12,22 @@ import pandas as pd
 from omegaconf import DictConfig, OmegaConf
 
 from dsp.params import Z_DIM
-from oracle import CONTEXTS, FAMILIES, find_optimum, observe_audiogram, sample_population, utility
+from oracle import CONTEXTS, FAMILIES, POST_HOC_FAMILIES, find_optimum, observe_audiogram, sample_population, utility
 from oracle.preference import OracleOptimum
 from twin import run_active_preference_twin, run_local_prior_preference_twin, run_prior_preference_twin, run_random_preference_twin, sample_feasible
+from twin.active import run_laplace_twin
+from twin.optimizer import feasible_anchor, project_from_anchor
+
+
+FINAL_SEED = 777000111   # RESERVED (docs/protocol.md): refuse to run unless allow_final=true
+LAPLACE_METHODS = {"audiotwin_qeubo": "qeubo", "audiotwin_bald": "bald", "audiotwin_gprandom": "random"}
+DEFAULT_BUDGETS = (0, 5, 10, 20, 30, 50)
+
+
+def stable_seed(base: int, *keys) -> int:
+    """Seed derived from stable keys only, so a cell's random streams never depend on which other
+    methods/contexts are in the config or on iteration order."""
+    return (int(base) + zlib.crc32("|".join(map(str, keys)).encode())) % (2**31 - 1)
 
 
 STATIC_Z = {
@@ -85,11 +99,29 @@ def _optimum_for(listener, ctx, family: str, a_hat: np.ndarray, seed: int, cfg: 
     )
 
 
+def method_outputs(method: str, listener, ctx, family: str, a_hat: np.ndarray, seed: int, cfg: DictConfig):
+    """Return [(n_queries, z, projected)] for one method in one cell.
+
+    Static baselines are projected into the SAME safe set AudioTwin must respect (`projected` records
+    whether that changed them). Laplace-GP methods return one entry per query budget from a single run."""
+    if method in STATIC_Z:
+        anchor = feasible_anchor(a_hat)
+        z = project_from_anchor(STATIC_Z[method], anchor, a_hat)
+        return [(0, z, not np.allclose(z, STATIC_Z[method]))]
+    if method in LAPLACE_METHODS:
+        budgets = [int(b) for b in cfg.get("budgets", DEFAULT_BUDGETS)]
+        run = run_laplace_twin(listener, ctx, family, a_hat, n_queries=max(budgets), seed=seed,
+                               acquisition=LAPLACE_METHODS[method], checkpoints=tuple(budgets))
+        return [(b, run.recs[b], False) for b in sorted(set(budgets))]
+    z, _ = _method_setting(method, listener, ctx, family, a_hat, seed, cfg)   # legacy variants
+    return [(int(cfg.n_queries) if method.startswith("audiotwin") else 0, z, False)]
+
+
 def compute_row(listener, global_listener_id: int, context_name: str, family: str, method: str,
                 a_hat: np.ndarray, seed: int, cfg: DictConfig, commit: str, config_json: str,
-                opt: OracleOptimum | None = None) -> dict:
+                z: np.ndarray, n_queries: int, projected: bool, opt: OracleOptimum | None = None) -> dict:
     ctx = CONTEXTS[context_name]
-    z, u = _method_setting(method, listener, ctx, family, a_hat, seed, cfg)
+    u = utility(z, listener, ctx, family, a_hat)
     u_opt = np.nan
     u_lo = np.nan
     regret = np.nan
@@ -102,12 +134,15 @@ def compute_row(listener, global_listener_id: int, context_name: str, family: st
         "config_json": config_json,
         "task_id": int(cfg.task_id),
         "seed": int(seed),
+        "base_seed": int(cfg.seed),
         "listener_id": int(global_listener_id),
         "context": context_name,
         "family": family,
+        "post_hoc_family": bool(family in POST_HOC_FAMILIES),
         "method": method,
         "sigma_a": float(cfg.sigma_a),
-        "n_queries": int(cfg.n_queries) if method.startswith("audiotwin") else 0,
+        "n_queries": int(n_queries),
+        "projected": bool(projected),
         "utility": float(u),
         "u_opt": float(u_opt),
         "u_lo": float(u_lo),
@@ -125,6 +160,9 @@ def compute_row(listener, global_listener_id: int, context_name: str, family: st
 
 
 def run_task(cfg: DictConfig) -> Path:
+    if int(cfg.seed) == FINAL_SEED and not bool(cfg.get("allow_final", False)):
+        raise RuntimeError("seed 777000111 is the RESERVED final-evaluation seed (docs/protocol.md); "
+                           "freeze and tag the protocol first, then pass allow_final=true")
     out_dir = Path(str(cfg.out_dir))
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"task_{int(cfg.task_id):05d}.parquet"
@@ -148,14 +186,18 @@ def run_task(cfg: DictConfig) -> Path:
             for family in list(cfg.families):
                 if family not in FAMILIES:
                     raise ValueError(f"unknown family: {family}")
-                opt_seed = base_seed + 10_000 + 193 * global_listener_id + 29 * len(rows)
-                opt = _optimum_for(listener, ctx, family, a_hat, opt_seed, cfg)
+                opt = _optimum_for(listener, ctx, family, a_hat,
+                                   stable_seed(base_seed, "opt", global_listener_id, context_name, family), cfg)
                 for method in list(cfg.methods):
-                    method_seed = base_seed + 17 * global_listener_id + 101 * len(rows)
-                    rows.append(compute_row(
-                        listener, global_listener_id, context_name, family, method,
-                        a_hat, method_seed, cfg, commit, config_json, opt,
-                    ))
+                    if method in LAPLACE_METHODS:   # paired: identical pool/oracle streams across acquisitions
+                        method_seed = stable_seed(base_seed, "gp", global_listener_id, context_name, family)
+                    else:
+                        method_seed = stable_seed(base_seed, method, global_listener_id, context_name, family)
+                    for n_q, z, projected in method_outputs(method, listener, ctx, family, a_hat, method_seed, cfg):
+                        rows.append(compute_row(
+                            listener, global_listener_id, context_name, family, method,
+                            a_hat, method_seed, cfg, commit, config_json, z, n_q, projected, opt,
+                        ))
 
     df = pd.DataFrame(rows)
     df.to_parquet(out_path, index=False)

@@ -4,7 +4,7 @@ import pytest
 from dsp import DSPConfig, Z_DIM, is_feasible
 from oracle import CONTEXTS, observe_audiogram, sample_population
 from twin.active import ACQUISITIONS, run_laplace_twin
-from twin.optimizer import feasible_anchor
+from twin.optimizer import feasible_anchor, project_from_anchor
 
 CFG = DSPConfig()
 
@@ -30,7 +30,7 @@ def test_run_is_feasible_deterministic_and_checkpointed(setting, acq):
     for k in r1.recs:
         assert np.array_equal(r1.recs[k], r2.recs[k])
     # zero-query recommendation is the prescription anchor (the GP prior mean peaks there)
-    assert np.allclose(r1.recs[0], feasible_anchor(a_hat, CFG))
+    assert np.allclose(r1.recs[0], project_from_anchor(np.zeros(Z_DIM), feasible_anchor(a_hat, CFG), a_hat, CFG))
 
 
 def test_acquisitions_pick_different_queries_but_share_the_pools(setting):
@@ -45,3 +45,23 @@ def test_rejects_unknown_acquisition(setting):
     L, ctx, a_hat = setting
     with pytest.raises(ValueError):
         run_laplace_twin(L, ctx, "balanced", a_hat, n_queries=2, seed=0, acquisition="nope")
+
+
+def test_zero_query_recommendation_is_the_projected_prescription_even_when_z0_is_unsafe():
+    """Fairness invariant: at T=0 the twin must equal the static prescription baseline."""
+    L = sample_population(1, seed=41)[0]
+    steep = np.array([55.0, 55, 60, 70, 85, 95, 95])      # steep high-frequency loss: z=0 unsafe, fallback anchor exists
+    assert not is_feasible(np.zeros(Z_DIM), steep, None, CFG)
+    for a_hat in (steep, np.array([30.0, 35, 45, 55, 60, 65, 65])):
+        anchor = feasible_anchor(a_hat, CFG)
+        z_rx = project_from_anchor(np.zeros(Z_DIM), anchor, a_hat, CFG)
+        run = run_laplace_twin(L, CONTEXTS["noisy_conversation"], "balanced", a_hat, n_queries=2, seed=3,
+                               acquisition="qeubo", checkpoints=(0, 2))
+        assert np.allclose(run.recs[0], z_rx)
+        assert is_feasible(run.recs[2], a_hat, None, CFG)
+
+
+def test_audiograms_beyond_the_safe_range_fail_loudly():
+    """Scope limit: for very severe flat loss no safe anchor exists. We want a clear error, not a silent skip."""
+    with pytest.raises(ValueError, match="no feasible"):
+        feasible_anchor(np.array([85.0, 90, 90, 95, 95, 95, 95]), CFG)

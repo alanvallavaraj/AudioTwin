@@ -57,6 +57,11 @@ def run_laplace_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.nd
     rng = np.random.default_rng(seed)                          # candidate pools, random pairs
     rng_oracle = np.random.default_rng(seed + 7_000_003)       # simulated listener responses
     anchor = feasible_anchor(a_dsp, cfg)
+    # The prescription (z=0) projected into the safe set. IDENTICAL to the static `prescription` baseline
+    # in the runner, and the zero-query recommendation, so at T=0 the twin IS the prescription and any
+    # later gain is attributable to learning.
+    z_rx = project_from_anchor(np.zeros(Z_DIM), anchor, a_dsp, cfg)
+    base_pts = [anchor[None, :]] + ([] if np.allclose(anchor, z_rx) else [z_rx[None, :]])
     ckpts = sorted({int(c) for c in checkpoints if 0 <= c <= n_queries} | {n_queries})
 
     X: list[np.ndarray] = []
@@ -82,19 +87,22 @@ def run_laplace_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.nd
         else:
             model = LaplacePreferenceGP(**(hyper or {})).fit(np.array(X), comps)
 
-        incumbent = anchor if not X else np.array(X)[int(np.argmax(model.predict_mean(np.array(X))))]
+        incumbent = z_rx if not X else np.array(X)[int(np.argmax(model.predict_mean(np.array(X))))]
 
         # ---- recommendation at checkpoints
         if t in ckpts:
-            pool = np.vstack([anchor[None, :], sample_feasible(a_dsp, rng, n_rec // 2, cfg),
-                              _local(incumbent, rng, n_rec // 2, 0.25, anchor, a_dsp, cfg)]
-                             + ([np.array(X)] if X else []))
-            recs[t] = pool[int(np.argmax(model.predict_mean(pool)))].copy()
+            if t == 0:
+                recs[0] = z_rx.copy()
+            else:
+                pool = np.vstack(base_pts + [sample_feasible(a_dsp, rng, n_rec // 2, cfg),
+                                             _local(incumbent, rng, n_rec // 2, 0.25, anchor, a_dsp, cfg),
+                                             np.array(X)])
+                recs[t] = pool[int(np.argmax(model.predict_mean(pool)))].copy()
         if t == n_queries:
             break
 
         # ---- choose the next pair from a feasible pool
-        parts = [anchor[None, :], sample_feasible(a_dsp, rng, n_uniform, cfg)]
+        parts = base_pts + [sample_feasible(a_dsp, rng, n_uniform, cfg)]
         if X:
             parts.append(_local(incumbent, rng, n_local, 0.25, anchor, a_dsp, cfg))
         Z = np.vstack(parts)
