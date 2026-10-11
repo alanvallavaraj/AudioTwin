@@ -34,7 +34,7 @@ echo "AudioTwin dev sweep task ${TASK_ID} on $(hostname) using $(${PYTHON} --ver
   'contexts=[noisy_conversation,lecture,music]' \
   'families=[intelligibility,comfort,balanced,noise_sensitive]' \
   'methods=[prescription,prescription_linear,prescription_slow,audiotwin_qeubo,audiotwin_bald,audiotwin_gprandom]' \
-  'budgets=[0,5,10,20,30,50]' \
+  '+budgets=[0,5,10,20,30,50]' \
   compute_optimum=true \
   optimum.n_random=400 \
   optimum.maxiter=60 \
