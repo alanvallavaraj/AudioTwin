@@ -15,6 +15,7 @@ CONTEXTS = ("noisy_conversation", "lecture", "music")
 ALL_FAMILIES = PRE_REGISTERED_FAMILIES + ("noise_sensitive",)
 ANALYSIS_SEED = 20261011
 N_BOOTSTRAP = 20_000
+FINAL_REPLACEMENT_MAP = {55: 128}
 
 
 def _listener_best_static(df: pd.DataFrame) -> pd.Series:
@@ -79,10 +80,23 @@ def load_results(root: str | Path) -> pd.DataFrame:
     return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
 
 
-def validate_final_results(df: pd.DataFrame, expected_n: int = 128) -> None:
-    """Refuse inference unless the complete frozen final result grid is present."""
+def validate_final_results(
+    df: pd.DataFrame, expected_n: int = 128, replacement_map: dict[int, int] | None = None
+) -> None:
+    """Refuse inference unless the complete frozen final result grid is present.
+
+    ``replacement_map`` maps infeasible original task IDs to deterministic, previously
+    unused replacement task IDs. Scientific rows are otherwise unchanged.
+    """
+    replacement_map = dict(replacement_map or {})
+    base_tasks = set(range(int(expected_n)))
+    if not set(replacement_map).issubset(base_tasks):
+        raise ValueError("replacement source IDs must belong to the frozen final sample")
+    replacement_ids = set(map(int, replacement_map.values()))
+    if replacement_ids & base_tasks or len(replacement_ids) != len(replacement_map):
+        raise ValueError("replacement IDs must be unique and outside the frozen 0..N-1 range")
+    expected_tasks = (base_tasks - set(map(int, replacement_map.keys()))) | replacement_ids
     task_ids = set(map(int, df.task_id.unique()))
-    expected_tasks = set(range(int(expected_n)))
     if task_ids != expected_tasks:
         missing = sorted(expected_tasks - task_ids)
         extra = sorted(task_ids - expected_tasks)
@@ -93,7 +107,7 @@ def validate_final_results(df: pd.DataFrame, expected_n: int = 128) -> None:
         raise ValueError("final listener IDs do not match frozen task IDs")
 
     expected = set()
-    for task_id in range(int(expected_n)):
+    for task_id in sorted(expected_tasks):
         for context in CONTEXTS:
             for family in ALL_FAMILIES:
                 for method in STATIC_METHODS:
@@ -124,8 +138,10 @@ def _fmt_delta(delta: pd.Series) -> str:
 
 def main(root: str | Path) -> None:
     df = load_results(root)
-    validate_final_results(df)
+    validate_final_results(df, replacement_map=FINAL_REPLACEMENT_MAP)
     print(f"files/listeners: {df.task_id.nunique()}/{df.listener_id.nunique()}  rows={len(df)}")
+    if FINAL_REPLACEMENT_MAP:
+        print(f"declared infeasible-listener replacements: {FINAL_REPLACEMENT_MAP}")
     print(f"code: {', '.join(sorted(df.git_hash.str[:7].unique()))}")
 
     print("\nPRIMARY: qEUBO T=20 minus per-cell best static; pre-registered families")

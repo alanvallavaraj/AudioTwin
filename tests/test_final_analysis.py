@@ -74,3 +74,32 @@ def test_validate_final_results_rejects_missing_frozen_budget():
 
 def test_validate_final_results_accepts_complete_frozen_grid():
     validate_final_results(_complete_structure(2), expected_n=2)
+
+
+def test_validate_final_results_accepts_declared_replacement_task():
+    import pandas as pd
+    rows=[]
+    contexts=['noisy_conversation','lecture','music']
+    families=['intelligibility','comfort','balanced','noise_sensitive']
+    static=['prescription','prescription_linear','prescription_slow']
+    learned=['audiotwin_qeubo','audiotwin_bald','audiotwin_gprandom']
+    for task in list(range(128)):
+        if task == 55:
+            continue
+        for c in contexts:
+            for f in families:
+                for m in static:
+                    rows.append({'task_id':task,'listener_id':task,'context':c,'family':f,'method':m,'n_queries':0,'regret':0.1,'git_hash':'x'})
+                for m in learned:
+                    for q in [0,5,10,20,30,50]:
+                        rows.append({'task_id':task,'listener_id':task,'context':c,'family':f,'method':m,'n_queries':q,'regret':0.1,'git_hash':'x'})
+    task=128
+    for c in contexts:
+        for f in families:
+            for m in static:
+                rows.append({'task_id':task,'listener_id':task,'context':c,'family':f,'method':m,'n_queries':0,'regret':0.1,'git_hash':'x'})
+            for m in learned:
+                for q in [0,5,10,20,30,50]:
+                    rows.append({'task_id':task,'listener_id':task,'context':c,'family':f,'method':m,'n_queries':q,'regret':0.1,'git_hash':'x'})
+    df=pd.DataFrame(rows)
+    validate_final_results(df, replacement_map={55:128})
