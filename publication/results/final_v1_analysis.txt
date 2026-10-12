@@ -1,0 +1,38 @@
+files/listeners: 128/128  rows=32256
+declared infeasible-listener replacements: {55: 128}
+code: fc040b3
+
+PRIMARY: qEUBO T=20 minus per-cell best static; pre-registered families
+mean=-0.0807  95% bootstrap CI=[-0.1027, -0.0593]  n=128
+
+SECONDARY: learned methods minus per-cell best static; pre-registered families
+audiotwin_qeubo      T= 0  mean=+0.0551  95% bootstrap CI=[+0.0445, +0.0663]  n=128
+audiotwin_qeubo      T= 5  mean=-0.0294  95% bootstrap CI=[-0.0470, -0.0123]  n=128
+audiotwin_qeubo      T=10  mean=-0.0568  95% bootstrap CI=[-0.0766, -0.0373]  n=128
+audiotwin_qeubo      T=20  mean=-0.0807  95% bootstrap CI=[-0.1027, -0.0593]  n=128
+audiotwin_qeubo      T=30  mean=-0.0972  95% bootstrap CI=[-0.1203, -0.0750]  n=128
+audiotwin_qeubo      T=50  mean=-0.1234  95% bootstrap CI=[-0.1467, -0.1013]  n=128
+audiotwin_bald       T= 0  mean=+0.0551  95% bootstrap CI=[+0.0445, +0.0663]  n=128
+audiotwin_bald       T= 5  mean=+0.0285  95% bootstrap CI=[+0.0144, +0.0426]  n=128
+audiotwin_bald       T=10  mean=-0.0079  95% bootstrap CI=[-0.0250, +0.0087]  n=128
+audiotwin_bald       T=20  mean=-0.0506  95% bootstrap CI=[-0.0703, -0.0319]  n=128
+audiotwin_bald       T=30  mean=-0.0506  95% bootstrap CI=[-0.0708, -0.0313]  n=128
+audiotwin_bald       T=50  mean=-0.0754  95% bootstrap CI=[-0.0967, -0.0548]  n=128
+audiotwin_gprandom   T= 0  mean=+0.0551  95% bootstrap CI=[+0.0445, +0.0663]  n=128
+audiotwin_gprandom   T= 5  mean=+0.0201  95% bootstrap CI=[+0.0035, +0.0366]  n=128
+audiotwin_gprandom   T=10  mean=-0.0196  95% bootstrap CI=[-0.0371, -0.0026]  n=128
+audiotwin_gprandom   T=20  mean=-0.0482  95% bootstrap CI=[-0.0663, -0.0310]  n=128
+audiotwin_gprandom   T=30  mean=-0.0754  95% bootstrap CI=[-0.0934, -0.0578]  n=128
+audiotwin_gprandom   T=50  mean=-0.1018  95% bootstrap CI=[-0.1221, -0.0824]  n=128
+
+ACQUISITION EFFICIENCY: qEUBO minus GP-random; pre-registered families
+T= 5  mean=-0.0495  95% bootstrap CI=[-0.0627, -0.0364]  n=128
+T=10  mean=-0.0371  95% bootstrap CI=[-0.0489, -0.0252]  n=128
+
+POST-HOC noise_sensitive: qEUBO minus per-cell best static
+T= 0  mean=+0.2349  95% bootstrap CI=[+0.2045, +0.2660]  n=128
+T= 5  mean=+0.0633  95% bootstrap CI=[+0.0339, +0.0922]  n=128
+T=10  mean=+0.0300  95% bootstrap CI=[+0.0000, +0.0590]  n=128
+T=20  mean=+0.0070  95% bootstrap CI=[-0.0228, +0.0358]  n=128
+T=30  mean=-0.0153  95% bootstrap CI=[-0.0445, +0.0131]  n=128
+T=50  mean=-0.0446  95% bootstrap CI=[-0.0738, -0.0158]  n=128

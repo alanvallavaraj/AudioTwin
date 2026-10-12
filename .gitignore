@@ -1,0 +1,13 @@
+data/
+/results/
+/logs/
+.env
+.venv/
+__pycache__/
+*.pyc
+*.wav
+*.parquet
+.ipynb_checkpoints/
+/outputs/
+/results_hpc/
+*.egg-info/

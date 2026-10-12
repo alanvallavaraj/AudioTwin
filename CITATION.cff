@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use AudioTwin, please cite the associated publication and this software repository."
+title: "AudioTwin"
+type: software
+authors:
+  - family-names: "Vallavaraj"
+    given-names: "Alan Immanuel Benjamin"
+    affiliation: "University of Westminster"
+repository-code: "https://github.com/alanvallavaraj/AudioTwin"
+url: "https://github.com/alanvallavaraj/AudioTwin"
+abstract: "A reproducible framework for preference-guided, context-aware hearing calibration using safety-constrained DSP and active Bayesian preference learning."
+keywords:
+  - hearing calibration
+  - digital twin
+  - preference learning
+  - Bayesian optimisation
+  - qEUBO
+  - hearing technology
