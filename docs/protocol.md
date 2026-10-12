@@ -27,5 +27,7 @@ The final protocol is therefore frozen as follows:
 - **Secondary analyses:** the complete regret curve at T in {0, 5, 10, 20, 30, 50}; qEUBO versus GP-random at 5 and 10 queries (acquisition efficiency); qEUBO versus static at 50 queries; BALD as a secondary acquisition comparator; family/context breakdowns.
 - **Post-hoc family:** `noise_sensitive` is analysed and labelled separately and cannot support the primary claim.
 - **Final sample size:** **128 independent listeners** (array tasks 0--127). The development qEUBO-vs-static paired effect at T=20 was about -0.0566 with SD about 0.158, implying about 82 listeners for 90% normal-approximation power at two-sided alpha 0.05. N=128 is fixed before final-seed exposure to provide margin for sampling variability and subgroup summaries.
-- **Final seed:** `777000111`, run once with exactly the frozen oracle, safety projection, baselines, qEUBO/BALD/GP-random implementations, candidate settings and query budgets in tag `final-protocol-v1`.
+- **Final seed:** `777000111`, run once with exactly the frozen oracle, safety projection, baselines, qEUBO/BALD/GP-random implementations, candidate settings and query budgets in tag `final-protocol-v1.1`.
 - If a software/numerical failure prevents completion, preserve the failed outputs/logs and document the failure before any re-run. Scientific tuning after seeing final-seed outcomes is prohibited.
+
+- **Operational launcher correction (2026-10-12, before final-seed execution):** tag `final-protocol-v1.1` differs from `final-protocol-v1` only by initialising QMUL environment modules via `/etc/profile` and using the installed module name `python/3.11.7-gcc-12.2.0`. Scientific settings, code, seed, methods, budgets, oracle, sample size and analysis are unchanged.

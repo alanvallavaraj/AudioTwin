@@ -8,8 +8,9 @@
 #SBATCH --error=logs/slurm-%x-%A_%a.err
 
 set -euo pipefail
+source /etc/profile 2>/dev/null || true
 module purge
-module load python/3.11.7
+module load python/3.11.7-gcc-12.2.0
 
 cd /data/home/hdw517/audiotwin
 mkdir -p logs results/final_v1
