@@ -37,6 +37,10 @@ configs/         Experiment configuration
  twin/           Preference GP, acquisitions and active optimisation
 ```
 
+## Manuscript
+
+The current Elsevier **Machine Learning with Applications** manuscript source and compiled submission bundle are available in [`manuscript_mlawa/`](manuscript_mlawa/). The bundle contains the complete `elsarticle` LaTeX manuscript, BibTeX references, publication figures, highlights, cover letter draft, and compiled PDF.
+
 ## Frozen final protocol
 
 The final evaluation is documented in [`docs/protocol.md`](docs/protocol.md). The publication analysis state is identified by:

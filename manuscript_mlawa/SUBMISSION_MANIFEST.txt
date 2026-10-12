@@ -1,0 +1,27 @@
+Machine Learning with Applications submission files
+
+Primary manuscript:
+  main.tex
+  main.bbl
+  references.bib
+  main.pdf
+
+Figures:
+  fig1_learning_curves.pdf
+  fig2_context_effects.pdf
+  fig3_family_effects.pdf
+  fig4_context_family_heatmap.pdf
+
+Optional raster figure copies:
+  fig1_learning_curves.png
+  fig2_context_effects.png
+  fig3_family_effects.png
+  fig4_context_family_heatmap.png
+
+Additional submission material:
+  highlights.txt
+  COVER_LETTER.md
+
+Repository/reproducibility helper:
+  make_manuscript_figures.py
+  README_SUBMISSION.md

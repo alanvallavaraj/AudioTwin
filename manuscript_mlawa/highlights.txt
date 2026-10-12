@@ -1,0 +1,7 @@
+Highlights
+
+• AudioTwin frames hearing-aid fitting as constrained preferential optimisation.
+• qEUBO reduced mean regret by 25.1% versus strengthened static prescriptions.
+• qEUBO beat matched GP-random acquisition after only 5 and 10 queries.
+• Benefits were strongest for comfort and speech-oriented listening contexts.
+• A frozen N=128 protocol separates method development from final evaluation.
