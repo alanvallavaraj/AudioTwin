@@ -107,7 +107,7 @@ A machine-readable citation file is provided in [`CITATION.cff`](CITATION.cff). 
 
 ## Author
 
-**Dr Alan Vallavaraj**
+**Dr Alan Immanuel Benjamin Vallavaraj**
 School of Computer Science and Engineering, University of Westminster
 
 ## Status

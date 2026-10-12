@@ -14,6 +14,6 @@ This manuscript is original, is not under consideration elsewhere, and the autho
 
 Yours sincerely,
 
-Dr Alan Vallavaraj
+Dr Alan Immanuel Benjamin Vallavaraj
 School of Computer Science and Engineering
 University of Westminster, London, United Kingdom
