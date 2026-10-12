@@ -8,9 +8,9 @@ import numpy as np
 from dsp.params import AUDIOGRAM_HZ, BANDS_HZ, interp_audiogram
 from .audiograms import sample_parametric
 
-# PLACEHOLDER reference equivalent threshold SPLs (dB) for AUDIOGRAM_HZ; replace with verified
-# ISO 389-1 values for the chosen transducer before submission.
-RETSPL_PLACEHOLDER = np.array([26.0, 12.0, 7.0, 9.0, 10.0, 15.0, 13.0])
+# Synthetic threshold-to-SPL offsets (dB) at AUDIOGRAM_HZ. These are simulation
+# assumptions only and are not represented as ISO 389-1 values for a specific transducer.
+THRESHOLD_SPL_OFFSETS_DB = np.array([26.0, 12.0, 7.0, 9.0, 10.0, 15.0, 13.0])
 
 FAMILIES = {  # Dirichlet alphas over weights (audibility, comfort, ideal-curve, artifacts)
     "intelligibility": np.array([6.0, 1.0, 1.0, 1.0]),
@@ -36,13 +36,13 @@ class Listener:
 
     def thr_spl(self) -> np.ndarray:
         return interp_audiogram(self.audiogram) + np.interp(
-            np.log2(BANDS_HZ), np.log2(AUDIOGRAM_HZ), RETSPL_PLACEHOLDER
+            np.log2(BANDS_HZ), np.log2(AUDIOGRAM_HZ), THRESHOLD_SPL_OFFSETS_DB
         )
 
 
 def sample_listener(rng: np.random.Generator, lid: int, pta_range=(20.0, 55.0)) -> Listener:
     a = sample_parametric(rng, pta_range)
-    thr = interp_audiogram(a) + np.interp(np.log2(BANDS_HZ), np.log2(AUDIOGRAM_HZ), RETSPL_PLACEHOLDER)
+    thr = interp_audiogram(a) + np.interp(np.log2(BANDS_HZ), np.log2(AUDIOGRAM_HZ), THRESHOLD_SPL_OFFSETS_DB)
     ucl = np.clip(np.maximum(thr + 25.0, 100.0 + rng.normal(0, 4, size=thr.shape)), None, 110.0)
     knots = rng.normal(0, 4, size=3)
     off = np.interp(np.log2(BANDS_HZ), np.log2([250.0, 1000.0, 8000.0]), knots) + rng.normal(0, 3)

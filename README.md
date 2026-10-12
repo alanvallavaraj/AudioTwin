@@ -2,7 +2,7 @@
 
 **AudioTwin** is a reproducible simulation framework for preference-guided, context-aware hearing calibration. It models listener-specific hearing profiles, safe DSP parameterisation, pairwise preference feedback, and active Bayesian optimisation for rapid personalisation.
 
-This repository accompanies the AudioTwin publication and contains the frozen experimental protocol, reference implementation, final analysis code, tests, and compact result summaries.
+This repository accompanies the AudioTwin publication and contains the reference implementation, released final synthetic dataset, final analysis code, tests, manuscript materials, and the original protocol history. `main` is the curated publication branch; the original pre-final development lineage is published separately as `protocol-history` with the original annotated protocol tags. See [`PROTOCOL_PROVENANCE.md`](PROTOCOL_PROVENANCE.md).
 
 ## Key result
 
@@ -30,7 +30,7 @@ configs/         Experiment configuration
  eval/           Evaluation metrics and statistics
  experiments/    Experiment runner
  oracle/         Simulated listeners, contexts and utility families
- publication/    Final compact result summaries for the paper
+ publication/    Released final synthetic data, summaries, and post-final diagnostics
  scripts/        Diagnostics and frozen final-analysis script
  slurm/          Reproducible HPC launchers for development/final runs
  tests/          Unit and regression tests
@@ -43,10 +43,11 @@ The current Elsevier **Machine Learning with Applications** manuscript source an
 
 ## Frozen final protocol
 
-The final evaluation is documented in [`docs/protocol.md`](docs/protocol.md). The publication analysis state is identified by:
+The final evaluation is documented in [`docs/protocol.md`](docs/protocol.md). Original pre-final history is available on the `protocol-history` branch. The publication analysis state is identified by:
 
-- Protocol tag: `final-protocol-v1.3`
-- Final experimental code hash recorded in result files: `fc040b3`
+- Scientific freeze: `final-protocol-v1`
+- Operational final-run tag / code hash: `final-protocol-v1.2` / `fc040b3`
+- Replacement-rule record: `final-protocol-v1.3`
 - Analysis/bootstrap seed: `20261011`
 - Final experiment seed: `777000111`
 
@@ -54,7 +55,7 @@ One pre-specified final listener draw (`task_id=55`) had no feasible safe low-ga
 
 ## Reproduce the analysis
 
-Create a Python environment and install the project:
+For exact final-run package versions, use `requirements-final.txt` (Python 3.11.7). For development, create a Python environment and install the project:
 
 ```bash
 python -m venv .venv
@@ -68,23 +69,23 @@ Run the tests:
 pytest -q -m "not slow"
 ```
 
-The raw per-listener parquet files are intentionally not committed to GitHub. Once the final result files are placed in `results/final_v1/`, run:
+The consolidated final synthetic dataset is released at `publication/data/final_v1.parquet`. Recompute the validated analysis directly with:
 
 ```bash
-python scripts/analyze_final.py results/final_v1
+python scripts/analyze_final.py publication/data/final_v1.parquet
 ```
 
-The frozen publication outputs are also provided in [`publication/results/`](publication/results/).
+The same analyser also accepts the original directory of 128 `task_*.parquet` files. The compact publication outputs are provided in [`publication/results/`](publication/results/).
 
 See [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) for the complete workflow.
 
 ## Main methods
 
-The final comparison includes three static baselines and three preference-learning strategies:
+The final files record three static configurations and three preference-learning strategies. In the three primary utility families, `prescription_slow` is utility-identical to `prescription`, so the primary static reference contains only two distinct utility behaviours:
 
 - `prescription`
 - `prescription_linear`
-- `prescription_slow`
+- `prescription_slow` — recorded separately but identical to `prescription` for the primary families; distinct only in the post-hoc `noise_sensitive` family
 - `audiotwin_qeubo`
 - `audiotwin_bald`
 - `audiotwin_gprandom`
@@ -95,11 +96,19 @@ Query-budget checkpoints are **0, 5, 10, 20, 30 and 50**.
 
 ## Publication outputs
 
+The `publication/data/` directory contains:
+
+- `final_v1.parquet` — consolidated 32,256-row final synthetic dataset used to recompute the inferential analysis
+
 The `publication/results/` directory contains:
 
 - `final_v1_analysis.txt` — frozen primary and secondary statistical output
 - `final_context_family_qeubo_t20.csv` — qEUBO T=20 context/family breakdown
 - `final_learned_curve_means.csv` — learned-method regret curves
+
+## Licence
+
+Released under the MIT License; see [`LICENSE`](LICENSE).
 
 ## Citation
 

@@ -1,7 +1,7 @@
 """Latent parameterisation z -> DSP settings (docs/methods.md).
 
-All numeric constants below are PLACEHOLDER assumptions and must be justified
-and documented in the paper's methods/appendix.
+Numeric values are explicit simulation assumptions, not clinical prescription constants.
+They are enumerated in docs/simulator_parameters.md and the manuscript parameter table.
 """
 from __future__ import annotations
 
@@ -56,7 +56,10 @@ def interp_audiogram(audiogram_db_hl: np.ndarray) -> np.ndarray:
 
 
 def prescription_gain(audiogram_db_hl: np.ndarray, cfg: DSPConfig = DSPConfig()) -> np.ndarray:
-    """Half-gain-style rule (documented placeholder for NAL-R)."""
+    """Synthetic half-gain prescription used in all reported experiments.
+
+This is not NAL-NL2 or NAL-R: gain is 0.5 times the interpolated threshold.
+"""
     thr = interp_audiogram(audiogram_db_hl)
     return np.clip(cfg.half_gain_factor * thr, 0.0, None)
 

@@ -12,7 +12,7 @@ for d in sorted(glob.glob(os.path.join(root, "audiotwin_*"))):
     df = pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
     hashes = sorted(df.git_hash.str[:7].unique())
     print(f"\n=== {os.path.basename(d)}  tasks={len(files)}  rows={len(df)}  code={hashes}  n_queries={sorted(df.n_queries.unique())}")
-    for label, sub in [("ALL families", df), ("pre-registered families only", df[df.family.isin(FAMS_PRE)]),
+    for label, sub in [("ALL families", df), ("pre-specified families only", df[df.family.isin(FAMS_PRE)]),
                        ("noise_sensitive (post-hoc)", df[df.family == "noise_sensitive"])]:
         per_l = sub.groupby(["listener_id", "method"]).regret.mean().unstack("method")
         order = list(per_l.mean().sort_values().index)

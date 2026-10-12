@@ -1,47 +1,85 @@
-# AudioTwin: methods spec (v0.4)
+# AudioTwin methods specification — reported final implementation
+
+This document describes the implementation used by the reported final simulation. Exact numeric assumptions are listed in `docs/simulator_parameters.md`. Historical development variants remain visible on the `protocol-history` branch.
 
 ## Listener and context
-- True audiogram a in R^7 (dB HL: 250, 500, 1k, 2k, 4k, 6k, 8k Hz); comfort limits u per band.
-- Twin estimate a_hat = a + eps, eps ~ N(0, sigma_a^2 I)  (smartphone audiometry error).
-- Contexts C = {quiet speech, noisy conversation, lecture, call, outdoor, music, live/worship}.
 
-## Latent parameterisation  z in [-1,1]^6
-z1 overall gain offset | z2 spectral tilt | z3 compression scale | z4 noise-reduction | z5 speech-enhancement | z6 compression speed
-- g_k(z)  = clip( g_k^Rx(a_hat) + b1*z1 + b2*z2*log2(f_k/1000), 0, g_k^max(a_hat) )
-- CR_k(z) = clip( CR_k^Rx * 2^(2*z3), 1, CR_max )   # z3=-1 reaches linear (CR=1)
-- NR(z)   = NR_max * (z4+1)/2 ;  SE(z) = SE_max * (z5+1)/2
-- Attack/release use log interpolation from 5/50 ms at z6=0 to 50/500 ms at z6=1.
-- Prescription g^Rx: public rule (NAL-R or half-gain). z=0 is the original fast-compression prescription.
-- Bands (10): 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000, 8000 Hz.
+- True audiogram `a` in R^7 at 250, 500, 1000, 2000, 4000, 6000 and 8000 Hz.
+- Twin estimate `a_hat = a + eps`, with independent Gaussian observation error and 5-dB rounding.
+- Final contexts: noisy conversation, lecture and music.
+- Final primary preference families: intelligibility, comfort and balanced.
+- `noise_sensitive` is post-hoc and reported separately.
 
-## Safety set S(a_hat, c)
-g_k <= g_k^max ; predicted output <= UCL_k ; |g_k - g_{k+1}| <= delta_s ; ||z - z_prev||_inf <= delta_r.
-Applied to every candidate in acquisition and recommendation. If z=0 is unsafe for an unusually severe/noisy measured audiogram, sampling shrinks candidates toward a conservative low-gain anchor.
+## Latent parameterisation `z in [-1,1]^6`
+
+`z1` overall gain offset | `z2` spectral tilt | `z3` compression scale | `z4` noise reduction | `z5` speech enhancement | `z6` compression speed
+
+- `g_k(z) = clip(g_k^Rx(a_hat) + b1*z1 + b2*z2*log2(f_k/1000), 0, g_k^max(a_hat))`
+- **Reported prescription:** `g_k^Rx(a) = 0.5 * interpolated_threshold_k`. This is a synthetic half-gain rule; it is not NAL-NL2 or NAL-R.
+- `CR_k(z) = clip(CR_k^Rx * 2^(2*z3), 1, CR_max)`; `z3=-1` reaches linear compression.
+- `NR(z)=NR_max*(z4+1)/2`; `SE(z)=SE_max*(z5+1)/2`.
+- Attack/release interpolate logarithmically from 5/50 ms at `z6=0` to 50/500 ms at `z6=1`.
+- Ten DSP bands: 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000 and 8000 Hz.
+
+The hidden oracle's ideal-gain curve uses the same half-gain construction evaluated on the true audiogram plus listener-specific random offsets. This shared structure is explicit in the manuscript limitations.
+
+## Feasible domain used by the final active loop
+
+Final qEUBO/BALD/GP-random candidate generation enforces:
+
+- latent box `z in [-1,1]^6`;
+- gain bounds induced by `g_k^max`;
+- fixed 100-dB-SPL predicted-output ceiling;
+- maximum adjacent-band gain difference.
+
+A conservative low-gain anchor is found first and candidate settings are projected towards it when necessary. The codebase contains an optional `z_prev` change-rate check in `dsp.safety.project_to_S`, but **the reported final active-learning path uses `project_from_anchor(..., z_prev=None)` and does not apply a sequential change-rate constraint**.
 
 ## Oracle (evaluation only)
-Hidden utility u*(z; listener, context). P(A>B) = lam/2 + (1-lam)*Phi((u*(zA)-u*(zB))/(sqrt2*sigma_n)).
-u* = weighted sum: intelligibility term + quality term + loudness-comfort penalty + distance to ideal gain curve.
-Compression artefacts in noise (including a compression-speed artefact) are confined to the POST-HOC noise_sensitive family. They had leaked into the shared quality term (commit 466e0b6); restored 2026-10-07 so the 3 pre-registered families are independent of the HASPI/compression observation again. z6 (compression speed) is therefore a no-op for the pre-registered oracle and only matters for the noise_sensitive family and for reported HASPI/HASQI.
-Weights sampled per listener; 3 pre-registered families (intelligibility, comfort, balanced) plus 1 POST-HOC
-family (noise_sensitive: extra compression-in-noise penalty, added after the HASPI/compression finding). Keep oracle components disjoint from reported metrics.
 
-## Twin preference model
-Stage-4 implementation: pairwise probit GP over queried z values with an RBF kernel, MAP latent utility fitting,
-and GP-prior interpolation to feasible candidate settings. This is deterministic, CPU-only and covered by unit tests.
-Planned full model: f: Z x C -> R, GP prior; mean m = -gamma*||z||^2; kernel = Matern52(ARD) on z x context-similarity kernel.
-Probit pairwise likelihood (Chu & Ghahramani); Laplace posterior (BoTorch PairwiseGP).
+`u*(z; listener, context)` is a weighted sum of:
+
+- an audibility/intelligibility-like term;
+- loudness-comfort penalty;
+- distance to the hidden ideal-gain curve;
+- processing/compression artefact penalty.
+
+Pairwise responses follow a lapse-contaminated probit choice model. Compression-speed artefacts occur only in the post-hoc `noise_sensitive` family. Therefore `z6` has no utility effect in the three pre-specified primary families.
+
+## Preference GP
+
+The reported learned methods use a pairwise probit GP with:
+
+- Matérn-5/2 kernel;
+- prior mean `m(z)=-0.1 ||z||^2`;
+- Laplace posterior around the MAP latent utilities;
+- grid selection of lengthscale, signal variance and assumed comparison noise every five queries.
+
+Predictive covariance propagates posterior uncertainty at queried settings to candidate points.
 
 ## Query selection
-Implemented baselines: random safe pair queries, prior-seeded clinical-anchor queries, conservative local-prior queries, mean-plus-uncertainty active queries, and exploitative active queries.
-Planned: qEUBO (default) | BALD (ablation) | random pairs (ablation). Acquisition uses GP only; audio rendered only to query oracle.
-Recommendation z*_T = argmax_{z in S} E[f(z,c)].
 
-## Evaluation
-simple regret r_T (normalised) | N_eps = min{T : r_T <= eps} | HASPI, HASQI, ESTOI, PESQ on held-out speech/noise |
-safety-violation rate | robustness vs sigma_a, sigma_n, lapse, context-classifier accuracy.
-Stats: paired Wilcoxon, bootstrap CIs, Holm correction.
+The final matched methods share the same preference GP and candidate-generation mechanism:
 
-## Baselines (same parameterisation and stimulus budget)
-no correction | fixed EQ | prescription (z=0) | prescription-linear (CR=1) | prescription-slow (z6=1 / 50/500 ms) |
-simulated manual self-adjust | in-situ audiometry fit |
-AudioTwin-random | AudioTwin-prior | AudioTwin-local-prior | AudioTwin-active | AudioTwin-exploit | AudioTwin-BALD | AudioTwin-qEUBO.
+- **qEUBO:** expected utility of the better item in a two-setting query;
+- **BALD:** approximate mutual-information acquisition;
+- **GP-random:** random admissible pair selection.
+
+The recommendation at each checkpoint maximises posterior mean over a feasible candidate pool. Checkpoints are 0, 5, 10, 20, 30 and 50 queries.
+
+## Static configurations
+
+Three rows were recorded in the final result grid:
+
+- `prescription`: half-gain + prescribed compression, `z4=z5=0` (0.5 NR/SE), fast timing;
+- `prescription_linear`: same gain rule, linear compression, **NR and SE both off** (`z3=z4=z5=-1`);
+- `prescription_slow`: default prescription with `z6=1` (50/500-ms timing).
+
+Because compression speed is absent from the three primary utility families, `prescription_slow` and `prescription` are utility-identical there. Thus the primary per-cell static minimum has only **two distinct utility behaviours**. Slow compression is distinct in the post-hoc `noise_sensitive` family.
+
+## Final analysis
+
+- Unit of analysis: listener.
+- Primary endpoint: qEUBO T=20 minus the per-cell best static regret, averaged over 3 contexts × 3 pre-specified primary families within listener.
+- 20,000 listener-level bootstrap resamples, seed 20261011.
+- Final analysable N=128, including declared replacement task 128 for infeasible task 55.
+- Released data: `publication/data/final_v1.parquet`.

@@ -1,13 +1,17 @@
-"""Listening contexts (all numbers are PLACEHOLDERS; justify or replace before submission)."""
+"""Synthetic listening-context assumptions used by the simulator.
+
+Values are fixed modelling choices, documented in docs/simulator_parameters.md; they are
+not claimed to reproduce measured real-world context distributions.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 import numpy as np
 
-# Placeholder long-term speech band levels (dB SPL) at 65 dB overall, per DSP band.
+# Synthetic long-term speech-spectrum band levels (dB SPL) at 65 dB overall.
 LTASS_65_DB = np.array([55.0, 55.0, 54.0, 52.0, 49.0, 47.0, 44.0, 41.0, 36.0, 31.0])
-# Placeholder speech-importance weights per DSP band (sum to 1).
+# Synthetic speech-importance weights per DSP band (normalised below).
 _I = np.array([0.06, 0.09, 0.09, 0.12, 0.12, 0.14, 0.14, 0.12, 0.08, 0.04])
 IMPORTANCE = _I / _I.sum()
 

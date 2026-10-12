@@ -1,0 +1,7 @@
+{
+  "development_seed": 424242,
+  "n_listeners": 32,
+  "endpoint_boundary_threshold": 0.9,
+  "qeubo_boundary_fraction": 0.228587962962963,
+  "bald_boundary_fraction": 0.8763310185185185
+}

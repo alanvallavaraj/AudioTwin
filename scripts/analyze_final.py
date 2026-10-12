@@ -8,11 +8,11 @@ import numpy as np
 import pandas as pd
 
 STATIC_METHODS = ("prescription", "prescription_linear", "prescription_slow")
-PRE_REGISTERED_FAMILIES = ("intelligibility", "comfort", "balanced")
+PRE_SPECIFIED_FAMILIES = ("intelligibility", "comfort", "balanced")
 LEARNED_METHODS = ("audiotwin_qeubo", "audiotwin_bald", "audiotwin_gprandom")
 BUDGETS = (0, 5, 10, 20, 30, 50)
 CONTEXTS = ("noisy_conversation", "lecture", "music")
-ALL_FAMILIES = PRE_REGISTERED_FAMILIES + ("noise_sensitive",)
+ALL_FAMILIES = PRE_SPECIFIED_FAMILIES + ("noise_sensitive",)
 ANALYSIS_SEED = 20261011
 N_BOOTSTRAP = 20_000
 FINAL_REPLACEMENT_MAP = {55: 128}
@@ -38,7 +38,7 @@ def paired_delta_vs_best_static(
     df: pd.DataFrame,
     method: str,
     budget: int,
-    families=PRE_REGISTERED_FAMILIES,
+    families=PRE_SPECIFIED_FAMILIES,
 ) -> pd.Series:
     """Listener-level method minus per-cell-best-static regret (negative is better)."""
     sub = df[df.family.isin(tuple(families))]
@@ -53,7 +53,7 @@ def paired_method_delta(
     method_a: str,
     method_b: str,
     budget: int,
-    families=PRE_REGISTERED_FAMILIES,
+    families=PRE_SPECIFIED_FAMILIES,
 ) -> pd.Series:
     """Listener-level method_a minus method_b regret (negative favours method_a)."""
     sub = df[df.family.isin(tuple(families))]
@@ -74,7 +74,12 @@ def bootstrap_mean_ci(values, n_resamples=N_BOOTSTRAP, seed=ANALYSIS_SEED):
 
 
 def load_results(root: str | Path) -> pd.DataFrame:
-    files = sorted(Path(root).glob("task_*.parquet"))
+    path = Path(root)
+    if path.is_file():
+        if path.suffix != ".parquet":
+            raise ValueError(f"expected a parquet file, got {path}")
+        return pd.read_parquet(path)
+    files = sorted(path.glob("task_*.parquet"))
     if not files:
         raise FileNotFoundError(f"no task_*.parquet files in {root}")
     return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
@@ -144,16 +149,16 @@ def main(root: str | Path) -> None:
         print(f"declared infeasible-listener replacements: {FINAL_REPLACEMENT_MAP}")
     print(f"code: {', '.join(sorted(df.git_hash.str[:7].unique()))}")
 
-    print("\nPRIMARY: qEUBO T=20 minus per-cell best static; pre-registered families")
+    print("\nPRIMARY: qEUBO T=20 minus per-cell best static; pre-specified families")
     print(_fmt_delta(paired_delta_vs_best_static(df, "audiotwin_qeubo", 20)))
 
-    print("\nSECONDARY: learned methods minus per-cell best static; pre-registered families")
+    print("\nSECONDARY: learned methods minus per-cell best static; pre-specified families")
     for method in LEARNED_METHODS:
         for budget in BUDGETS:
             d = paired_delta_vs_best_static(df, method, budget)
             print(f"{method:20s} T={budget:2d}  {_fmt_delta(d)}")
 
-    print("\nACQUISITION EFFICIENCY: qEUBO minus GP-random; pre-registered families")
+    print("\nACQUISITION EFFICIENCY: qEUBO minus GP-random; pre-specified families")
     for budget in (5, 10):
         d = paired_method_delta(df, "audiotwin_qeubo", "audiotwin_gprandom", budget)
         print(f"T={budget:2d}  {_fmt_delta(d)}")

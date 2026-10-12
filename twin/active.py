@@ -51,7 +51,7 @@ def run_laplace_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.nd
                      n_queries: int, seed: int, acquisition: str = "qeubo",
                      checkpoints=(0, 5, 10, 20, 30, 50), n_uniform: int = 192, n_local: int = 64,
                      n_rec: int = 512, min_sep: float = 0.4, hyper_every: int = 5,
-                     cfg: DSPConfig = DSPConfig()) -> ActiveRun:
+                     gp_gamma: float = 0.1, cfg: DSPConfig = DSPConfig()) -> ActiveRun:
     if acquisition not in ACQUISITIONS:
         raise ValueError(f"acquisition must be one of {ACQUISITIONS}")
     rng = np.random.default_rng(seed)                          # candidate pools, random pairs
@@ -80,12 +80,12 @@ def run_laplace_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.nd
     for t in range(n_queries + 1):
         # ---- model on the t comparisons so far
         if not comps:
-            model = LaplacePreferenceGP()
+            model = LaplacePreferenceGP(gamma=gp_gamma)
         elif t % hyper_every == 0:
-            model = fit_with_selection(np.array(X), comps)
+            model = fit_with_selection(np.array(X), comps, base=LaplacePreferenceGP(gamma=gp_gamma))
             hyper = dict(lengthscale=model.lengthscale, signal_var=model.signal_var, noise_scale=model.noise_scale)
         else:
-            model = LaplacePreferenceGP(**(hyper or {})).fit(np.array(X), comps)
+            model = LaplacePreferenceGP(gamma=gp_gamma, **(hyper or {})).fit(np.array(X), comps)
 
         incumbent = z_rx if not X else np.array(X)[int(np.argmax(model.predict_mean(np.array(X))))]
 

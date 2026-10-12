@@ -27,7 +27,7 @@
 \address[uow]{School of Computer Science and Engineering, University of Westminster, London, United Kingdom}
 
 \begin{abstract}
-Personalisation problems often require optimisation of an unknown subjective utility function from a small number of user interactions while respecting hard operational constraints. We present \textit{AudioTwin}, a safety-constrained preferential Bayesian optimisation framework evaluated for personalised hearing-aid fitting. AudioTwin represents candidate processing configurations in a six-dimensional latent space controlling gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed. Listener-specific utility is learned from noisy pairwise preferences using a Gaussian-process preference model with Laplace-approximated inference, while candidate configurations are restricted to a deterministic feasible region. Expected utility of the best option (qEUBO) is used to select decision-relevant comparisons. A frozen evaluation was conducted on 128 independent simulated listeners across three listening contexts and three pre-registered preference families. At the pre-specified primary endpoint of 20 preference queries, qEUBO reduced mean normalised regret from 0.3212 for the per-cell best of three strengthened static prescription baselines to 0.2405, a paired difference of $-0.0807$ (95\% listener-level bootstrap CI $[-0.1027,-0.0593]$), corresponding to a 25.1\% reduction in mean regret. Improvement was already evident after five queries. Against an otherwise identical preference-GP using random pair selection, qEUBO achieved lower regret at five queries ($-0.0495$, 95\% CI $[-0.0627,-0.0364]$) and ten queries ($-0.0371$, 95\% CI $[-0.0489,-0.0252]$), isolating an acquisition-efficiency benefit. Effects were strongest for comfort-oriented preferences and speech-oriented contexts, while music-intelligibility remained a failure case. AudioTwin provides a reproducible testbed for constrained active preference learning; human-listener validation is required before clinical effectiveness can be inferred.
+Personalisation problems often require optimisation of an unknown subjective utility function from a small number of user interactions while respecting hard operational constraints. We present \textit{AudioTwin}, a safety-constrained preferential Bayesian optimisation framework evaluated for personalised hearing-aid fitting. AudioTwin represents candidate processing configurations in a six-dimensional latent space controlling gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed. Listener-specific utility is learned from noisy pairwise preferences using a Gaussian-process preference model with Laplace-approximated inference, while candidate configurations are restricted to a deterministic feasible region. Expected utility of the best option (qEUBO) is used to select decision-relevant comparisons. A frozen evaluation was conducted on 128 independent simulated listeners across three listening contexts and three pre-specified preference families. At the pre-specified primary endpoint of 20 preference queries, qEUBO reduced mean normalised regret from 0.3212 for the per-cell best static comparator to 0.2405, a paired difference of $-0.0807$ (95\% listener-level bootstrap CI $[-0.1027,-0.0593]$), corresponding to a 25.1\% reduction in mean regret. Improvement was already evident after five queries. Against an otherwise identical preference-GP using random pair selection, qEUBO achieved lower regret at five queries ($-0.0495$, 95\% CI $[-0.0627,-0.0364]$) and ten queries ($-0.0371$, 95\% CI $[-0.0489,-0.0252]$), isolating an acquisition-efficiency benefit. Effects were strongest for comfort-oriented preferences and speech-oriented contexts, while music-intelligibility remained a failure case. AudioTwin provides a reproducible testbed for constrained active preference learning; human-listener validation is required before clinical effectiveness can be inferred.
 \end{abstract}
 
 \begin{keyword}
@@ -47,7 +47,7 @@ Hearing-aid fitting provides a concrete application with all of these properties
 
 This paper presents \textit{AudioTwin}, a reproducible framework for safety-constrained active preference learning in hearing-aid fitting. AudioTwin maintains a simulated listener with a hidden preference function and exposes the learner only to an imperfect audiometric estimate and pairwise choices. The learner uses a Laplace-approximated GP preference model and selects comparisons using expected utility of the best option (qEUBO) \cite{astudillo2023}. Every proposed configuration is projected into a deterministic feasible region before it can be queried or recommended.
 
-The term \emph{safety-constrained} is used in a computational sense: known model-based gain, output and transition constraints are enforced by construction. This differs from SafeOpt-style methods that learn an unknown safety function under uncertainty \cite{sui2015}. AudioTwin therefore evaluates active preference optimisation within a known feasible set; it does not claim medical-device safety certification.
+The term \emph{safety-constrained} is used in a computational sense: known model-based latent bounds, output limits and adjacent-band gain-smoothness constraints are enforced by construction. This differs from SafeOpt-style methods that learn an unknown safety function under uncertainty \cite{sui2015}. AudioTwin therefore evaluates active preference optimisation within a known feasible set; it does not claim medical-device safety certification.
 
 The work was designed to address four methodological questions:
 \begin{enumerate}[label=(Q\arabic*)]
@@ -61,7 +61,7 @@ The principal contributions are:
 \begin{itemize}
     \item a continuous six-dimensional, model-constrained personalisation space spanning gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed;
     \item a matched comparison of qEUBO, BALD and GP-random acquisitions using the same GP model, candidate-generation process and preference-response streams;
-    \item a conservative static comparator defined as the per-cell best of three prescription variants rather than a single default fitting;
+    \item a conservative per-cell static reference computed over three recorded configurations, while explicitly recognising that only two have distinct utility in the pre-specified primary families;
     \item a frozen final evaluation with a reserved seed, pre-specified primary endpoint, listener-level bootstrap inference and an explicit rule for infeasible simulated listeners;
     \item a public implementation and publication snapshot enabling exact reproduction of the computational experiment.
 \end{itemize}
@@ -83,7 +83,7 @@ Safety-aware BO is a related but distinct literature. SafeOpt, for example, expa
 
 Population-derived prescriptions are an important starting point in hearing-aid fitting, but they cannot encode every listener's subjective preference. NAL-NL2 combines audiometric information with models of speech intelligibility and loudness to derive frequency-dependent targets \cite{keidser2011}. User-directed adjustment studies nevertheless demonstrate residual individual preference variation. Dreschler et al. \cite{dreschler2008} reported systematic client-controlled gain adjustments, while the ``Goldilocks'' studies showed that users can navigate low-dimensional self-fitting controls and obtain plausible gain responses \cite{boothroyd2017,mackersie2019}. Sabin et al. \cite{sabin2020} further evaluated a self-fitting interface that jointly adjusted gain and compression in real-world use.
 
-Machine-learning approaches attempt to improve the efficiency of this preference elicitation. Birlutiu et al. \cite{birlutiu2010} used multi-task GP preference learning on pairwise sound-quality data, demonstrating that structure shared across users can improve prediction. Vyas et al. \cite{vyas2022} reduced a 24-dimensional configuration space to a set of presets and used online learning over pairwise comparisons; their simulation study indicated that the preferred preset could be identified with fewer comparisons than baseline approaches. Ni et al. \cite{ni2024} proposed efficient multi-band Bayesian learning and reported both simulation evidence and a small clinical experiment. More recently, Ignatenko et al. \cite{ignatenko2025} formalised hearing-aid preference learning as sequential Bayesian optimisation with pairwise comparisons.
+Machine-learning approaches attempt to improve the efficiency of this preference elicitation. Birlutiu et al. \cite{birlutiu2010} used multi-task GP preference learning on pairwise sound-quality data, demonstrating that structure shared across users can improve prediction. Nielsen et al. \cite{nielsen2015} are particularly close to the present work: they used Gaussian processes, active learning and pairwise perceptual comparisons to personalise up to four hearing-aid parameters in ten hearing-impaired listeners. Korzepa et al. \cite{korzepa2020} subsequently proposed a simulation environment specifically for contextual hearing-aid personalisation, emphasising partial observability and synthetic user-preference models. Vyas et al. \cite{vyas2022} reduced a 24-dimensional configuration space to a set of presets and used online learning over pairwise comparisons; their simulation study indicated that the preferred preset could be identified with fewer comparisons than baseline approaches. Ni et al. \cite{ni2024} proposed efficient multi-band Bayesian learning and reported both simulation evidence and a small clinical experiment. More recently, Ignatenko et al. \cite{ignatenko2025} formalised hearing-aid preference learning as sequential Bayesian optimisation with pairwise comparisons.
 
 AudioTwin is complementary to these studies rather than a replacement for them. Its methodological focus is the joint evaluation of (i) continuous latent control across multiple DSP dimensions, (ii) deterministic feasibility constraints, (iii) decision-theoretic active acquisition, (iv) matched acquisition ablations, and (v) a leakage-resistant final protocol. In particular, the qEUBO comparison asks whether an explicit decision-theoretic acquisition policy improves recommendations relative to random querying when all other modelling choices are held fixed.
 
@@ -98,7 +98,7 @@ encodes preference. Direct utility observations are unavailable. Instead, a quer
 
 The optimisation objective after $T$ comparisons is to recommend
 \begin{equation}
-    \hat z_T(c)=\arg\max_{z\in\mathcal S(\hat a_l,c)} \mathbb E[f_l(z,c)\mid\mathcal D_T],
+    \hat z_T(c)=\arg\max_{z\in\mathcal S(\hat a_l)} \mathbb E[f_l(z,c)\mid\mathcal D_T],
     \label{eq:recommend}
 \end{equation}
 where $\hat a_l$ is an estimated audiogram, $\mathcal S$ is the deterministic feasible set, $f_l$ is the learned latent preference model, and $\mathcal D_T$ is the set of observed pairwise choices.
@@ -110,7 +110,7 @@ For evaluation only, a hidden oracle utility $u_l^*$ is available. Let $u^*_{l,c
 \end{equation}
 with lower values preferred.
 
-The primary study endpoint averages the nine pre-registered context/family cells within each listener before population-level inference. This preserves the listener as the statistical unit and prevents the large number of within-listener rows from being treated as independent observations.
+The primary study endpoint averages the nine pre-specified context/family cells within each listener before population-level inference. This preserves the listener as the statistical unit and prevents the large number of within-listener rows from being treated as independent observations.
 
 \section{AudioTwin framework}
 \label{sec:framework}
@@ -137,6 +137,12 @@ For band $k$,
  g_k(z)=\mathrm{clip}\left(g^{Rx}_k(\hat a_l)+b_1z_1+b_2z_2\log_2(f_k/1000),0,g^{\max}_k\right).
  \label{eq:gain}
 \end{equation}
+The reported simulator does \emph{not} implement NAL-NL2. Its synthetic prescription is an explicit half-gain rule,
+\begin{equation}
+ g^{Rx}_k(a)=0.5\,\tilde a_k,
+ \label{eq:halfgain}
+\end{equation}
+where $\tilde a_k$ is the audiometric threshold interpolated to the ten DSP bands. NAL-NL2 is cited only as clinical background. The hidden ideal-gain term in the oracle is intentionally related to the same simulator construction: $g^{ideal}_{l,k}=g^{Rx}_k(a_l)+\delta_{l,k}$, where $a_l$ is the listener's true audiogram and $\delta_{l,k}$ is a listener-specific random offset. Thus the ideal curve is not an independent prescription and this shared structure is a limitation of the benchmark.
 Compression ratio is controlled as
 \begin{equation}
  CR_k(z)=\mathrm{clip}\left(CR^{Rx}_k 2^{2z_3},1,CR_{\max}\right),
@@ -146,9 +152,37 @@ so the lower extreme can reach linear compression. Noise-reduction and speech-en
 
 The latent parameterisation is deliberately compact. It is not intended to reproduce every proprietary hearing-aid algorithm; rather, it provides a heterogeneous continuous space in which preference learning must coordinate spectral, dynamic and enhancement controls.
 
+
+\begin{table}[t]
+\centering
+\caption{Core simulator parameters used in the reported study. These are synthetic modelling assumptions rather than clinical prescription constants. The complete parameter inventory and distributions are provided in \texttt{docs/simulator\_parameters.md}.}
+\label{tab:simparams}
+\small
+\begin{tabular}{p{0.48\linewidth}p{0.39\linewidth}}
+\toprule
+Quantity & Value \\
+\midrule
+Audiogram observation error & $\sigma_a=5$ dB; rounded to 5 dB \\
+Accepted PTA4 range & 20--55 dB HL \\
+Prescription gain & $0.5\times$ interpolated threshold \\
+Gain offset / spectral tilt & 10 dB per $z_1$ / 6 dB octave$^{-1}$ per $z_2$ \\
+Compression range & prescribed CR $\times 2^{2z_3}$, clipped to [1,4] \\
+Output / MPO limits & 100 / 105 dB SPL \\
+Adjacent-band gain limit & 12 dB \\
+Fast / slow attack-release & 5/50 ms; 50/500 ms \\
+GP prior mean & $-0.1\|z\|^2$ \\
+GP kernel & Mat\'ern-$5/2$ \\
+Query candidates & 192 uniform + 64 local \\
+Recommendation candidates & 512 \\
+Query checkpoints & 0, 5, 10, 20, 30, 50 \\
+Bootstrap & 20,000 listener resamples; seed 20261011 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Deterministic feasible set}
 
-All methods operate under the same model-based constraints. A setting is admissible only if it satisfies limits on per-band gain, predicted output relative to upper comfort limits, adjacent-band spectral variation and maximum latent movement from the relevant anchor/previous setting. We denote the resulting set $\mathcal S(\hat a_l,c)$.
+All methods operate under the same model-based constraints. In the reported final active-learning loop, a setting is admissible only if it lies inside the latent box, respects the gain bounds induced by the parameterisation, remains below the fixed 100-dB-SPL model output ceiling and satisfies the adjacent-band gain-difference limit. We denote the resulting set $\mathcal S(\hat a_l)$. Although the codebase also contains an optional previous-setting change-rate check for a legacy projection utility, the final qEUBO/BALD/GP-random loop calls feasibility without a previous setting and therefore does \emph{not} enforce a sequential change-rate constraint.
 
 A conservative low-gain anchor is located first. Candidate settings are then projected from that anchor into the feasible region. Static baselines undergo the same projection as learned methods. Consequently, neither the baseline nor AudioTwin is evaluated at an unprojected setting that violates the frozen model constraints.
 
@@ -238,20 +272,20 @@ At $T=0$ the recommendation is exactly the safely projected prescription. This c
 
 \subsection{Contexts, preference families and methods}
 
-The final study uses three contexts: noisy conversation, lecture and music. The primary population crosses them with the three pre-registered preference families (intelligibility, comfort and balanced), yielding nine primary cells per listener. The post-hoc noise-sensitive family is excluded from the primary estimate.
+The final study uses three contexts: noisy conversation, lecture and music. The primary population crosses them with the three pre-specified preference families (intelligibility, comfort and balanced), yielding nine primary cells per listener. The post-hoc noise-sensitive family is excluded from the primary estimate.
 
-The learned methods are AudioTwin-qEUBO, AudioTwin-BALD and AudioTwin-GP-random. The static comparators are:
+The learned methods are AudioTwin-qEUBO, AudioTwin-BALD and AudioTwin-GP-random. The recorded static configurations are:
 \begin{enumerate}
-    \item prescription: the safely projected prescription with default compression;
-    \item prescription-linear: prescription gain with linear compression;
-    \item prescription-slow: prescription with slow compression.
+    \item prescription: half-gain prescription with the default compression ratio, $z_4=z_5=0$ (which maps to 0.5 noise-reduction and speech-enhancement strengths), and fast timing;
+    \item prescription-linear: the same gain rule with linear compression and with noise reduction and speech enhancement both switched off ($z_3=z_4=z_5=-1$);
+    \item prescription-slow: the default prescription with only compression speed changed to the slow 50/500-ms setting.
 \end{enumerate}
 
-For each listener/context/family cell, the primary static comparator is the \emph{best} of these three alternatives according to the hidden oracle. This is deliberately more difficult to beat than choosing one global baseline and protects against a result driven solely by a weak default compression choice.
+Compression speed is absent from the three pre-specified primary utility families. Consequently, prescription-slow and prescription have identical oracle utility in every primary cell; the three recorded configurations therefore represent only \emph{two distinct primary static utility behaviours}. The analysis still takes the per-cell minimum over all three recorded rows, which is numerically identical to taking the better of prescription and prescription-linear. The slow setting becomes distinct only in the post-hoc noise-sensitive family.
 
 \subsection{Frozen development/final separation}
 
-Development used separate seeds, principally seed 424242 for the final development sweep. The final seed 777000111 was reserved. Before final-seed outcomes were inspected, the primary method, baselines, budgets, oracle families, final sample size, primary contrast, bootstrap procedure and analysis seed were recorded in the protocol and tagged in version control.
+Development used separate seeds, principally seed 424242 for the final development sweep. The final seed 777000111 was reserved. The primary method, baselines, budgets, oracle families, final sample size, primary contrast, bootstrap procedure and analysis seed were recorded in the private development protocol before final performance outcomes were inspected. The curated publication branch was assembled after the final run, but the original development lineage is now published on a separate \texttt{protocol-history} branch with its annotated protocol tags. In particular, \texttt{final-protocol-v1.2} resolves to commit \texttt{fc040b3}, the code hash embedded in every released final result row; \texttt{v1.3} records only the later infeasible-listener replacement rule. These are version-control provenance records rather than a third-party preregistration, so we describe the design as \emph{pre-specified}.
 
 The final sample size was fixed at 128 simulated listeners. The choice used development-set variability only: the development qEUBO-versus-static effect at $T=20$ was approximately $-0.0566$ with paired standard deviation approximately 0.158, suggesting roughly 82 listeners for 90\% normal-approximation power at two-sided $\alpha=0.05$. A larger $N=128$ was chosen before exposing final outcomes to provide margin for sampling variability and subgroup summaries.
 
@@ -259,7 +293,7 @@ One original final draw (task 55) contained no feasible low-gain anchor under th
 
 \subsection{Primary and secondary estimands}
 
-For each listener, regret is first averaged over the nine pre-registered context/family cells. The primary contrast is
+For each listener, regret is first averaged over the nine pre-specified context/family cells. The primary contrast is
 \begin{equation}
  \Delta_{20}=\bar r^{\mathrm{qEUBO}}_{20}-\bar r^{\mathrm{best\ static}},
 \end{equation}
@@ -284,7 +318,7 @@ The per-cell best static comparator achieved mean normalised regret 0.3212. At t
 
 \begin{table}[t]
 \centering
-\caption{Primary final-evaluation result. Lower normalised regret is better. The static value is the mean of the per-cell best of three prescription variants.}
+\caption{Primary final-evaluation result. Lower normalised regret is better. The static value is the mean of the per-cell minimum over the three recorded rows; default and slow are utility-identical in the primary families, leaving two distinct static utility behaviours.}
 \label{tab:primary}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{lrrrr}
@@ -303,7 +337,7 @@ The complete mean-regret curves are shown in Fig.~\ref{fig:learning}. qEUBO begi
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\linewidth]{fig1_learning_curves.pdf}
-\caption{Mean normalised regret across the nine pre-registered cells as a function of pairwise preference budget. The dashed line is the best static comparator (mean regret 0.3212). All learned policies use the same Laplace GP preference model.}
+\caption{Mean normalised regret across the nine pre-specified cells as a function of pairwise preference budget. The dashed line is the best static comparator (mean regret 0.3212). All learned policies use the same Laplace GP preference model.}
 \label{fig:learning}
 \end{figure}
 
@@ -388,7 +422,23 @@ Music & Balanced & +0.0001 & $[-0.0358,+0.0368]$ \\
 
 \subsection{Post-hoc noise-sensitive robustness family}
 
-The noise-sensitive family was introduced after a development diagnostic and cannot support the primary claim. It is nevertheless informative as a harder robustness case. qEUBO remains worse than static at $T=5$ ($+0.0633$, 95\% CI $[+0.0339,+0.0922]$) and $T=10$ ($+0.0300$, CI $[+0.0000,+0.0590]$), is indistinguishable at $T=20$ and $T=30$, and becomes clearly better only at $T=50$ ($-0.0446$, CI $[-0.0738,-0.0158]$). This contrasts with the pre-registered population, where qEUBO is already superior by five queries.
+The noise-sensitive family was introduced after a development diagnostic and cannot support the primary claim. It is nevertheless informative as a harder robustness case. qEUBO remains worse than static at $T=5$ ($+0.0633$, 95\% CI $[+0.0339,+0.0922]$) and $T=10$ ($+0.0300$, CI $[+0.0000,+0.0590]$), is indistinguishable at $T=20$ and $T=30$, and becomes clearly better only at $T=50$ ($-0.0446$, CI $[-0.0738,-0.0158]$). This contrasts with the pre-specified population, where qEUBO is already superior by five queries.
+
+\subsection{Post-final development diagnostics conducted after the final evaluation}
+\label{sec:reviewdiag}
+
+After completion and analysis of the frozen final cohort, reviewer comments motivated several additional diagnostics. To preserve separation from the final evidence, these analyses were specified in a protocol-v2 addendum before execution, used development seed 424242 only, and did not rerun or modify the reserved final seed. They are therefore exploratory development evidence rather than part of the primary final evaluation.
+
+First, a simple interactive coordinate-search baseline was evaluated on the same 32-listener development sweep used before the final run. At 20 pairwise queries, its listener-mean regret difference relative to the static reference was $+0.0275$ (worse than static), and it beat static for 11/32 listeners. On those same development listeners qEUBO was $-0.0566$ relative to static and beat static for 21/32 listeners. Thus a simple local interactive strategy did not reproduce the gain of the GP-based active policy under the tested budget.
+
+Second, we examined query geometry to understand the relatively flat BALD trajectory. A query endpoint was labelled ``near boundary'' when $\max_j |z_j|\geq0.9$. Across 32 development listeners, nine primary context/family cells and the first 30 queries, 87.6\% of BALD endpoints were near the boundary compared with 22.9\% for qEUBO. This concentration offers a plausible geometric explanation for BALD spending many mid-budget queries on extreme settings, although the diagnostic is post-final and does not establish causality.
+
+Third, the music--intelligibility failure was probed directly. For all 32 development listeners the approximate oracle optimum placed both noise reduction and speech enhancement essentially at the off corner (mean $z_4=-0.995$, mean $z_5=-0.994$). This confirms an extreme optimum geometry. However, removing the centre-pulling GP mean by setting $\gamma=0$ did \emph{not} improve qEUBO: mean T=20 regret increased from 0.2940 to 0.3815. By contrast, eliminating simulated choice noise and lapses reduced mean T=20 regret to 0.0693 and improved 31/32 listeners. Thus this diagnostic supports the corner observation but not the hypothesis that the quadratic prior is the principal cause; within this development test, response noise was materially involved.
+
+The scripts and outputs for these diagnostics are released under \texttt{publication/reviewer\_diagnostics/}. They are not used to alter the frozen final estimand or confidence interval.
+
+
+Finally, a small development-only robustness sweep (12 listeners) perturbed assumptions that could favour the learner. The qEUBO T=20 minus static mean remained negative when the listener ideal-gain offset was doubled ($-0.0594$) and under doubled audiogram-observation error ($-0.0481$ among 11 feasible of 12 attempted listeners). Removing the ideal-gain-distance term entirely increased the mean advantage to $-0.1771$. In contrast, doubling simulated choice noise and lapse changed the mean difference to $+0.0482$, favouring static fitting. The high-audiogram-error condition also produced one listener with no feasible low-gain anchor; this draw was recorded as infeasible rather than repaired by relaxing constraints. These small-sample diagnostics indicate that the reported qualitative advantage is not dependent on the ideal-gain term, but is sensitive to preference-response reliability.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -399,13 +449,15 @@ The principal result is not simply that a GP can learn a simulated listener pref
 
 At five queries, qEUBO is already better than the strengthened static reference, while BALD and GP-random remain worse than static on average. qEUBO also beats GP-random directly by nearly 0.05 normalised-regret units. At ten queries the qEUBO-versus-random advantage remains substantial. The convergence of policies at larger budgets further supports an efficiency interpretation: random exploration eventually supplies the GP with useful coverage, but qEUBO places early queries in regions that more directly improve the terminal recommendation.
 
+A post-final development diagnostic also clarifies BALD's weak mid-budget behaviour: 87.6\% of BALD query endpoints lay near the latent boundary ($\max|z|\geq0.9$), compared with 22.9\% for qEUBO. This suggests that the information-gain objective devoted substantially more comparisons to extreme settings, whereas qEUBO concentrated more of its budget away from the boundary. Because this analysis was requested after the final study, it is presented as explanatory evidence rather than a pre-specified result.
+
 This distinction matters in human-in-the-loop applications. A comparison is not free: it consumes attention, can induce fatigue and may become less reliable with repeated exposure. The practical target is therefore not merely asymptotic preference-function recovery; it is acceptable decision quality after a small number of interactions. qEUBO's decision-theoretic objective is aligned with that target.
 
 \subsection{Strength of the static comparator}
 
-The primary baseline is intentionally favourable to static fitting. Each listener/context/family cell may retrospectively take the best result from the default prescription, linear compression or slow compression. AudioTwin therefore competes with an oracle-selected static variant rather than a single fixed prescription.
+The primary analysis takes the per-cell minimum across three recorded static rows, but the correction above is important for interpretation: only two distinct primary utility behaviours are represented. The default and slow rows have identical utility because compression speed is absent from the three pre-specified primary families. The linear row is more than a compression-only alternative: it also switches noise reduction and speech enhancement off. Consequently, the reported static reference should be understood as the better of two distinct synthetic static behaviours, not as three independent prescriptions.
 
-This design was motivated by development diagnostics showing that an unfavourable default compression configuration could create an artificial advantage for learned methods. Instead of leaving that weakness in place, the baseline family was strengthened before final-seed evaluation. As a consequence, the reported 25.1\% reduction is harder to obtain but easier to interpret: qEUBO is learning listener/context-specific preferences beyond what can be captured by selecting among the three tested static prescriptions.
+This reference remains stronger than comparing only with the default half-gain setting because each cell may retrospectively choose between the default behaviour and the linear/NR-off/SE-off behaviour. However, the earlier manuscript description as a ``best of three'' distinct alternatives overstated baseline diversity; the revised wording and released rows make the exact comparison explicit.
 
 \subsection{Why comfort is easier to improve than intelligibility}
 
@@ -417,13 +469,13 @@ Comfort is more idiosyncratic. Listener-specific upper limits, preferred gain of
 
 Noisy conversation and lecture exhibit robust qEUBO gains, whereas music is weak overall. The context-by-family analysis makes the reason visible: music-comfort benefits strongly, but music-intelligibility is a clear negative result.
 
-This failure case should not be treated as noise to be averaged away. It suggests at least three possible forms of model mismatch. First, the intelligibility-like oracle is speech-oriented and may create an unnatural objective when combined with the music context. Second, the six latent controls were chosen around hearing-aid speech-processing parameters and may not express music-relevant dimensions sufficiently. Third, a stationary GP with a single smooth kernel may be a poor approximation when local preference geometry differs substantially across acoustic domains.
+This failure case should not be treated as noise to be averaged away. The post-final development diagnostic in Section~\ref{sec:reviewdiag} shows that the music--intelligibility optimum is consistently located at an extreme NR/SE-off corner. That geometry is therefore real in the simulator. The diagnostic did not support a simple ``prior pulls away from the corner'' explanation: setting the quadratic-prior coefficient to zero worsened performance. Conversely, removing simulated response noise/lapses substantially reduced regret, indicating that noisy pairwise decisions interact strongly with the extreme optimum in this condition.
 
-A future system should therefore consider context-conditioned models or multi-task kernels rather than assuming that one preference surface transfers uniformly across contexts. The earlier multi-task preference-learning literature provides a natural starting point \cite{birlutiu2010}.
+The result also highlights application-model mismatch: the intelligibility-like oracle is speech-oriented, whereas the context is music, and the six latent controls were designed around hearing-aid speech-processing dimensions. A future system should consider context-conditioned models or multi-task kernels rather than assuming uniform preference geometry across contexts. The earlier multi-task preference-learning literature provides a natural starting point \cite{birlutiu2010}.
 
 \subsection{Relation to recent hearing-aid ML}
 
-The present results should be interpreted in the context of increasingly active machine-learning research on hearing-aid personalisation. Vyas et al. \cite{vyas2022} demonstrated efficient pairwise identification over a discrete preset set; Ni et al. \cite{ni2024} improved training efficiency through multi-band Bayesian learning and included a small clinical validation; Ignatenko et al. \cite{ignatenko2025} analysed sequential BO with pairwise comparison using hearing-aid fitting as a motivating application.
+The present results should be interpreted in the context of increasingly active machine-learning research on hearing-aid personalisation. Nielsen et al. \cite{nielsen2015} already demonstrated GP active learning from pairwise perceptual comparisons in hearing-aid parameter adjustment, while Korzepa et al. \cite{korzepa2020} developed a simulation environment for contextual hearing-aid personalisation. Vyas et al. \cite{vyas2022} demonstrated efficient pairwise identification over a discrete preset set; Ni et al. \cite{ni2024} improved training efficiency through multi-band Bayesian learning and included a small clinical validation; Ignatenko et al. \cite{ignatenko2025} analysed sequential BO with pairwise comparison using hearing-aid fitting as a motivating application.
 
 AudioTwin differs most clearly in experimental emphasis. It treats the final evaluation as a controlled acquisition-policy comparison with a frozen protocol, continuous multidimensional latent control, explicit feasibility projection and an oracle-strengthened static baseline. This allows the study to answer a machine-learning question---whether qEUBO improves recommendation regret under limited preference budgets---without claiming that the simulated utility constitutes clinical evidence.
 
@@ -439,7 +491,7 @@ Again, these constraints are computational guardrails and should not be equated 
 
 Applied optimisation studies are vulnerable to researcher degrees of freedom. Candidate spaces, baselines, oracle definitions, budgets and random seeds can all be changed after preliminary results are seen. Such adaptation may be necessary during development, but it weakens confirmatory interpretation if the same outcomes are repeatedly reused.
 
-The AudioTwin workflow therefore records development/final separation. A reserved final seed was not used during method development. The primary endpoint, sample size and bootstrap procedure were frozen before final outcome inspection. A development-discovered compression artefact was not inserted into the three pre-registered utility families; instead it was isolated into a post-hoc robustness family. These choices do not eliminate all design bias---the simulator itself was developed by the research team---but they reduce direct tuning to the reported final random draw.
+The AudioTwin workflow records development/final separation in its private protocol record. A reserved final seed was not used during method development. The primary endpoint, sample size and bootstrap procedure were specified before final outcome inspection. A development-discovered compression artefact was not inserted into the three pre-specified utility families; instead it was isolated into a post-hoc robustness family. The original development branch and annotated tags are now public, but they remain repository provenance rather than an externally registered protocol. These choices do not eliminate all design bias---the simulator itself was developed by the research team---but they reduce direct tuning to the reported final random draw.
 
 \section{Limitations}
 \label{sec:limitations}
@@ -452,7 +504,7 @@ This limitation is particularly important because recent hearing-aid personalisa
 
 \subsection{The oracle and learner share structural assumptions}
 
-Although the oracle is not directly exposed to the learner, both are smooth functions over the same latent DSP space. A Mat\'ern GP is consequently a reasonable model class. Real preferences may include discontinuities, hysteresis, context drift, adaptation and non-stationary judgement noise. Future simulation studies should stress-test acquisition policies under explicit model misspecification.
+Although the oracle is not directly exposed to the learner, both are smooth functions over the same latent DSP space, and the oracle's hidden ideal gain is derived from the same half-gain prescription family used by the learner, plus random listener-specific offsets. These shared structural assumptions make the benchmark favourable to smooth preference learning and limit external validity. Real preferences may include discontinuities, hysteresis, context drift, adaptation and non-stationary judgement noise. Post-final development-only robustness experiments are therefore governed by the post-final protocol-v2 addendum; they cannot alter the frozen final primary result.
 
 \subsection{Approximate optimum and normalised regret}
 
@@ -503,7 +555,7 @@ The author declares no known competing financial interests or personal relations
 The reported final evaluation is a computational simulation and did not recruit human participants or use identifiable participant data. Human-participant ethics approval was therefore not required for the experiments reported here. Any prospective human-listener validation will require appropriate institutional ethics review and informed consent.
 
 \section*{Data and code availability}
-The AudioTwin source code, frozen protocol, analysis implementation, compact final result summaries and LaTeX manuscript sources are available at \url{https://github.com/alanvallavaraj/AudioTwin}. The publication code snapshot is tagged \texttt{publication-v1.0.0}; the final evaluation protocol is tagged \texttt{final-protocol-v1.3}. Raw per-task HPC parquet outputs are not included in the public repository; the compact derived result summaries required to reproduce all manuscript statistics and plots are included under \texttt{publication/results/}.
+The AudioTwin source code, protocol record, exact analysis implementation, LaTeX manuscript sources and consolidated final synthetic dataset are available at \url{https://github.com/alanvallavaraj/AudioTwin}. The released file \texttt{publication/data/final\_v1.parquet} contains all 32,256 final analysis rows and is accepted directly by \texttt{scripts/analyze\_final.py}; it is sufficient to recompute the reported listener-level bootstrap confidence intervals. Exact package versions from the QMUL final-run environment are pinned in \texttt{requirements-final.txt}. The repository is released under the MIT License. The curated \texttt{main} history is post-experiment; the original development lineage and annotated protocol tags are published separately under \texttt{protocol-history} and documented in \texttt{PROTOCOL\_PROVENANCE.md}.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During the preparation of this work, the author used ChatGPT (OpenAI) to assist with manuscript organisation, language refinement, LaTeX preparation and consistency checking. The author reviewed and edited the generated material, verified the reported numerical results against the frozen analysis outputs, and takes full responsibility for the content of the publication.

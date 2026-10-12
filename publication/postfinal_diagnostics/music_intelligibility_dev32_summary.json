@@ -1,0 +1,13 @@
+{
+  "development_seed": 424242,
+  "n_listeners": 32,
+  "nr_se_corner_fraction": 1.0,
+  "mean_z4_nr": -0.9953026827343575,
+  "mean_z5_se": -0.9938986697589213,
+  "mean_prior_at_optimum": -0.2639177766948897,
+  "original_t20_regret": 0.29404089331538635,
+  "noiseless_t20_regret": 0.06934681065999554,
+  "zero_gamma_t20_regret": 0.3815199780378917,
+  "noiseless_better_fraction": 0.96875,
+  "zero_gamma_better_fraction": 0.21875
+}

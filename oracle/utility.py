@@ -2,7 +2,8 @@
 
 Deliberately built from an SII-like audibility term, a loudness-comfort term, an
 ideal-gain-curve term and an artifact term, so it stays disjoint from the REPORTED
-evaluation metrics (HASPI/HASQI/PESQ/ESTOI). All constants are placeholders to justify.
+evaluation metrics (HASPI/HASQI/PESQ/ESTOI). Numerical assumptions are listed in
+docs/simulator_parameters.md; they define the synthetic oracle rather than clinical constants.
 """
 from __future__ import annotations
 
@@ -59,7 +60,7 @@ def utility(z, listener: Listener, ctx: Context, family: str, a_dsp: np.ndarray,
               + (mean_log_cr - listener.cr_pref) ** 2)
     if family == "noise_sensitive":
         # POST-HOC family only (docs/findings.md): compression artefacts, including a
-        # compression-speed artefact, matter more in noise. The three pre-registered families
+        # compression-speed artefact, matter more in noise. The three pre-specified families
         # (intelligibility, comfort, balanced) deliberately do NOT contain these terms, so they
         # stay independent of the HASPI/compression observation.
         Q += 3.0 * noise_factor * mean_log_cr**2

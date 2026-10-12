@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from scripts.analyze_final import bootstrap_mean_ci, paired_delta_vs_best_static, validate_final_results
+from scripts.analyze_final import bootstrap_mean_ci, load_results, paired_delta_vs_best_static, validate_final_results
 
 
 def _row(listener, context, family, method, q, regret):
@@ -103,3 +103,11 @@ def test_validate_final_results_accepts_declared_replacement_task():
                     rows.append({'task_id':task,'listener_id':task,'context':c,'family':f,'method':m,'n_queries':q,'regret':0.1,'git_hash':'x'})
     df=pd.DataFrame(rows)
     validate_final_results(df, replacement_map={55:128})
+
+
+def test_load_results_accepts_consolidated_parquet(tmp_path):
+    df = _complete_structure(2)
+    path = tmp_path / "final_v1.parquet"
+    df.to_parquet(path, index=False)
+    loaded = load_results(path)
+    pd.testing.assert_frame_equal(loaded.reset_index(drop=True), df.reset_index(drop=True))

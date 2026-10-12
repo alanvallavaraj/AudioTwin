@@ -1,10 +1,10 @@
 """Audiogram sources.
 
 1. Parametric synthetic family (documented; NOT Bisgaard-derived). Main population.
-2. Bisgaard et al. (2010) standard audiograms: only N4 and N6 are VERIFIED here
-   (copied from a published table of the Bisgaard values, 250-6000 Hz, 9 frequencies).
-   The other eight (N1-N3, N5, N7, S1-S3) must be filled from the paper's table via
-   configs/bisgaard_standard_audiograms.csv before they are used. Do not guess them.
+2. Optional Bisgaard et al. (2010) standard audiograms: only N4 and N6 are included
+   because those values were verified during development. Other standard patterns are
+   intentionally unsupported rather than inferred. The reported final study uses the
+   parametric synthetic population, not these optional patterns.
 """
 from __future__ import annotations
 

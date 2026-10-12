@@ -17,7 +17,7 @@ def conds():
                     ("gain -1 (z1=-1)", np.array([-1, 0, 0, -1, -1.])),
                     ("gain +1 (z1=+1)", np.array([1, 0, 0, -1, -1.]))]:
         yield name, z_to_settings(z, AUD, CFG)
-    yield "half prescription", None  # placeholder replaced below
+    yield "half prescription", None  # constructed below
 
 print(f"{'condition':22s} {'SNR':>5s} {'HASPI':>7s} {'HASQI':>7s} {'ESTOI':>7s}")
 for snr in (None, 5.0):

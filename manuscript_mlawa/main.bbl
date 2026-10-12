@@ -105,6 +105,22 @@ N.~Houlsby, F.~Husz{\'a}r, Z.~Ghahramani, M.~Lengyel, Bayesian active learning
   for classification and preference learning, arXiv preprint arXiv:1112.5745
   (2011).
 
+\bibitem{nielsen2015}
+J.~B. Nielsen, J.~Nielsen, J.~Larsen, Perception-based personalization of
+  hearing aids using gaussian processes and active learning, IEEE/ACM
+  Transactions on Audio, Speech, and Language Processing 23~(1) (2015)
+  162--173.
+\newblock \href {https://doi.org/10.1109/TASLP.2014.2377581}
+  {\path{doi:10.1109/TASLP.2014.2377581}}.
+
+\bibitem{korzepa2020}
+M.~Korzepa, M.~K. Petersen, J.~E. Larsen, M.~M{\o}rup, Simulation environment
+  for guiding the design of contextual personalization systems in the context
+  of hearing aids, in: Adjunct Publication of the 28th ACM Conference on User
+  Modeling, Adaptation and Personalization, ACM, 2020, pp. 293--298.
+\newblock \href {https://doi.org/10.1145/3386392.3399291}
+  {\path{doi:10.1145/3386392.3399291}}.
+
 \bibitem{whitmer2022}
 W.~M. Whitmer, B.~Caswell-Midwinter, G.~Naylor, The effect of stimulus duration
   on preferences for gain adjustments when listening to speech, International

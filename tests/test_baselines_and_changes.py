@@ -70,8 +70,8 @@ def test_post_hoc_family_optimum_prefers_lower_compression_in_noise():
     assert z3["noise_sensitive"] < z3["balanced"] - 0.05, z3
 
 
-def test_preregistered_families_do_not_depend_on_compression_speed():
-    """Guard against re-introducing the HASPI-motivated speed term into the pre-registered oracle."""
+def test_prespecified_families_do_not_depend_on_compression_speed():
+    """Guard against re-introducing the HASPI-motivated speed term into the pre-specified oracle."""
     L = sample_population(1, seed=31)[0]
     a = L.audiogram
     z_fast = np.array([0.2, 0.0, 0.0, -1.0, -1.0, 0.0])
@@ -84,3 +84,18 @@ def test_preregistered_families_do_not_depend_on_compression_speed():
     # the post-hoc family DOES care: slow beats fast when compressing in noise
     ctx = CONTEXTS["noisy_conversation"]
     assert utility(z_slow, L, ctx, "noise_sensitive", a) > utility(z_fast, L, ctx, "noise_sensitive", a) + 1e-4
+
+
+def test_default_and_slow_static_have_identical_primary_utility():
+    """In the three primary families, z6 is deliberately absent from the oracle."""
+    L = sample_population(2, seed=31415)
+    for listener in L:
+        a = listener.audiogram
+        z_default = np.zeros(Z_DIM)
+        z_slow = z_default.copy(); z_slow[5] = 1.0
+        for family in ("intelligibility", "comfort", "balanced"):
+            for ctx_name in ("noisy_conversation", "lecture", "music"):
+                ctx = CONTEXTS[ctx_name]
+                assert utility(z_default, listener, ctx, family, a) == pytest.approx(
+                    utility(z_slow, listener, ctx, family, a), abs=1e-12
+                )

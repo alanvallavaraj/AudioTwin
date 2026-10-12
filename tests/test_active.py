@@ -65,3 +65,13 @@ def test_audiograms_beyond_the_safe_range_fail_loudly():
     """Scope limit: for very severe flat loss no safe anchor exists. We want a clear error, not a silent skip."""
     with pytest.raises(ValueError, match="no feasible"):
         feasible_anchor(np.array([85.0, 90, 90, 95, 95, 95, 95]), CFG)
+
+
+def test_explicit_default_gp_gamma_preserves_frozen_behaviour(setting):
+    L, ctx, a_hat = setting
+    kw = dict(n_queries=6, seed=123, acquisition="qeubo", checkpoints=(6,))
+    implicit = run_laplace_twin(L, ctx, "balanced", a_hat, **kw)
+    explicit = run_laplace_twin(L, ctx, "balanced", a_hat, gp_gamma=0.1, **kw)
+    assert np.array_equal(implicit.X, explicit.X)
+    assert np.array_equal(implicit.comparisons, explicit.comparisons)
+    assert np.array_equal(implicit.recs[6], explicit.recs[6])

@@ -2,12 +2,13 @@
 
 ## 1. Environment
 
-The final QMUL HPC runs used Python 3.11.7. Install the package in an isolated environment:
+The final QMUL HPC runs used Python 3.11.7. The exact final-run environment is pinned in `requirements-final.txt`. Install those versions in an isolated Python 3.11.7 environment:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -r requirements-final.txt
+pip install -e . --no-deps
 ```
 
 ## 2. Verification
@@ -29,7 +30,7 @@ Core settings:
 - final experiment seed: `777000111`
 - listeners: 128 valid final listeners
 - contexts: `noisy_conversation`, `lecture`, `music`
-- pre-registered utility families: `intelligibility`, `comfort`, `balanced`
+- pre-specified utility families: `intelligibility`, `comfort`, `balanced`
 - post-hoc stress-test family: `noise_sensitive`
 - query budgets: 0, 5, 10, 20, 30, 50
 - learned methods: qEUBO, BALD and GP-random using the same Laplace preference GP
@@ -42,17 +43,13 @@ Original task 55 was infeasible under the frozen safety constraints because no s
 
 ## 5. Run the final analysis
 
-Place the 128 final parquet result files under:
-
-```text
-results/final_v1/
-```
-
-Then run:
+The released consolidated final dataset is `publication/data/final_v1.parquet`. Run:
 
 ```bash
-python scripts/analyze_final.py results/final_v1
+python scripts/analyze_final.py publication/data/final_v1.parquet
 ```
+
+The analyser also accepts the original 128-file `results/final_v1/` directory. The consolidated file has been verified to produce identical analysis output.
 
 The script validates the complete expected result grid before inference and recognises the declared `{55: 128}` replacement.
 
@@ -60,7 +57,7 @@ The script validates the complete expected result grid before inference and reco
 
 The exact compact outputs used for manuscript preparation are under `publication/results/`.
 
-Primary result at qEUBO T=20 versus the per-cell best static comparator across the three pre-registered utility families:
+Primary result at qEUBO T=20 versus the per-cell best static comparator across the three pre-specified utility families:
 
 - best static mean regret: 0.3212173
 - qEUBO mean regret: 0.2404755
@@ -68,3 +65,12 @@ Primary result at qEUBO T=20 versus the per-cell best static comparator across t
 - 95% listener-level bootstrap CI: [-0.1027, -0.0593]
 
 Lower regret is better.
+
+
+## 7. Public-history limitation
+
+The curated `main` branch was assembled after the final run, but the original development lineage is now published as `protocol-history` with the original annotated `final-protocol-v1` through `v1.3` tags. The released final rows record code hash `fc040b3`, which resolves to `final-protocol-v1.2`. These records establish the repository provenance but are not a external protocol registration; the manuscript therefore uses **pre-specified**.
+
+## 8. Simulator assumptions
+
+All fixed simulator values and distributions are listed in `docs/simulator_parameters.md`. They are modelling assumptions for a computational benchmark rather than clinical prescription constants.

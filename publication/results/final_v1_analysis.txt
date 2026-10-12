@@ -2,10 +2,10 @@ files/listeners: 128/128  rows=32256
 declared infeasible-listener replacements: {55: 128}
 code: fc040b3
 
-PRIMARY: qEUBO T=20 minus per-cell best static; pre-registered families
+PRIMARY: qEUBO T=20 minus per-cell best static; pre-specified families
 mean=-0.0807  95% bootstrap CI=[-0.1027, -0.0593]  n=128
 
-SECONDARY: learned methods minus per-cell best static; pre-registered families
+SECONDARY: learned methods minus per-cell best static; pre-specified families
 audiotwin_qeubo      T= 0  mean=+0.0551  95% bootstrap CI=[+0.0445, +0.0663]  n=128
 audiotwin_qeubo      T= 5  mean=-0.0294  95% bootstrap CI=[-0.0470, -0.0123]  n=128
 audiotwin_qeubo      T=10  mean=-0.0568  95% bootstrap CI=[-0.0766, -0.0373]  n=128
@@ -25,7 +25,7 @@ audiotwin_gprandom   T=20  mean=-0.0482  95% bootstrap CI=[-0.0663, -0.0310]  n=
 audiotwin_gprandom   T=30  mean=-0.0754  95% bootstrap CI=[-0.0934, -0.0578]  n=128
 audiotwin_gprandom   T=50  mean=-0.1018  95% bootstrap CI=[-0.1221, -0.0824]  n=128
 
-ACQUISITION EFFICIENCY: qEUBO minus GP-random; pre-registered families
+ACQUISITION EFFICIENCY: qEUBO minus GP-random; pre-specified families
 T= 5  mean=-0.0495  95% bootstrap CI=[-0.0627, -0.0364]  n=128
 T=10  mean=-0.0371  95% bootstrap CI=[-0.0489, -0.0252]  n=128
 

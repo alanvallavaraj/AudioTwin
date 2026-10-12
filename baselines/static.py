@@ -4,8 +4,10 @@
 Interactive baselines (simulated manual self-adjustment, in-situ audiometry fit with its own
 audiogram error, AudioTwin variants) live in the experiment runner stage.
 
-Fairness note (docs/findings.md): fast compression lowers HASPI in noise, so the prescription is
-reported THREE ways (as built, linear, slow compression). AudioTwin must beat the best of them.
+The experiment records default, linear and slow-compression static settings. In the three
+pre-specified primary oracle families compression speed has no utility term, so default and slow
+are utility-identical; only the post-hoc noise-sensitive family distinguishes them. The linear
+variant also disables noise reduction and speech enhancement.
 """
 from __future__ import annotations
 
@@ -21,8 +23,11 @@ def no_correction() -> None:
 
 
 def fixed_eq(cfg: DSPConfig = DSPConfig()) -> DSPSettings:
-    """Audiogram-independent consumer EQ: gentle high-frequency lift, no compression.
-    PLACEHOLDER curve (3 dB/octave above 1 kHz, capped at 12 dB); justify or replace."""
+    """Audiogram-independent reference EQ: 3 dB/octave above 1 kHz, capped at 12 dB.
+
+    This auxiliary baseline is a fixed simulation reference and is not used in the frozen
+    primary final comparison.
+    """
     gains = np.clip(3.0 * np.log2(BANDS_HZ / 1000.0), 0.0, 12.0)
     nb = len(BANDS_HZ)
     return DSPSettings(gains, np.ones(nb), 0.0, 0.0, cfg.attack_ms, cfg.release_ms,
