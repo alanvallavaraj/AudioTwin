@@ -36,4 +36,4 @@ Post-final analyses are governed by `docs/protocol_v2_addendum.md` (sections v2 
 
 ## Snapshot cited by the manuscript
 
-The submitted manuscript corresponds to tag `manuscript-mlwa-v1.3` on `main`. Scientific code under `twin/`, `dsp/`, `oracle/`, `baselines/` and `experiments/` is functionally identical to `fc040b3`. Later edits are limited to comments, documentation and two optional arguments of `twin.active.run_laplace_twin` (`gp_gamma`, `extra_base_points`) whose defaults reproduce the frozen behaviour exactly; a regression test checks this.
+The current BSPC submission manuscript corresponds to tag `manuscript-bspc-v1.0` on `main`. A preceding MLwA-targeted snapshot is retained in Git history. Scientific code under `twin/`, `dsp/`, `oracle/`, `baselines/` and `experiments/` is functionally identical to `fc040b3`. Later edits are limited to comments, documentation and two optional arguments of `twin.active.run_laplace_twin` (`gp_gamma`, `extra_base_points`) whose defaults reproduce the frozen behaviour exactly; a regression test checks this.

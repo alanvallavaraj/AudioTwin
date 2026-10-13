@@ -1,0 +1,5 @@
+Audiogram data initialise a constrained hearing-aid DSP control space.
+Pairwise perceptual choices provide sparse feedback for personalised fitting.
+qEUBO cut mean regret by 25.1% versus the best static fitting at 20 queries.
+Active query selection beat matched random feedback after only five queries.
+Simulation identifies response reliability as a key limit before human validation.

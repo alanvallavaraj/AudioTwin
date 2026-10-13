@@ -42,7 +42,7 @@ configs/         Experiment configuration
 
 ## Manuscript
 
-The current Elsevier **Machine Learning with Applications** manuscript source and compiled submission bundle are available in [`manuscript_mlawa/`](manuscript_mlawa/). The bundle contains the complete `elsarticle` LaTeX manuscript, BibTeX references, publication figures (with their generating scripts), highlights, cover letter and compiled PDF.
+The current Elsevier **Biomedical Signal Processing and Control** manuscript source and compiled submission bundle are available in [`manuscript_bspc/`](manuscript_bspc/). The bundle contains the complete `elsarticle` LaTeX manuscript, BibTeX references, publication figures (with their generating scripts), highlights, cover letter and compiled PDF.
 
 ## Frozen final protocol
 
@@ -51,7 +51,7 @@ The final evaluation is documented in [`docs/protocol.md`](docs/protocol.md). Or
 - Scientific freeze: `final-protocol-v1` (commit `52fcd8b`)
 - Final-run code: `final-protocol-v1.2` (commit `fc040b3`, stored in every result row)
 - Replacement-rule record: `final-protocol-v1.3` (commit `7b3ab57`)
-- Submitted manuscript snapshot: `manuscript-mlwa-v1.3`
+- Submitted manuscript snapshot: `manuscript-bspc-v1.0`
 - Analysis/bootstrap seed: `20261011`
 - Final experiment seed: `777000111`
 
@@ -84,7 +84,7 @@ The same analyser also accepts the original directory of 128 `task_*.parquet` fi
 ```bash
 python scripts/make_publication_summaries.py publication/data/final_v1.parquet
 python scripts/analyze_exploratory_final.py publication/data/final_v1.parquet > publication/results/final_v1_exploratory.txt
-python manuscript_mlawa/make_manuscript_figures.py      # needs matplotlib
+python manuscript_bspc/make_manuscript_figures.py      # needs matplotlib
 ```
 
 See [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) for the complete workflow.
@@ -135,4 +135,4 @@ Anonymous Institution
 
 ## Status
 
-Submission snapshot `manuscript-mlwa-v1.3` for *Machine Learning with Applications*. Scientific code is functionally identical to the frozen final-run commit `fc040b3`; `tests/test_frozen_equivalence.py` checks this. Bibliographic metadata will be updated on publication.
+Submission snapshot `manuscript-bspc-v1.0` for *Biomedical Signal Processing and Control*. Scientific code is functionally identical to the frozen final-run commit `fc040b3`; `tests/test_frozen_equivalence.py` checks this. Bibliographic metadata will be updated on publication.

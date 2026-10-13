@@ -15,7 +15,7 @@
 \usepackage{algpseudocode}
 \usepackage[hidelinks]{hyperref}
 
-\journal{Machine Learning with Applications}
+\journal{Biomedical Signal Processing and Control}
 \emergencystretch=2em
 \renewcommand{\topfraction}{0.9}
 \renewcommand{\bottomfraction}{0.8}
@@ -30,17 +30,17 @@
 
 \begin{frontmatter}
 
-\title{AudioTwin: Safety-Constrained Preferential Bayesian Optimisation for Query-Efficient Personalised Hearing-Aid Fitting}
+\title{AudioTwin: Closed-Loop Preference-Guided Personalisation of Hearing-Aid Signal Processing with Safety-Constrained Bayesian Optimisation}
 
 \author[anon]{Anonymous Author}
 \address[anon]{Anonymous Institution}
 
 \begin{abstract}
-Personalisation problems often require optimising an unknown subjective utility from a few user interactions while respecting hard operational constraints. We present \textit{AudioTwin}, a safety-constrained preferential Bayesian optimisation framework, evaluated in simulation for personalised hearing-aid fitting. Candidate processing configurations occupy a six-dimensional latent space controlling gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed. Listener utility is learned from noisy pairwise preferences with a Laplace-approximated Gaussian-process preference model, every candidate is restricted to a deterministic feasible region, and expected utility of the best option (qEUBO) selects the comparisons. In a frozen evaluation of 128 simulated listeners across three listening contexts and three pre-specified preference families, qEUBO at the pre-specified endpoint of 20 queries reduced mean normalised regret from 0.321 for the per-cell best static half-gain fitting to 0.240: a paired difference of $-0.081$ (95\% listener-level bootstrap CI $-0.103$ to $-0.059$), or a 25.1\% reduction, with improvement for 94 of 128 listeners. Against an otherwise identical preference model that chose pairs at random, qEUBO reduced regret by 0.049 (95\% CI 0.036 to 0.063) after five queries, isolating an acquisition-efficiency benefit. Gains were largest for comfort-oriented preferences and speech contexts, whereas in music with intelligibility-oriented preferences a static setting remained better. Exploratory development-seed checks indicate that these benefits depend on preference-response reliability. AudioTwin provides a reproducible testbed for constrained active preference learning; human-listener validation is required before clinical benefit can be inferred.
+Personalised hearing-aid fitting is a closed-loop biomedical control problem in which audiometric measurements define an initial device state, listener judgements provide sparse behavioural feedback, and signal-processing parameters must remain within admissible operating limits. We present \textit{AudioTwin}, a simulation framework that combines audiogram-conditioned feasibility constraints with preferential Bayesian optimisation for query-efficient adaptation of hearing-aid processing. A six-dimensional latent control vector adjusts gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed. Noisy pairwise listener choices are modelled with a Laplace-approximated Gaussian-process preference model, while expected utility of the best option (qEUBO) selects the next feasible comparison. In a frozen evaluation of 128 simulated listeners across three listening contexts and three pre-specified preference families, qEUBO at 20 queries reduced mean normalised regret from 0.321 for the per-cell best static half-gain fitting to 0.240, a paired difference of $-0.081$ (95\% listener-level bootstrap CI $-0.103$ to $-0.059$), corresponding to a 25.1\% reduction; 94 of 128 listeners improved. Relative to the same preference model with random pair selection, qEUBO reduced regret by 0.049 (95\% CI 0.036 to 0.063) after five queries, isolating the benefit of active feedback selection. Benefits were largest for comfort-oriented preferences and speech contexts, whereas a static setting remained better for music with intelligibility-oriented preferences. AudioTwin therefore provides a reproducible closed-loop testbed for preference-guided control of assistive hearing-device processing. The study is computational and requires human-listener validation before clinical benefit or medical-device safety can be inferred.
 \end{abstract}
 
 \begin{keyword}
-preferential Bayesian optimisation \sep preference learning \sep Gaussian process \sep active learning \sep personalisation \sep hearing aid \sep safe optimisation
+biomedical signal processing \sep hearing aid \sep closed-loop control \sep preferential Bayesian optimisation \sep audiometry \sep personalised assistive devices \sep active learning
 \end{keyword}
 
 \end{frontmatter}
@@ -48,38 +48,38 @@ preferential Bayesian optimisation \sep preference learning \sep Gaussian proces
 \section{Introduction}
 \label{sec:introduction}
 
-Many applied machine-learning systems must optimise outcomes that cannot be measured directly. Instead, the target is a latent human preference revealed through interaction. Recommender systems, interface personalisation, assistive technology and adaptive control are examples in which the objective is subjective, observations are noisy, and querying the user is costly. In such settings, the central learning problem is not merely to estimate a response surface, but to identify a high-utility decision using as few interactions as possible.
+Modern hearing devices increasingly combine measured biomedical state with adaptive digital signal processing. Audiometric thresholds provide an objective description of hearing loss, but they do not fully specify an individual listener's preferred trade-off among audibility, comfort and processing artefacts. Fine-tuning is therefore naturally a closed-loop problem: the device proposes a processing configuration, the listener supplies behavioural feedback, and the controller updates its recommendation. Because each comparison consumes listener attention and repeated judgements may become unreliable, the control loop must extract useful information from a small number of interactions.
 
-Bayesian optimisation (BO) provides a natural framework for sample-efficient optimisation of expensive black-box objectives \cite{shahriari2016}. When feedback is comparative rather than numerical, preferential Bayesian optimisation (PBO) replaces direct function observations with statements such as ``configuration $i$ is preferred to configuration $j$'' \cite{gonzalez2017}. Gaussian-process (GP) preference learning provides a probabilistic model for these comparisons \cite{chu2005,rasmussen2006}, while acquisition functions determine which comparisons should be presented next. The problem becomes harder when candidate queries must also satisfy hard constraints.
+This setting links biomedical data processing with sequential control. The measured audiogram conditions the feasible device response, while pairwise perceptual judgements act as a behavioural feedback signal. Bayesian optimisation (BO) provides a framework for sample-efficient optimisation of expensive black-box objectives \cite{shahriari2016}. When observations are comparative rather than numerical, preferential Bayesian optimisation (PBO) replaces direct function measurements with statements such as ``configuration $i$ is preferred to configuration $j$'' \cite{gonzalez2017}. Gaussian-process (GP) preference learning provides a probabilistic state estimate from these comparisons \cite{chu2005,rasmussen2006}, and the acquisition rule determines which admissible device pair should be presented next.
 
 Hearing-aid fitting provides a concrete application with all of these properties. Prescriptive procedures such as NAL-NL2 provide a principled initial response based primarily on audiometric information \cite{keidser2011}, but individual listeners may prefer different trade-offs among audibility, comfort and signal-processing artefacts. User-controlled fitting studies show that listeners can make systematic adjustments \cite{dreschler2008,boothroyd2017,mackersie2019,sabin2020}, and pairwise and preference-based approaches have been explored for hearing-aid personalisation \cite{birlutiu2010,nielsen2015,vyas2022,akbarzadeh2022,ni2024}. Practical deployment, however, requires more than preference modelling: comparisons should be informative, the search space should remain clinically plausible, and performance should be assessed against strong rather than weak static comparators.
 
-This paper presents \textit{AudioTwin}, a reproducible framework for safety-constrained active preference learning in hearing-aid fitting. AudioTwin pairs a simulated listener, whose preference function is hidden, with a learner---the \emph{twin}---whose entire state is an imperfect audiometric estimate and a posterior preference model built from the listener's pairwise choices (Fig.~\ref{fig:framework}). The learner uses a Laplace-approximated GP preference model and selects comparisons using expected utility of the best option (qEUBO) \cite{astudillo2023}. Every proposed configuration is projected into a deterministic feasible region before it can be queried or recommended.
+This paper presents \textit{AudioTwin}, a reproducible closed-loop framework for preference-guided personalisation of hearing-aid signal processing. The loop couples an audiogram-conditioned device model to a simulated listener whose latent preference function is hidden. The learner---the \emph{twin}---maintains an imperfect audiometric estimate and a posterior preference model built from binary perceptual choices (Fig.~\ref{fig:framework}). A Laplace-approximated GP preference model estimates latent utility, expected utility of the best option (qEUBO) selects the next pair to test \cite{astudillo2023}, and every proposed processing configuration is projected into a deterministic feasible region before it can be queried or recommended. In control terms, audiometric data initialise the admissible state space, pairwise judgements provide the feedback signal, and the sequential recommendation is the adaptive control output.
 
 The term \emph{safety-constrained} is used in a computational sense: known model-based latent bounds, output limits and adjacent-band gain-smoothness constraints are enforced by construction. This differs from SafeOpt-style methods that learn an unknown safety function under uncertainty \cite{sui2015}. AudioTwin therefore evaluates active preference optimisation within a known feasible set; it does not claim medical-device safety certification.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig1_framework.pdf}
-\caption{AudioTwin. The learner sees only an estimated audiogram and the listener's binary choices. Each query pair is chosen from a feasible candidate pool by an acquisition rule (qEUBO, BALD or random) under a shared Laplace preference GP. The hidden oracle generates noisy choices and is used only to score recommendations.}
+\caption{Closed-loop AudioTwin architecture. An estimated audiogram conditions the admissible hearing-aid processing space. The controller selects a feasible pair of DSP settings, receives a binary perceptual response from the simulated listener, updates a Laplace preference GP, and recommends the setting with highest posterior mean utility. The hidden oracle is used only to generate simulated behavioural feedback and to score recommendations.}
 \label{fig:framework}
 \end{figure}
 
-The work was designed to address four methodological questions:
+The work was designed to address four questions relevant to closed-loop assistive-device personalisation:
 \begin{enumerate}[label=(Q\arabic*)]
-    \item Can active preference learning outperform a strengthened static comparator under a small interaction budget?
-    \item Does qEUBO add value beyond fitting the same GP preference model with random comparisons?
-    \item How does performance vary across preference families and listening contexts?
-    \item Can the evaluation be structured to reduce leakage between method development and final reporting?
+    \item Can sparse behavioural feedback improve an audiogram-initialised static fitting under a small interaction budget?
+    \item Does decision-theoretic query selection add value beyond fitting the same GP preference model with random comparisons?
+    \item How does closed-loop performance vary across listening contexts and preference families?
+    \item Can feasibility constraints and a frozen evaluation protocol provide a reproducible benchmark for adaptive hearing-device control?
 \end{enumerate}
 
 The principal contributions are:
 \begin{itemize}
-    \item a continuous six-dimensional, model-constrained personalisation space spanning gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed;
-    \item a matched comparison of qEUBO, BALD and random pair acquisition that shares the GP model, candidate-generation process and common random-number seeds;
-    \item a conservative per-cell static reference computed over three recorded configurations, explicitly recognising that only two have distinct utility in the pre-specified primary families;
-    \item a frozen final evaluation with a reserved seed, pre-specified primary endpoint, listener-level bootstrap inference and an explicit rule for infeasible simulated listeners;
-    \item a public implementation, released final dataset and analysis scripts that reproduce every reported statistic.
+    \item a closed-loop formulation that connects audiometric measurements, behavioural preference feedback and adaptive control of six hearing-aid DSP dimensions;
+    \item an audiogram-conditioned feasible processing space spanning gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed;
+    \item a matched comparison of qEUBO, BALD and random pair acquisition under a shared GP preference model, candidate generator and common random-number seeds, isolating the effect of feedback-selection policy;
+    \item a conservative per-cell static reference and a frozen final evaluation with a reserved seed, pre-specified primary endpoint, listener-level bootstrap inference and an explicit infeasibility rule;
+    \item a reproducible simulation and analysis package for studying query efficiency, response reliability and failure modes before human-listener evaluation.
 \end{itemize}
 
 The final evaluation contains 128 independent simulated listeners. The pre-specified primary hypothesis is that AudioTwin-qEUBO at 20 comparisons achieves lower normalised regret than the per-cell best static comparator. Secondary analyses assess query efficiency against random pair selection, BALD, larger budgets, context/family heterogeneity and a separately labelled post-hoc robustness family. Section~\ref{sec:exploratory} reports exploratory analyses carried out after the frozen evaluation.
@@ -95,7 +95,7 @@ PBO extends this model from prediction to sequential decision making \cite{gonza
 
 Safety-aware BO is a related but distinct literature. SafeOpt, for example, expands a set of points whose unknown safety value is inferred with a GP while maintaining probabilistic safety guarantees \cite{sui2015}. In AudioTwin, the relevant constraints are deterministic functions of the estimated listener state and DSP configuration. The learner therefore searches only over projected feasible settings rather than learning whether a queried point is safe.
 
-\subsection{Machine learning for hearing-aid personalisation}
+\subsection{Adaptive hearing-aid signal processing and personalisation}
 
 Population-derived prescriptions are an important starting point in hearing-aid fitting, but they cannot encode every listener's subjective preference. NAL-NL2 combines audiometric information with models of speech intelligibility and loudness to derive frequency-dependent targets \cite{keidser2011}. User-directed adjustment studies nevertheless demonstrate residual individual preference variation. Dreschler et al. \cite{dreschler2008} reported systematic client-controlled gain adjustments, while the ``Goldilocks'' studies showed that users can navigate low-dimensional self-fitting controls and obtain plausible gain responses \cite{boothroyd2017,mackersie2019}. Sabin et al. \cite{sabin2020} evaluated a self-fitting interface that jointly adjusted gain and compression in real-world use.
 
@@ -124,10 +124,10 @@ AudioTwin (this work) & Noisy pairwise (simulated) & Constrained PBO; matched qE
 
 AudioTwin is complementary to these studies rather than a replacement for them. Its methodological focus is the joint evaluation of (i) continuous latent control across multiple DSP dimensions, (ii) deterministic feasibility constraints, (iii) decision-theoretic active acquisition, (iv) matched acquisition ablations, and (v) a leakage-resistant final protocol. In particular, the qEUBO comparison asks whether an explicit decision-theoretic acquisition policy improves recommendations relative to random querying when all other modelling choices are held fixed.
 
-\section{Problem formulation}
+\section{Closed-loop problem formulation}
 \label{sec:problem}
 
-Let $z\in\mathcal Z\subset[-1,1]^6$ denote a latent hearing-aid configuration and $c\in\mathcal C$ a listening context. For listener $l$, an unknown utility function
+The adaptive loop receives two forms of listener information: an estimated audiogram $\hat a_l$, which conditions admissible device settings, and sequential binary perceptual responses, which update the preference model. Let $z\in\mathcal Z\subset[-1,1]^6$ denote a latent hearing-aid DSP control vector and $c\in\mathcal C$ a listening context. For listener $l$, an unknown utility function
 \begin{equation}
     u_l(z,c):\mathcal Z\times\mathcal C\rightarrow\mathbb R
 \end{equation}
@@ -149,10 +149,10 @@ with lower values preferred. A value of one corresponds to a setting as poor as 
 
 The primary study endpoint averages the nine pre-specified context/family cells within each listener before population-level inference. This keeps the listener as the statistical unit and prevents the many within-listener rows from being treated as independent observations.
 
-\section{AudioTwin framework}
+\section{AudioTwin closed-loop framework}
 \label{sec:framework}
 
-\subsection{Listener and observed audiogram}
+\subsection{Biomedical input: listener audiogram and uncertainty}
 
 Each simulated listener has a seven-frequency true audiogram
 \begin{equation}
@@ -165,7 +165,7 @@ plus upper comfort limits and latent preference parameters. The fitting system o
 \end{equation}
 that is, the noisy threshold rounded to the 5-dB audiometric grid and clipped to 0--100 dB HL, with $\sigma_a=5$ dB in the final evaluation. The separation between $a_l$ and $\hat a_l$ prevents the optimiser from receiving the exact hidden listener state.
 
-\subsection{Six-dimensional processing space}
+\subsection{Controlled variables: six-dimensional hearing-aid DSP space}
 
 AudioTwin maps $z=(z_1,\ldots,z_6)$ to DSP controls. The dimensions represent overall gain offset, spectral tilt, compression-ratio scale, noise reduction, speech enhancement and compression speed. Gain is represented over ten bands centred at 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000 and 8000 Hz.
 
@@ -366,7 +366,7 @@ Pre-specified secondary analyses comprise the full regret trajectory, qEUBO vers
 
 The final result bundle contains 128 listener files and 32,256 rows. A validation gate checks task IDs, listener IDs, contexts, families, methods, query budgets, row uniqueness and finite regret before inferential output is printed. The frozen final analysis was executed twice after the dataset was complete and produced byte-identical output. The consolidated released dataset reproduces that output exactly, and a regression test confirms that the published code returns the same recommendations as commit \texttt{fc040b3}.
 
-Code, the released dataset, analysis scripts, protocol records and manuscript sources are available in an anonymised supplementary repository for peer review; the submitted snapshot corresponds to tag \texttt{manuscript-mlwa-v1.3}.
+Code, the released dataset, analysis scripts, protocol records and manuscript sources are available in an anonymised supplementary repository for peer review; the submitted snapshot corresponds to tag \texttt{manuscript-bspc-v1.0}.
 
 \section{Results}
 \label{sec:results}
@@ -570,13 +570,13 @@ Choice noise and lapses doubled & 32 & $+0.039$ $[-0.016, +0.088]$ & 9/32 & & $+
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Main finding: decision-theoretic acquisition improves low-budget personalisation}
+\subsection{Main finding: decision-theoretic feedback selection improves low-budget closed-loop control}
 
 The principal result is not simply that a GP can learn a simulated listener preference. Prior hearing-aid work already demonstrates that pairwise comparisons and Bayesian models can support personalisation \cite{birlutiu2010,nielsen2015,vyas2022,ni2024}. The stronger result is that, under matched modelling conditions, \emph{which comparisons are requested} materially changes the recommendation quality at small budgets.
 
 At five queries, qEUBO is already better than the strengthened static reference, while BALD and GP-random remain worse than static on average. qEUBO also beats GP-random directly by about 0.05 normalised-regret units. As the budget grows the gap narrows but does not close: random exploration progressively supplies the GP with useful coverage, while qEUBO places early queries where they most improve the terminal recommendation and retains a smaller advantage throughout. BALD, which targets information about the whole preference function, spends much of its budget near the boundary of the latent space (Section~\ref{sec:exploratory}) and trails both alternatives at most budgets.
 
-This distinction matters in human-in-the-loop applications. A comparison is not free: it consumes attention, can induce fatigue and may become less reliable with repeated exposure. The practical target is therefore acceptable decision quality after a small number of interactions rather than asymptotic recovery of the preference function, and qEUBO's decision-theoretic objective is aligned with that target.
+This distinction matters for closed-loop biomedical and assistive systems. A perceptual comparison is a feedback measurement, but it is not free: it consumes attention, can induce fatigue and may become less reliable with repeated exposure. The practical control objective is therefore a useful device recommendation after a small number of measurements rather than asymptotic recovery of the entire preference function. qEUBO is aligned with that objective because it chooses feedback specifically for its expected value to the terminal recommendation.
 
 \subsection{Strength of the static comparator}
 
@@ -602,7 +602,7 @@ The robustness sweep (Section~\ref{sec:robust}) shows that the advantage over st
 
 Nielsen et al. \cite{nielsen2015} already demonstrated GP active learning from pairwise perceptual comparisons in hearing-aid parameter adjustment, and Korzepa et al. \cite{korzepa2020} developed a simulation environment for contextual hearing-aid personalisation. Reinforcement-learning approaches have personalised compression from user feedback \cite{alamdari2020,akbarzadeh2022}. Vyas et al. \cite{vyas2022} demonstrated efficient pairwise identification over a discrete preset set, and Ni et al. \cite{ni2024} improved training efficiency through multi-band Bayesian learning with a small clinical validation.
 
-AudioTwin differs mainly in experimental emphasis. It treats the final evaluation as a controlled acquisition-policy comparison with a frozen protocol, continuous multidimensional latent control, explicit feasibility projection and an oracle-strengthened static baseline. This allows the study to answer a machine-learning question---whether qEUBO improves recommendation regret under limited preference budgets---without claiming that the simulated utility constitutes clinical evidence.
+AudioTwin differs mainly in its closed-loop systems emphasis. It treats audiometric measurements as the conditioning biomedical input, behavioural pairwise choices as the feedback signal, and multidimensional DSP settings as the controlled device variables. The final evaluation is a controlled acquisition-policy comparison with a frozen protocol, explicit feasibility projection and an oracle-strengthened static baseline. This design asks whether a feedback-selection policy improves the quality of assistive-device recommendations under limited interaction budgets without treating simulated utility as clinical evidence.
 
 \subsection{Feasibility constraints and the rejected listener}
 
@@ -619,7 +619,7 @@ AudioTwin records development/final separation in its protocol history. A reserv
 
 \subsection{Simulation is not clinical validation}
 
-The most important limitation is that all 128 final listeners are simulated. The oracle contains plausible ingredients---audibility, comfort, ideal-gain deviation, compression preference and response noise---but it is not a human participant. Lower oracle regret demonstrates successful optimisation of the specified benchmark, not improved hearing outcomes. Because recent hearing-aid personalisation studies include real participant data \cite{vyas2022,akbarzadeh2022,ni2024}, AudioTwin should be viewed as a methodological and reproducibility study that motivates, rather than replaces, a human-listener trial.
+The most important limitation is that all 128 final listeners are simulated. The oracle contains plausible ingredients---audibility, comfort, ideal-gain deviation, compression preference and response noise---but it is not a human participant. Lower oracle regret demonstrates successful optimisation of the specified benchmark, not improved hearing outcomes. Because recent hearing-aid personalisation studies include real participant data \cite{vyas2022,akbarzadeh2022,ni2024}, AudioTwin should therefore be viewed as a methodological closed-loop simulation and reproducibility study that motivates, rather than replaces, a human-listener trial with measured acoustic outputs and clinically relevant outcomes.
 
 \subsection{The oracle and learner share structural assumptions}
 
@@ -637,7 +637,7 @@ The oracle optimum is computed numerically by random-plus-evolutionary search sp
 
 AudioTwin projects candidates against known model constraints. It does not infer safety from observations and therefore does not solve the full safe-BO problem addressed by methods such as SafeOpt \cite{sui2015}. Applications with uncertain constraints would require a probabilistic constraint model and a different safety analysis.
 
-\subsection{Limited DSP and context model}
+\subsection{Limited signal-processing and context model}
 
 The six-dimensional latent space omits many commercial hearing-aid features, including binaural coordination, adaptive directionality, feedback cancellation, source separation and modern neural speech enhancement. The three final contexts cover only a small subset of real environments. The reported effects should not be extrapolated to a complete hearing-aid signal chain.
 
@@ -648,7 +648,7 @@ The study counts preference comparisons but does not model response time, fatigu
 \section{Future work}
 \label{sec:future}
 
-The highest-priority next step is a prospective listening study. A suitable initial design would compare a verified prescription, conventional fine-tuning and AudioTwin-qEUBO within participants. Outcomes should include preference, speech recognition in noise, comfort, listening effort, test--retest stability and the number of comparisons required to reach a stable setting. Stimulus duration should be chosen with reference to evidence that preference reliability depends on the amount of speech presented \cite{whitmer2022}.
+The highest-priority next step is a prospective listening study in which the optimisation loop controls an implemented hearing-aid signal-processing chain and each candidate setting is evaluated using reproducible acoustic stimuli. A suitable initial design would compare a verified prescription, conventional fine-tuning and AudioTwin-qEUBO within participants. Outcomes should include preference, speech recognition in noise, comfort, listening effort, test--retest stability and the number of comparisons required to reach a stable setting. Stimulus duration should be chosen with reference to evidence that preference reliability depends on the amount of speech presented \cite{whitmer2022}.
 
 A second direction is hierarchical preference learning. Preference structure can be shared across listeners \cite{birlutiu2010}; a population prior could reduce cold-start queries while retaining individual adaptation.
 
@@ -659,11 +659,11 @@ Finally, learned constraints and modern neural audio processing could be integra
 \section{Conclusion}
 \label{sec:conclusion}
 
-AudioTwin formulates personalised hearing-aid fitting as constrained preferential Bayesian optimisation. In a frozen final evaluation of 128 simulated listeners, qEUBO reduced mean normalised regret from 0.3212 for an oracle-strengthened static comparator to 0.2405 after 20 pairwise choices, a 25.1\% reduction (paired difference $-0.0807$, 95\% listener-level bootstrap CI $[-0.1027,-0.0593]$), and improved on the static reference for 94 of 128 listeners.
+AudioTwin formulates personalised hearing-aid signal-processing adjustment as a closed-loop biomedical control problem driven by audiometric state and sparse perceptual feedback. In a frozen final evaluation of 128 simulated listeners, qEUBO reduced mean normalised regret from 0.3212 for an oracle-strengthened static comparator to 0.2405 after 20 pairwise choices, a 25.1\% reduction (paired difference $-0.0807$, 95\% listener-level bootstrap CI $[-0.1027,-0.0593]$), and improved on the static reference for 94 of 128 listeners.
 
-More importantly for the machine-learning contribution, qEUBO outperformed a matched random-pair policy at the pre-specified five- and ten-comparison budgets, and in exploratory analysis at every budget up to 50. This demonstrates a benefit attributable to active query selection rather than GP preference modelling alone. Performance was heterogeneous: comfort-oriented preferences and speech contexts showed the largest gains, whereas music--intelligibility favoured static fitting at the primary budget.
+The matched random-pair comparison shows that the benefit cannot be attributed to GP preference modelling alone: qEUBO achieved lower regret at the pre-specified five- and ten-query budgets by selecting more decision-relevant behavioural measurements. Performance remained heterogeneous across operating conditions, with the strongest benefits for comfort-oriented preferences and speech contexts and a static advantage for music--intelligibility at the primary budget.
 
-These results support qEUBO as a promising acquisition strategy for sparse preference feedback under known feasibility constraints. Development-only robustness checks indicate that its advantages depend on response reliability: with doubled choice noise and lapse rates, neither the static reference nor random pair selection was outperformed at 20 queries. The results do not establish clinical benefit; the next evidential step is human-listener validation under realistic speech and acoustic conditions.
+For biomedical signal processing and assistive-device control, the key implication is that audiometric measurements and behavioural feedback can be integrated in a constrained sequential loop rather than treated as separate fitting stages. The present evidence is computational: the feasibility rules are model-based guardrails, not certified safety limits, and the simulator is not a substitute for measured acoustic output or human-listener outcomes. The next step is therefore prospective validation using an implemented hearing-aid processing chain, controlled audio stimuli and repeatable listener measurements.
 
 \section*{CRediT authorship contribution statement}
 Anonymous Author: Conceptualisation, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualisation, Writing -- original draft, Writing -- review \& editing, Project administration.
@@ -678,7 +678,7 @@ The author declares no known competing financial interests or personal relations
 The reported evaluation is a computational simulation and did not recruit human participants or use identifiable participant data. Human-participant ethics approval was therefore not required for the experiments reported here. Any prospective human-listener validation will require appropriate institutional ethics review and informed consent.
 
 \section*{Data and code availability}
-The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are provided through an anonymised supplementary repository for peer review under the MIT License; the submitted snapshot corresponds to tag \path{manuscript-mlwa-v1.3}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
+The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are provided through an anonymised supplementary repository for peer review under the MIT License; the submitted snapshot corresponds to tag \path{manuscript-bspc-v1.0}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During the preparation of this work, the author used ChatGPT (OpenAI) solely to improve
