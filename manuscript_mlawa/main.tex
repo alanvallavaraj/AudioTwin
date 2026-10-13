@@ -365,7 +365,7 @@ Pre-specified secondary analyses comprise the full regret trajectory, qEUBO vers
 \subsection{Reproducibility}
 \label{sec:repro}
 
-The final result bundle contains 128 listener files and 32,256 rows. A validation gate checks task IDs, listener IDs, contexts, families, methods, query budgets, row uniqueness and finite regret before inferential output is printed. The frozen final analysis was executed twice after the dataset was complete and produced byte-identical output. The consolidated released dataset reproduces that output exactly, and a regression test confirms that the published code returns the same recommendations as commit \texttt{fc040b3}. The simulation and analysis software was developed with the assistance of an AI coding assistant (Claude Code, Anthropic); the author reviewed the code, which is covered by automated unit and regression tests.
+The final result bundle contains 128 listener files and 32,256 rows. A validation gate checks task IDs, listener IDs, contexts, families, methods, query budgets, row uniqueness and finite regret before inferential output is printed. The frozen final analysis was executed twice after the dataset was complete and produced byte-identical output. The consolidated released dataset reproduces that output exactly, and a regression test confirms that the published code returns the same recommendations as commit \texttt{fc040b3}.
 
 Code, the released dataset, analysis scripts, protocol records and manuscript sources are available at \url{https://github.com/alanvallavaraj/AudioTwin}; the submitted version corresponds to tag \texttt{manuscript-mlwa-v1.3}.
 
@@ -682,7 +682,12 @@ The reported evaluation is a computational simulation and did not recruit human 
 The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are available at \url{https://github.com/alanvallavaraj/AudioTwin} under the MIT License; the submitted version corresponds to tag \path{manuscript-mlwa-v1.3}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
-During the preparation of this work the author used ChatGPT (OpenAI) and Claude (Anthropic) to assist with manuscript organisation, language refinement, LaTeX preparation, consistency checking and pre-submission critical review. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content of the publication. The use of an AI coding assistant during software development is described in Section~\ref{sec:repro}.
+During the preparation of this work, the author used ChatGPT (OpenAI) solely to improve
+the grammar, language, clarity and readability of the manuscript. The tool was not used for
+research design, data generation, simulation, implementation, data analysis, interpretation of
+results, or formulation of scientific conclusions. After using this tool, the author reviewed and
+edited the content as needed and takes full responsibility for the content of the publication.
+
 
 \section*{Acknowledgements}
 The author acknowledges the computational resources used for the final simulation experiments and institutional research support from the University of Westminster.
