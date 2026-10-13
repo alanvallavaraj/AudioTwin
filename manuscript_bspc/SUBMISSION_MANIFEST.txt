@@ -1,0 +1,22 @@
+Biomedical Signal Processing and Control submission files
+
+Manuscript
+  main.pdf
+  main.tex
+  references.bib
+  main.bbl
+
+Figures
+  fig1_framework.pdf
+  fig2_learning_curves.pdf
+  fig3_effects.pdf
+  fig4_context_family_heatmap.pdf
+
+Submission documents
+  highlights.txt
+  COVER_LETTER.md
+  README_SUBMISSION.md
+
+Figure source / reproducibility
+  fig1_framework.tex
+  make_manuscript_figures.py

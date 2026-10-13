@@ -80,8 +80,8 @@ All fixed simulator values and distributions are listed in `docs/simulator_param
 ```bash
 python scripts/make_publication_summaries.py publication/data/final_v1.parquet
 python scripts/analyze_exploratory_final.py publication/data/final_v1.parquet > publication/results/final_v1_exploratory.txt
-python manuscript_mlawa/make_manuscript_figures.py      # Figs 2-4; requires matplotlib
-pdflatex manuscript_mlawa/fig1_framework.tex          # Fig. 1 (TikZ)
+python manuscript_bspc/make_manuscript_figures.py      # Figs 2-4; requires matplotlib
+pdflatex manuscript_bspc/fig1_framework.tex          # Fig. 1 (TikZ)
 ```
 
 `make_publication_summaries.py` reproduces `final_context_family_qeubo_t20.csv` and `final_learned_curve_means.csv` exactly and also writes `final_learned_curve_ci.csv`.

@@ -1,7 +1,0 @@
-Highlights
-
-• AudioTwin casts hearing-aid fitting as safety-constrained preferential optimisation.
-• qEUBO cut mean regret by 25% versus the best static half-gain fitting.
-• qEUBO beat matched random-pair acquisition after only 5 and 10 queries.
-• Gains were largest for comfort; the benefit is sensitive to response noise.
-• A frozen N=128 protocol separates method development from final evaluation.
