@@ -25,7 +25,7 @@ These are SANITY numbers only (one clip, one audiogram), not results.
    60 listeners x 8 methods x 7 contexts x 4 SNRs x 5 utterances = 67,200 evals ~ 93 CPU-hours.
 
 ## Decision record (2026-10-06): how finding 3 was handled
-- **Main oracle unchanged (option b).** The 3 pre-specified families (intelligibility, comfort,
+- **Main oracle unchanged (option b).** The 3 pre-registered families (intelligibility, comfort,
   balanced) are NOT modified in response to the HASPI/compression result. This keeps the oracle
   independent of the reported metrics. A gap between oracle regret and HASPI in noise is reported
   as a finding, not engineered away.
@@ -41,12 +41,12 @@ These are SANITY numbers only (one clip, one audiogram), not results.
 
 ## Correction (2026-10-07): oracle leak reverted; pilots are not comparable
 - Commit 466e0b6 added a HASPI-motivated compression-speed penalty to the SHARED quality term, so it applied to the
-  3 pre-specified families too. This contradicted the decision record above. Reverted: the penalty now exists only
+  3 pre-registered families too. This contradicted the decision record above. Reverted: the penalty now exists only
   in `noise_sensitive` (post-hoc). Tests guard this (tests/test_baselines_and_changes.py).
 - All seven pilot sets in results_hpc/ (code 4bdf2a9 ... 360def2) were produced under the LEAKED oracle (and the
   early ones under an older parameterisation). They are development data only, are not comparable with new runs,
   and must not be reported as results. Pilot readout (32 listeners, 12 queries, regret lower=better): the static
-  prescription_linear (~0.35 pre-specified, ~0.22 noise_sensitive) was as good as or better than every
+  prescription_linear (~0.35 pre-registered, ~0.22 noise_sensitive) was as good as or better than every
   AudioTwin variant; active/exploit acquisition scored worse than random queries.
 - The hand-seeded 'prior' / 'local_prior' variants encode the linear/slow finding into the search and are NOT
   headline methods; keep only as clearly-labelled post-hoc ablations.

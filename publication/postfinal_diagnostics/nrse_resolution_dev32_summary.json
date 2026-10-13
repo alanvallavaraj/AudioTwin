@@ -1,0 +1,52 @@
+{
+  "development_seed": 424242,
+  "n_listeners": 32,
+  "family": "intelligibility",
+  "budget": 20,
+  "by_context": {
+    "lecture": {
+      "median_nrse_stake_over_sigma": 0.09707661006724318,
+      "mean_best_static_regret": 0.3293617027642046,
+      "mean_qeubo_regret": 0.24855198609644782,
+      "mean_noiseless_regret": 0.04182353324700962,
+      "noiseless_improvement": 0.20672845284943822,
+      "noiseless_better_fraction": 0.96875,
+      "mean_rec_z4": -0.16641814817918105,
+      "mean_rec_z5": 0.08378803568795154,
+      "mean_opt_z4": -0.19350975088046152,
+      "mean_opt_z5": -0.12779435573117426,
+      "linear_best_static_fraction": 0.21875
+    },
+    "music": {
+      "median_nrse_stake_over_sigma": 0.1792934632137157,
+      "mean_best_static_regret": 0.2561611082105751,
+      "mean_qeubo_regret": 0.29404089331538635,
+      "mean_noiseless_regret": 0.06934681065999554,
+      "noiseless_improvement": 0.22469408265539081,
+      "noiseless_better_fraction": 0.96875,
+      "mean_rec_z4": -0.053068426792253265,
+      "mean_rec_z5": -0.1247602431507723,
+      "mean_opt_z4": -0.9953026827343575,
+      "mean_opt_z5": -0.9938986697589213,
+      "linear_best_static_fraction": 0.53125
+    },
+    "noisy_conversation": {
+      "median_nrse_stake_over_sigma": 0.4616060992035949,
+      "mean_best_static_regret": 0.37854638679881564,
+      "mean_qeubo_regret": 0.3471935368882406,
+      "mean_noiseless_regret": 0.08185493356953347,
+      "noiseless_improvement": 0.2653386033187071,
+      "noiseless_better_fraction": 0.9375,
+      "mean_rec_z4": 0.06343000019022715,
+      "mean_rec_z5": -0.01888983996732562,
+      "mean_opt_z4": 0.5250881904814625,
+      "mean_opt_z5": 0.5173373961536244,
+      "linear_best_static_fraction": 0.09375
+    }
+  },
+  "music_corner_pool": {
+    "mean_qeubo_regret": 0.29404089331538635,
+    "mean_corner_pool_regret": 0.29404089331538635,
+    "corner_pool_better_fraction": 0.0
+  }
+}

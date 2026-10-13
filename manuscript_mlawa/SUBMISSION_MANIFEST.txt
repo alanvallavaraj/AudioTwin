@@ -7,21 +7,22 @@ Primary manuscript:
   main.pdf
 
 Figures:
-  fig1_learning_curves.pdf
-  fig2_context_effects.pdf
-  fig3_family_effects.pdf
+  fig1_framework.pdf
+  fig2_learning_curves.pdf
+  fig3_effects.pdf
   fig4_context_family_heatmap.pdf
 
 Optional raster figure copies:
-  fig1_learning_curves.png
-  fig2_context_effects.png
-  fig3_family_effects.png
+  fig1_framework.png
+  fig2_learning_curves.png
+  fig3_effects.png
   fig4_context_family_heatmap.png
 
 Additional submission material:
   highlights.txt
   COVER_LETTER.md
 
-Repository/reproducibility helper:
+Repository/reproducibility helpers (not uploaded):
+  fig1_framework.tex
   make_manuscript_figures.py
   README_SUBMISSION.md

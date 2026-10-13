@@ -1,0 +1,62 @@
+EXPLORATORY ANALYSIS OF RELEASED FINAL DATA  rows=32256  listeners=128  code=fc040b3
+
+LISTENER-LEVEL WIN COUNTS: qEUBO vs per-cell best static (pre-specified families)
+T= 0  qEUBO better for   0/128  median=+0.0338  IQR=[+0.0042, +0.0864]
+T= 5  qEUBO better for  75/128  median=-0.0223  IQR=[-0.0890, +0.0337]
+T=10  qEUBO better for  88/128  median=-0.0530  IQR=[-0.1271, +0.0215]
+T=20  qEUBO better for  94/128  median=-0.0718  IQR=[-0.1690, +0.0053]
+T=30  qEUBO better for  97/128  median=-0.0893  IQR=[-0.1850, -0.0140]
+T=50  qEUBO better for 106/128  median=-0.1218  IQR=[-0.2002, -0.0311]
+
+CELL-LEVEL: qEUBO T=20 utility above best static in 0.648 of 1152 listener-cells
+cell win rate by context x family:
+family              balanced  comfort  intelligibility
+context                                               
+lecture                0.602    0.797            0.664
+music                  0.570    0.758            0.383
+noisy_conversation     0.648    0.828            0.586
+share of cells where the linear (NR/SE-off) static setting is the better static choice:
+family              balanced  comfort  intelligibility
+context                                               
+lecture                0.484    0.562            0.125
+music                  0.727    0.547            0.711
+noisy_conversation     0.430    0.539            0.094
+
+MATCHED ACQUISITION DIFFERENCES (listener-level bootstrap 95% CI; pre-specified families)
+(pre-specified: qEUBO - GP-random at T=5 and T=10; all other rows exploratory)
+qEUBO - audiotwin_gprandom T= 5  mean=-0.0495  95% CI=[-0.0627, -0.0364]  qEUBO better for 93/128
+qEUBO - audiotwin_gprandom T=10  mean=-0.0371  95% CI=[-0.0489, -0.0252]  qEUBO better for 90/128
+qEUBO - audiotwin_gprandom T=20  mean=-0.0326  95% CI=[-0.0441, -0.0210]  qEUBO better for 90/128
+qEUBO - audiotwin_gprandom T=30  mean=-0.0218  95% CI=[-0.0343, -0.0092]  qEUBO better for 79/128
+qEUBO - audiotwin_gprandom T=50  mean=-0.0215  95% CI=[-0.0321, -0.0106]  qEUBO better for 89/128
+qEUBO - audiotwin_bald     T= 5  mean=-0.0579  95% CI=[-0.0706, -0.0454]  qEUBO better for 102/128
+qEUBO - audiotwin_bald     T=10  mean=-0.0489  95% CI=[-0.0619, -0.0357]  qEUBO better for 96/128
+qEUBO - audiotwin_bald     T=20  mean=-0.0301  95% CI=[-0.0431, -0.0172]  qEUBO better for 85/128
+qEUBO - audiotwin_bald     T=30  mean=-0.0466  95% CI=[-0.0594, -0.0334]  qEUBO better for 85/128
+qEUBO - audiotwin_bald     T=50  mean=-0.0479  95% CI=[-0.0609, -0.0349]  qEUBO better for 98/128
+
+REGRET SCALE
+rows with regret == 0 (setting at or above the numerical optimum): 1
+rows with regret > 1 (worse than the 5th-percentile reference): 15; max regret 1.173
+qEUBO rows with utility above the numerical optimum: 1
+
+BALD T=20 vs T=30
+recommendation unchanged between T=20 and T=30 in 0.023 of 1152 primary cells
+
+NR/SE GEOMETRY: qEUBO recommendations vs oracle optimum (primary families)
+                                       z4     z5  zopt4  zopt5  rec_corner  opt_corner
+context            family                                                             
+lecture            balanced        -0.053 -0.099 -0.672 -0.650       0.023       0.211
+                   comfort          0.062 -0.095 -0.621 -0.593       0.000       0.406
+                   intelligibility -0.027  0.048 -0.094 -0.028       0.008       0.008
+music              balanced        -0.210 -0.212 -0.998 -0.998       0.039       1.000
+                   comfort         -0.004 -0.164 -0.997 -0.995       0.023       0.992
+                   intelligibility -0.041 -0.098 -0.997 -0.998       0.039       1.000
+noisy_conversation balanced        -0.051 -0.080 -0.369 -0.382       0.000       0.086
+                   comfort         -0.028 -0.052 -0.348 -0.357       0.016       0.281
+                   intelligibility  0.089  0.112  0.694  0.689       0.000       0.000
+music-intelligibility T= 5: mean rec z4=-0.001 z5=-0.063; recommendations at NR/SE-off corner: 0.000
+music-intelligibility T=10: mean rec z4=+0.005 z5=-0.073; recommendations at NR/SE-off corner: 0.008
+music-intelligibility T=20: mean rec z4=-0.041 z5=-0.098; recommendations at NR/SE-off corner: 0.039
+music-intelligibility T=30: mean rec z4=-0.065 z5=-0.111; recommendations at NR/SE-off corner: 0.031
+music-intelligibility T=50: mean rec z4=-0.095 z5=-0.122; recommendations at NR/SE-off corner: 0.016

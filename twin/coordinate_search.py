@@ -1,6 +1,6 @@
 """Simple development-only coordinate-search preference baseline.
 
-This comparator was added after the frozen final evaluation in response to review. It is not part
+This comparator was added after the frozen final evaluation as a post-final exploratory baseline. It is not part
 of the historical primary analysis. One pairwise query compares the current incumbent with a
 single projected coordinate perturbation. Coordinates and directions are visited deterministically;
 the step size halves after each complete +/- sweep over all six latent dimensions.

@@ -18,7 +18,7 @@ This document describes the implementation used by the reported final simulation
 - **Reported prescription:** `g_k^Rx(a) = 0.5 * interpolated_threshold_k`. This is a synthetic half-gain rule; it is not NAL-NL2 or NAL-R.
 - `CR_k(z) = clip(CR_k^Rx * 2^(2*z3), 1, CR_max)`; `z3=-1` reaches linear compression.
 - `NR(z)=NR_max*(z4+1)/2`; `SE(z)=SE_max*(z5+1)/2`.
-- Attack/release interpolate logarithmically from 5/50 ms at `z6=0` to 50/500 ms at `z6=1`.
+- Attack/release interpolate logarithmically from 5/50 ms at `z6=0` to 50/500 ms at `z6=1`; the same log-linear map extends to 0.5/5 ms at `z6=-1`. Timing has no utility effect in the primary families.
 - Ten DSP bands: 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 6000 and 8000 Hz.
 
 The hidden oracle's ideal-gain curve uses the same half-gain construction evaluated on the true audiogram plus listener-specific random offsets. This shared structure is explicit in the manuscript limitations.
@@ -29,10 +29,10 @@ Final qEUBO/BALD/GP-random candidate generation enforces:
 
 - latent box `z in [-1,1]^6`;
 - gain bounds induced by `g_k^max`;
-- fixed 100-dB-SPL predicted-output ceiling;
+- fixed 100-dB-SPL ceiling on predicted band output for a 65-dB-SPL reference input (static compression curve, after the 105-dB-SPL limiter);
 - maximum adjacent-band gain difference.
 
-A conservative low-gain anchor is found first and candidate settings are projected towards it when necessary. The codebase contains an optional `z_prev` change-rate check in `dsp.safety.project_to_S`, but **the reported final active-learning path uses `project_from_anchor(..., z_prev=None)` and does not apply a sequential change-rate constraint**.
+A conservative low-gain anchor is found first and candidate settings are projected towards it when necessary. The codebase contains an optional `z_prev` change-rate check in `dsp.safety.project_to_S`, but **the reported final active-learning path uses `twin.optimizer.project_from_anchor`, which checks feasibility without a previous setting, so no sequential change-rate constraint is applied**.
 
 ## Oracle (evaluation only)
 

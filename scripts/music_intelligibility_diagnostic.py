@@ -1,6 +1,6 @@
 """Development-only diagnostic for the music-intelligibility failure mode.
 
-Tests two reviewer hypotheses without touching the reserved final seed: (i) the optimum lies near the
+Tests two candidate explanations without touching the reserved final seed: (i) the optimum lies near the
 NR/SE-off corner and is penalised by the GP centre prior; (ii) response noise is or is not sufficient
 to explain the failure. Governed by docs/protocol_v2_addendum.md.
 """

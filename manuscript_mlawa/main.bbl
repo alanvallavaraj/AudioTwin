@@ -12,6 +12,12 @@ B.~Shahriari, K.~Swersky, Z.~Wang, R.~P. Adams, N.~de~Freitas, Taking the human
 \newblock \href {https://doi.org/10.1109/JPROC.2015.2494218}
   {\path{doi:10.1109/JPROC.2015.2494218}}.
 
+\bibitem{gonzalez2017}
+J.~Gonz{\'a}lez, Z.~Dai, A.~Damianou, N.~D. Lawrence, Preferential {B}ayesian
+  optimization, in: Proceedings of the 34th International Conference on Machine
+  Learning, Vol.~70 of Proceedings of Machine Learning Research, 2017, pp.
+  1282--1291.
+
 \bibitem{chu2005}
 W.~Chu, Z.~Ghahramani, Preference learning with gaussian processes, in:
   Proceedings of the 22nd International Conference on Machine Learning, 2005,
@@ -66,6 +72,14 @@ A.~Birlutiu, P.~C. Groot, T.~Heskes, Multi-task preference learning with an
 \newblock \href {https://doi.org/10.1016/j.neucom.2009.11.025}
   {\path{doi:10.1016/j.neucom.2009.11.025}}.
 
+\bibitem{nielsen2015}
+J.~B. Nielsen, J.~Nielsen, J.~Larsen, Perception-based personalization of
+  hearing aids using gaussian processes and active learning, IEEE/ACM
+  Transactions on Audio, Speech, and Language Processing 23~(1) (2015)
+  162--173.
+\newblock \href {https://doi.org/10.1109/TASLP.2014.2377581}
+  {\path{doi:10.1109/TASLP.2014.2377581}}.
+
 \bibitem{vyas2022}
 D.~Vyas, R.~Brummet, Y.~Anwar, J.~Jensen, E.~Jorgensen, Y.-H. Wu, O.~Chipara,
   Personalizing over-the-counter hearing aids using pairwise comparisons, Smart
@@ -73,19 +87,19 @@ D.~Vyas, R.~Brummet, Y.~Anwar, J.~Jensen, E.~Jorgensen, Y.-H. Wu, O.~Chipara,
 \newblock \href {https://doi.org/10.1016/j.smhl.2021.100231}
   {\path{doi:10.1016/j.smhl.2021.100231}}.
 
+\bibitem{akbarzadeh2022}
+S.~Akbarzadeh, E.~Lobarinas, N.~Kehtarnavaz, Online personalization of
+  compression in hearing aids via maximum likelihood inverse reinforcement
+  learning, IEEE Access 10 (2022) 58537--58546.
+\newblock \href {https://doi.org/10.1109/ACCESS.2022.3178594}
+  {\path{doi:10.1109/ACCESS.2022.3178594}}.
+
 \bibitem{ni2024}
 A.~Ni, E.~Lobarinas, N.~Kehtarnavaz, Efficient personalization of amplification
   in hearing aids via multi-band bayesian machine learning, IEEE Access 12
   (2024) 112116--112123.
 \newblock \href {https://doi.org/10.1109/ACCESS.2024.3441762}
   {\path{doi:10.1109/ACCESS.2024.3441762}}.
-
-\bibitem{ignatenko2025}
-T.~Ignatenko, K.~Kondrashov, M.~Cox, B.~de~Vries, On preference learning based
-  on sequential bayesian optimization with pairwise comparison, Artificial
-  Intelligence 348 (2025) 104400.
-\newblock \href {https://doi.org/10.1016/j.artint.2025.104400}
-  {\path{doi:10.1016/j.artint.2025.104400}}.
 
 \bibitem{astudillo2023}
 R.~Astudillo, Z.~J. Lin, E.~Bakshy, P.~I. Frazier, {qEUBO}: A
@@ -105,13 +119,18 @@ N.~Houlsby, F.~Husz{\'a}r, Z.~Ghahramani, M.~Lengyel, Bayesian active learning
   for classification and preference learning, arXiv preprint arXiv:1112.5745
   (2011).
 
-\bibitem{nielsen2015}
-J.~B. Nielsen, J.~Nielsen, J.~Larsen, Perception-based personalization of
-  hearing aids using gaussian processes and active learning, IEEE/ACM
-  Transactions on Audio, Speech, and Language Processing 23~(1) (2015)
-  162--173.
-\newblock \href {https://doi.org/10.1109/TASLP.2014.2377581}
-  {\path{doi:10.1109/TASLP.2014.2377581}}.
+\bibitem{ignatenko2025}
+T.~Ignatenko, K.~Kondrashov, M.~Cox, B.~de~Vries, On preference learning based
+  on sequential bayesian optimization with pairwise comparison, Artificial
+  Intelligence 348 (2025) 104400.
+\newblock \href {https://doi.org/10.1016/j.artint.2025.104400}
+  {\path{doi:10.1016/j.artint.2025.104400}}.
+
+\bibitem{lin2022}
+Z.~J. Lin, R.~Astudillo, P.~Frazier, E.~Bakshy, Preference exploration for
+  efficient {B}ayesian optimization with multiple outcomes, in: Proceedings of
+  the 25th International Conference on Artificial Intelligence and Statistics,
+  Vol. 151 of Proceedings of Machine Learning Research, 2022, pp. 4235--4258.
 
 \bibitem{korzepa2020}
 M.~Korzepa, M.~K. Petersen, J.~E. Larsen, M.~M{\o}rup, Simulation environment
@@ -120,6 +139,13 @@ M.~Korzepa, M.~K. Petersen, J.~E. Larsen, M.~M{\o}rup, Simulation environment
   Modeling, Adaptation and Personalization, ACM, 2020, pp. 293--298.
 \newblock \href {https://doi.org/10.1145/3386392.3399291}
   {\path{doi:10.1145/3386392.3399291}}.
+
+\bibitem{alamdari2020}
+N.~Alamdari, E.~Lobarinas, N.~Kehtarnavaz, Personalization of hearing aid
+  compression by human-in-the-loop deep reinforcement learning, IEEE Access 8
+  (2020) 203503--203515.
+\newblock \href {https://doi.org/10.1109/ACCESS.2020.3035728}
+  {\path{doi:10.1109/ACCESS.2020.3035728}}.
 
 \bibitem{whitmer2022}
 W.~M. Whitmer, B.~Caswell-Midwinter, G.~Naylor, The effect of stimulus duration

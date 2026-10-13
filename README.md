@@ -11,14 +11,17 @@ On the frozen final evaluation of **128 simulated listeners**, the Laplace prefe
 - Paired mean difference: **-0.0807** (lower is better)
 - 95% listener-level bootstrap CI: **[-0.1027, -0.0593]**
 - Approximate reduction in mean regret: **25.1%**
+- Listeners improved relative to the best static reference: **94 of 128**
 - Final evaluation size: **N = 128**
 
-qEUBO also outperformed GP-random at early budgets, supporting improved query efficiency:
+qEUBO also outperformed the matched GP-random policy (same model, pools and seeds) at the pre-specified early budgets:
 
 - 5 queries: **-0.0495**, 95% CI **[-0.0627, -0.0364]**
 - 10 queries: **-0.0371**, 95% CI **[-0.0489, -0.0252]**
 
-The context/family analysis is intentionally reported without hiding limitations: gains are strongest for comfort-oriented calibration and in noisy-conversation/lecture contexts, while music-intelligibility remains a challenging case.
+In exploratory analysis the gap narrows but persists at every budget up to 50 queries (`publication/results/final_v1_exploratory.txt`).
+
+Limitations are reported alongside the gains. Gains are largest for comfort-oriented preferences and in the noisy-conversation and lecture contexts. In music with intelligibility-oriented preferences a static setting remains better. Development-seed robustness checks show that the advantages over static fitting and over random pair selection both disappear when simulated preference-response noise is doubled. The simulator's prescription is a synthetic half-gain rule, and all listeners are simulated.
 
 ## Repository structure
 
@@ -31,7 +34,7 @@ configs/         Experiment configuration
  experiments/    Experiment runner
  oracle/         Simulated listeners, contexts and utility families
  publication/    Released final synthetic data, summaries, and post-final diagnostics
- scripts/        Diagnostics and frozen final-analysis script
+ scripts/        Frozen final analysis, publication summaries, exploratory and diagnostic scripts
  slurm/          Reproducible HPC launchers for development/final runs
  tests/          Unit and regression tests
  twin/           Preference GP, acquisitions and active optimisation
@@ -39,15 +42,16 @@ configs/         Experiment configuration
 
 ## Manuscript
 
-The current Elsevier **Machine Learning with Applications** manuscript source and compiled submission bundle are available in [`manuscript_mlawa/`](manuscript_mlawa/). The bundle contains the complete `elsarticle` LaTeX manuscript, BibTeX references, publication figures, highlights, cover letter draft, and compiled PDF.
+The current Elsevier **Machine Learning with Applications** manuscript source and compiled submission bundle are available in [`manuscript_mlawa/`](manuscript_mlawa/). The bundle contains the complete `elsarticle` LaTeX manuscript, BibTeX references, publication figures (with their generating scripts), highlights, cover letter and compiled PDF.
 
 ## Frozen final protocol
 
 The final evaluation is documented in [`docs/protocol.md`](docs/protocol.md). Original pre-final history is available on the `protocol-history` branch. The publication analysis state is identified by:
 
-- Scientific freeze: `final-protocol-v1`
-- Operational final-run tag / code hash: `final-protocol-v1.2` / `fc040b3`
-- Replacement-rule record: `final-protocol-v1.3`
+- Scientific freeze: `final-protocol-v1` (commit `52fcd8b`)
+- Final-run code: `final-protocol-v1.2` (commit `fc040b3`, stored in every result row)
+- Replacement-rule record: `final-protocol-v1.3` (commit `7b3ab57`)
+- Submitted manuscript snapshot: `manuscript-mlwa-v1.3`
 - Analysis/bootstrap seed: `20261011`
 - Final experiment seed: `777000111`
 
@@ -75,7 +79,13 @@ The consolidated final synthetic dataset is released at `publication/data/final_
 python scripts/analyze_final.py publication/data/final_v1.parquet
 ```
 
-The same analyser also accepts the original directory of 128 `task_*.parquet` files. The compact publication outputs are provided in [`publication/results/`](publication/results/).
+The same analyser also accepts the original directory of 128 `task_*.parquet` files. Regenerate the compact summaries, the exploratory final-cohort analyses and the figures with:
+
+```bash
+python scripts/make_publication_summaries.py publication/data/final_v1.parquet
+python scripts/analyze_exploratory_final.py publication/data/final_v1.parquet > publication/results/final_v1_exploratory.txt
+python manuscript_mlawa/make_manuscript_figures.py      # needs matplotlib
+```
 
 See [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) for the complete workflow.
 
@@ -103,8 +113,12 @@ The `publication/data/` directory contains:
 The `publication/results/` directory contains:
 
 - `final_v1_analysis.txt` — frozen primary and secondary statistical output
+- `final_v1_exploratory.txt` — exploratory re-analysis of the released rows (win counts, full matched acquisition table, NR/SE geometry)
 - `final_context_family_qeubo_t20.csv` — qEUBO T=20 context/family breakdown
 - `final_learned_curve_means.csv` — learned-method regret curves
+- `final_learned_curve_ci.csv` — the same curves with listener-level bootstrap intervals (figure input)
+
+The `publication/postfinal_diagnostics/` directory contains development-seed-only exploratory diagnostics (see its README and `docs/protocol_v2_addendum.md`).
 
 ## Licence
 
@@ -121,4 +135,4 @@ School of Computer Science and Engineering, University of Westminster
 
 ## Status
 
-Publication repository snapshot prepared from the frozen AudioTwin final-evaluation state. Manuscript bibliographic metadata will be updated when the paper is formally submitted/published.
+Submission snapshot `manuscript-mlwa-v1.3` for *Machine Learning with Applications*. Scientific code is functionally identical to the frozen final-run commit `fc040b3`; `tests/test_frozen_equivalence.py` checks this. Bibliographic metadata will be updated on publication.
