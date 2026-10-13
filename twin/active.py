@@ -51,7 +51,14 @@ def run_laplace_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.nd
                      n_queries: int, seed: int, acquisition: str = "qeubo",
                      checkpoints=(0, 5, 10, 20, 30, 50), n_uniform: int = 192, n_local: int = 64,
                      n_rec: int = 512, min_sep: float = 0.4, hyper_every: int = 5,
-                     gp_gamma: float = 0.1, cfg: DSPConfig = DSPConfig()) -> ActiveRun:
+                     gp_gamma: float = 0.1, extra_base_points=None,
+                     cfg: DSPConfig = DSPConfig()) -> ActiveRun:
+    """Run one active preference-learning episode.
+
+    ``gp_gamma`` and ``extra_base_points`` exist only for post-final development diagnostics; their
+    defaults (0.1 and None) reproduce the frozen final-evaluation behaviour exactly. Extra base points
+    are projected into the feasible set and added to every query and recommendation pool.
+    """
     if acquisition not in ACQUISITIONS:
         raise ValueError(f"acquisition must be one of {ACQUISITIONS}")
     rng = np.random.default_rng(seed)                          # candidate pools, random pairs
@@ -62,6 +69,9 @@ def run_laplace_twin(listener: Listener, ctx: Context, family: str, a_dsp: np.nd
     # later gain is attributable to learning.
     z_rx = project_from_anchor(np.zeros(Z_DIM), anchor, a_dsp, cfg)
     base_pts = [anchor[None, :]] + ([] if np.allclose(anchor, z_rx) else [z_rx[None, :]])
+    if extra_base_points is not None:
+        base_pts += [project_from_anchor(np.asarray(p, dtype=float), anchor, a_dsp, cfg)[None, :]
+                     for p in np.atleast_2d(extra_base_points)]
     ckpts = sorted({int(c) for c in checkpoints if 0 <= c <= n_queries} | {n_queries})
 
     X: list[np.ndarray] = []

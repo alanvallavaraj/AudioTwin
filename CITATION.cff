@@ -2,10 +2,13 @@ cff-version: 1.2.0
 message: "If you use AudioTwin, please cite the associated publication and this software repository."
 title: "AudioTwin"
 type: software
+version: "manuscript-mlwa-v1.3"
+date-released: "2026-10-12"
 authors:
   - family-names: "Vallavaraj"
     given-names: "Alan Immanuel Benjamin"
     affiliation: "University of Westminster"
+    orcid: "https://orcid.org/0000-0002-2664-0140"
 repository-code: "https://github.com/alanvallavaraj/AudioTwin"
 url: "https://github.com/alanvallavaraj/AudioTwin"
 abstract: "A reproducible framework for preference-guided, context-aware hearing calibration using safety-constrained DSP and active Bayesian preference learning."
@@ -16,5 +19,4 @@ keywords:
   - Bayesian optimisation
   - qEUBO
   - hearing technology
-
 license: MIT

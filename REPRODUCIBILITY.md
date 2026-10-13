@@ -19,7 +19,7 @@ Run the non-slow test suite:
 pytest -q -m "not slow"
 ```
 
-The frozen publication state passed the complete non-slow suite before final analysis.
+The frozen publication state passed the complete non-slow suite before final analysis. `tests/test_frozen_equivalence.py` additionally checks that the current active loop returns the same recommendations as the frozen final-run commit `fc040b3`.
 
 ## 3. Final experimental design
 
@@ -69,8 +69,38 @@ Lower regret is better.
 
 ## 7. Public-history limitation
 
-The curated `main` branch was assembled after the final run, but the original development lineage is now published as `protocol-history` with the original annotated `final-protocol-v1` through `v1.3` tags. The released final rows record code hash `fc040b3`, which resolves to `final-protocol-v1.2`. These records establish the repository provenance but are not a external protocol registration; the manuscript therefore uses **pre-specified**.
+The curated `main` branch was assembled after the final run, but the original development lineage is published as `protocol-history` with the original annotated `final-protocol-v1` to `v1.3` tags (commits `52fcd8b`, `2017fe0`, `fc040b3`, `7b3ab57`). The released final rows record code hash `fc040b3`. These records establish repository provenance but are not an external protocol registration, so the manuscript uses **pre-specified**. See `PROTOCOL_PROVENANCE.md`.
 
 ## 8. Simulator assumptions
 
 All fixed simulator values and distributions are listed in `docs/simulator_parameters.md`. They are modelling assumptions for a computational benchmark rather than clinical prescription constants.
+
+## 9. Publication summaries, exploratory analyses and figures
+
+```bash
+python scripts/make_publication_summaries.py publication/data/final_v1.parquet
+python scripts/analyze_exploratory_final.py publication/data/final_v1.parquet > publication/results/final_v1_exploratory.txt
+python manuscript_mlawa/make_manuscript_figures.py      # Figs 2-4; requires matplotlib
+pdflatex manuscript_mlawa/fig1_framework.tex          # Fig. 1 (TikZ)
+```
+
+`make_publication_summaries.py` reproduces `final_context_family_qeubo_t20.csv` and `final_learned_curve_means.csv` exactly and also writes `final_learned_curve_ci.csv`.
+
+## 10. Post-final development diagnostics
+
+These use development seed `424242` only (governed by `docs/protocol_v2_addendum.md`) and write to `publication/postfinal_diagnostics/`:
+
+```bash
+python scripts/coordinate_baseline_from_dev.py <dev_results_dir>   # needs the original dev sweep outputs
+python scripts/acquisition_geometry_dev.py --tasks 32
+python scripts/music_intelligibility_diagnostic.py --tasks 32
+python scripts/nrse_resolution_dev.py --tasks 32
+python scripts/oracle_robustness_dev.py --tasks 32
+```
+
+The robustness sweep is the most expensive (about 70 single-core seconds per listener and scenario; 160 units in total).
+
+## 11. Known implementation note
+
+`experiments/runner.py` seeds the audiogram-observation generator with the same base seed used to sample the listener, so measurement error and listener parameters are drawn from overlapping random streams. Over 4,000 seeds the largest absolute correlation between the first listener draw and any measurement error is below 0.04 (0.08 for the absolute error at 250 Hz). This is negligible for the reported comparisons and is kept unchanged to preserve the frozen experiment. New work should derive independent streams with `numpy.random.SeedSequence.spawn`.
+

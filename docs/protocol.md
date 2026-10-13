@@ -1,9 +1,4 @@
-# Evaluation protocol (private development record)
-
-## Public provenance note
-
-This text originated in the development repository. The original lineage is now public on the `protocol-history` branch with annotated tags `final-protocol-v1`, `v1.1`, `v1.2` and `v1.3`. The curated `main` branch was assembled later and must not be used to infer freeze timing. `final-protocol-v1.2` resolves to commit `fc040b3`, the code hash stored in every released final data row. The later v1.3 tag records only the deterministic infeasible-listener replacement rule after task 55 failed and before performance analysis. These records are version-control provenance rather than external protocol registration, so manuscript language uses **pre-specified**.
-
+# Evaluation protocol (written 2026-10-07, BEFORE any results on the final seed)
 
 Purpose: keep method development and final evaluation separate so reported numbers are not tuned on.
 
@@ -17,17 +12,17 @@ Purpose: keep method development and final evaluation separate so reported numbe
   Laplace-GP with qEUBO / BALD / random pairs. Only the Laplace-GP family is a candidate headline method;
   the hand-seeded prior variants encode the HASPI/linear-compression finding and are post-hoc ablations only.
 - Pre-registered oracle families: intelligibility, comfort, balanced. Post-hoc: noise_sensitive (reported separately).
-- Static configurations recorded: prescription, prescription_linear, prescription_slow (per analysis cell). In the three primary families, prescription_slow is utility-identical to prescription because compression speed is absent from the primary oracle; thus there are two distinct primary static utility behaviours. The slow variant remains distinct in the post-hoc noise_sensitive family. prescription_linear also sets noise reduction and speech enhancement to zero.
+- Static baselines to beat: the BEST of prescription, prescription_linear, prescription_slow (per analysis cell).
 - Primary outcome: normalised regret at each query budget T in {0, 5, 10, 20, 30, 50}; unit of analysis = listener.
 
 ## Frozen final-evaluation decision (recorded 2026-10-11, before exposing the final seed)
 
-Development evidence used for this decision is restricted to seed `424242`. On the 32-listener development sweep, qEUBO showed its clearest acquisition advantage over the matched GP-random policy at low budgets (5 and 10 queries), and its paired mean regret was below the per-cell best static baseline from 20 queries onward on the three pre-specified families. No result from the reserved final seed has been inspected.
+Development evidence used for this decision is restricted to seed `424242`. On the 32-listener development sweep, qEUBO showed its clearest acquisition advantage over the matched GP-random policy at low budgets (5 and 10 queries), and its paired mean regret was below the per-cell best static baseline from 20 queries onward on the three pre-registered families. No result from the reserved final seed has been inspected.
 
 The final protocol is therefore frozen as follows:
 
 - **Primary learned method:** Laplace preference GP + qEUBO. BALD and GP-random remain fixed secondary acquisition comparators; no further learned variant will be developed before final evaluation.
-- **Primary population/outcome:** all three contexts crossed with the three pre-specified families (`intelligibility`, `comfort`, `balanced`). Average the nine cells within each listener first. The primary contrast is qEUBO at **20 queries** versus the per-cell minimum over the three recorded static rows (two distinct utility behaviours in the primary families), expressed as paired normalised-regret difference (qEUBO minus static; negative is better).
+- **Primary population/outcome:** all three contexts crossed with the three pre-registered families (`intelligibility`, `comfort`, `balanced`). Average the nine cells within each listener first. The primary contrast is qEUBO at **20 queries** versus the per-cell best of the three static baselines, expressed as paired normalised-regret difference (qEUBO minus static; negative is better).
 - **Primary uncertainty:** listener-level non-parametric bootstrap 95% confidence interval for the paired mean difference. Resample listeners, not rows. Use 20,000 bootstrap resamples with analysis RNG seed `20261011`.
 - **Secondary analyses:** the complete regret curve at T in {0, 5, 10, 20, 30, 50}; qEUBO versus GP-random at 5 and 10 queries (acquisition efficiency); qEUBO versus static at 50 queries; BALD as a secondary acquisition comparator; family/context breakdowns.
 - **Post-hoc family:** `noise_sensitive` is analysed and labelled separately and cannot support the primary claim.

@@ -43,6 +43,7 @@ The hidden ideal gain is **not independently prescribed**: it is the same synthe
 | Speech-enhancement range (`z5`) | 0–1 |
 | Fast attack/release (`z6=0`) | 5/50 ms |
 | Slow attack/release (`z6=1`) | 50/500 ms |
+| Very fast attack/release (`z6=-1`, log-linear extrapolation) | 0.5/5 ms |
 
 `DSPConfig.change_rate_delta=0.5` exists for the legacy `project_to_S(..., z_prev=...)` utility, but the **reported final active-learning loop did not pass a previous setting and therefore did not enforce a sequential change-rate constraint**. The final feasible domain used the latent box, output/UCL check and adjacent-band gain smoothness.
 
@@ -69,7 +70,21 @@ The synthetic utility is a weighted sum of audibility, comfort, ideal-gain dista
 | balanced | 3 | 3 | 2 | 2 | pre-specified primary |
 | noise_sensitive | 4 | 2 | 1 | 3 | post-hoc robustness only |
 
-Other utility constants: speech peak factor 12 dB; comfort distance scale 10 dB; over-UCL scale 5 dB; ideal-gain distance scale 10 dB. The noise-sensitive family adds compression-in-noise penalties of 3.0 (compression magnitude) and 1.5 (fast-speed interaction). Compression speed is absent from all three primary families.
+Other utility constants: speech peak factor 12 dB; comfort distance scale 10 dB; over-UCL scale 5 dB; ideal-gain distance scale 10 dB; artefact weights 0.5 (noise reduction) and 0.7 (speech enhancement), doubled in non-speech contexts (music). The noise-sensitive family adds compression-in-noise penalties of 3.0 (compression magnitude) and 1.5 (fast-speed interaction). Compression speed is absent from all three primary families.
+
+### Oracle equations
+
+DSP settings are computed from the **estimated** audiogram; thresholds, comfort limits and the ideal gain use the listener's **true** audiogram. Per DSP band *k*:
+
+* speech level `L_k` = long-term speech level at the context's speech level; compressed output `O_k = min(L_k + g_k - (1 - 1/CR_k) * max(L_k - 45, 0), 105)` dB SPL;
+* output SNR `SNR_out = SNR + NR * B_NR + SE * B_SE`, with `NR = (z4+1)/2`, `SE = (z5+1)/2` and context benefits `B_NR`, `B_SE`;
+* audibility `a_k = clip((min(SNR_out, O_k + 12 - T_k) + 15) / 30, 0, 1)`, where `T_k` is the threshold in dB SPL; `A = sum_k I_k a_k`;
+* comfort: `M_k = T_k + 0.5 (UCL_k - T_k)`, `d_k = (O_k - M_k)/10`, `c = mean_k(2 d_k^2 if d_k > 0 else d_k^2) + mean_k(max(O_k + 12 - UCL_k, 0)/5)^2`;
+* ideal-gain distance `D = mean_k((g_k - g_ideal,k)/10)^2`, with `g_ideal,k = 0.5 * true threshold (dB HL) + listener offset`;
+* artefacts `Q = w_art (0.5 NR^2 + 0.7 SE^2) + (log2(mean_k CR_k) - cr_pref)^2`, with `w_art = 1` for speech contexts and `2` for music; the post-hoc noise-sensitive family adds `3.0 n (log2 mean CR)^2 + 1.5 n f (log2 mean CR)^2`, where `n = clip((15 - SNR)/15, 0, 1)` and `f` is 1 at the fast and 0 at the slow attack time (log scale);
+* utility `u* = w_A A - w_C pen(c) - w_D pen(D) - w_Q pen(Q)`, with `pen(x) = 1 - exp(-x)` and family weights `(w_A, w_C, w_D, w_Q)` drawn from the Dirichlet distributions above.
+
+Because music has no NR/SE benefit (`B_NR = B_SE = 0`) and a doubled artefact weight, noise reduction and speech enhancement can only lower utility in music. The music optimum therefore lies at `NR = SE = 0` (`z4 = z5 = -1`) by construction.
 
 ## Preference GP and acquisition
 
