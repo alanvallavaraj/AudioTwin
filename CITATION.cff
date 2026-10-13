@@ -5,12 +5,9 @@ type: software
 version: "manuscript-mlwa-v1.3"
 date-released: "2026-10-12"
 authors:
-  - family-names: "Vallavaraj"
-    given-names: "Alan Immanuel Benjamin"
-    affiliation: "University of Westminster"
-    orcid: "https://orcid.org/0000-0002-2664-0140"
-repository-code: "https://github.com/alanvallavaraj/AudioTwin"
-url: "https://github.com/alanvallavaraj/AudioTwin"
+  - family-names: "Author"
+    given-names: "Anonymous"
+    affiliation: "Anonymous Institution"
 abstract: "A reproducible framework for preference-guided, context-aware hearing calibration using safety-constrained DSP and active Bayesian preference learning."
 keywords:
   - hearing calibration

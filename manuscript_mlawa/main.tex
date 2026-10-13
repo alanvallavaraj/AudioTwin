@@ -32,9 +32,8 @@
 
 \title{AudioTwin: Safety-Constrained Preferential Bayesian Optimisation for Query-Efficient Personalised Hearing-Aid Fitting}
 
-\author[uow]{Alan Immanuel Benjamin Vallavaraj}
-\ead{a.vallavaraj@westminster.ac.uk}
-\address[uow]{School of Computer Science and Engineering, University of Westminster, London, United Kingdom}
+\author[anon]{Anonymous Author}
+\address[anon]{Anonymous Institution}
 
 \begin{abstract}
 Personalisation problems often require optimising an unknown subjective utility from a few user interactions while respecting hard operational constraints. We present \textit{AudioTwin}, a safety-constrained preferential Bayesian optimisation framework, evaluated in simulation for personalised hearing-aid fitting. Candidate processing configurations occupy a six-dimensional latent space controlling gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed. Listener utility is learned from noisy pairwise preferences with a Laplace-approximated Gaussian-process preference model, every candidate is restricted to a deterministic feasible region, and expected utility of the best option (qEUBO) selects the comparisons. In a frozen evaluation of 128 simulated listeners across three listening contexts and three pre-specified preference families, qEUBO at the pre-specified endpoint of 20 queries reduced mean normalised regret from 0.321 for the per-cell best static half-gain fitting to 0.240: a paired difference of $-0.081$ (95\% listener-level bootstrap CI $-0.103$ to $-0.059$), or a 25.1\% reduction, with improvement for 94 of 128 listeners. Against an otherwise identical preference model that chose pairs at random, qEUBO reduced regret by 0.049 (95\% CI 0.036 to 0.063) after five queries, isolating an acquisition-efficiency benefit. Gains were largest for comfort-oriented preferences and speech contexts, whereas in music with intelligibility-oriented preferences a static setting remained better. Exploratory development-seed checks indicate that these benefits depend on preference-response reliability. AudioTwin provides a reproducible testbed for constrained active preference learning; human-listener validation is required before clinical benefit can be inferred.
@@ -367,7 +366,7 @@ Pre-specified secondary analyses comprise the full regret trajectory, qEUBO vers
 
 The final result bundle contains 128 listener files and 32,256 rows. A validation gate checks task IDs, listener IDs, contexts, families, methods, query budgets, row uniqueness and finite regret before inferential output is printed. The frozen final analysis was executed twice after the dataset was complete and produced byte-identical output. The consolidated released dataset reproduces that output exactly, and a regression test confirms that the published code returns the same recommendations as commit \texttt{fc040b3}.
 
-Code, the released dataset, analysis scripts, protocol records and manuscript sources are available at \url{https://github.com/alanvallavaraj/AudioTwin}; the submitted version corresponds to tag \texttt{manuscript-mlwa-v1.3}.
+Code, the released dataset, analysis scripts, protocol records and manuscript sources are available in an anonymised supplementary repository for peer review; the submitted snapshot corresponds to tag \texttt{manuscript-mlwa-v1.3}.
 
 \section{Results}
 \label{sec:results}
@@ -667,7 +666,7 @@ More importantly for the machine-learning contribution, qEUBO outperformed a mat
 These results support qEUBO as a promising acquisition strategy for sparse preference feedback under known feasibility constraints. Development-only robustness checks indicate that its advantages depend on response reliability: with doubled choice noise and lapse rates, neither the static reference nor random pair selection was outperformed at 20 queries. The results do not establish clinical benefit; the next evidential step is human-listener validation under realistic speech and acoustic conditions.
 
 \section*{CRediT authorship contribution statement}
-Alan Immanuel Benjamin Vallavaraj: Conceptualisation, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualisation, Writing -- original draft, Writing -- review \& editing, Project administration.
+Anonymous Author: Conceptualisation, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualisation, Writing -- original draft, Writing -- review \& editing, Project administration.
 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
@@ -679,7 +678,7 @@ The author declares no known competing financial interests or personal relations
 The reported evaluation is a computational simulation and did not recruit human participants or use identifiable participant data. Human-participant ethics approval was therefore not required for the experiments reported here. Any prospective human-listener validation will require appropriate institutional ethics review and informed consent.
 
 \section*{Data and code availability}
-The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are available at \url{https://github.com/alanvallavaraj/AudioTwin} under the MIT License; the submitted version corresponds to tag \path{manuscript-mlwa-v1.3}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
+The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are provided through an anonymised supplementary repository for peer review under the MIT License; the submitted snapshot corresponds to tag \path{manuscript-mlwa-v1.3}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During the preparation of this work, the author used ChatGPT (OpenAI) solely to improve
@@ -690,7 +689,7 @@ edited the content as needed and takes full responsibility for the content of th
 
 
 \section*{Acknowledgements}
-The author acknowledges the computational resources used for the final simulation experiments and institutional research support from the University of Westminster.
+The author acknowledges the computational resources and institutional research support used for the final simulation experiments. Identifying institutional details have been withheld for anonymous peer review.
 
 \appendix
 
