@@ -1,3 +1,7 @@
+## Current target journal
+
+The current AudioTwin submission package targets **Applied Soft Computing (Elsevier)** and is stored in `manuscript_asoc/`. The manuscript is anonymised for peer review; the separate editable title page contains author details.
+
 # Current manuscript submission
 
 The current submission package targets **Array (Elsevier)** and is stored in `manuscript_array/`. It was prepared after transfer from BSPC manuscript `BSPC-D-26-20436`. The abstract, introduction and conclusion have been retargeted to emphasise the engineering contribution and the potential real-world benefit of reducing unnecessary hearing-aid fine-tuning, while clearly stating that the present evidence is simulation-based and requires human-listener validation.

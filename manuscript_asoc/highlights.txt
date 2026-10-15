@@ -1,0 +1,5 @@
+AudioTwin learns individual hearing-aid preferences from pairwise choices.
+Active Bayesian querying reduced mean regret by 25.1% after 20 comparisons.
+Targeted comparisons beat matched random querying after only five choices.
+A constrained search kept proposed settings within defined model limits.
+The approach may reduce manual fine-tuning after human validation.
