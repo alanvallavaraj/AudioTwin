@@ -1,0 +1,25 @@
+TITLE PAGE
+
+Target journal: Array
+Article type: Full research paper
+
+Title
+AudioTwin: Preference-Guided Personalisation of Hearing-Aid Signal Processing with Constrained Bayesian Optimisation
+
+Author
+Alan Immanuel Benjamin Vallavaraj
+
+Affiliation
+School of Computer Science and Engineering
+University of Westminster
+London, United Kingdom
+
+Corresponding author
+Alan Immanuel Benjamin Vallavaraj
+Email: A.Vallavaraj@westminster.ac.uk
+
+Keywords
+hearing aid; personalised audio; Bayesian optimisation; preference learning; assistive technology; digital signal processing; active learning
+
+Code and reproducibility repository
+https://github.com/alanvallavaraj/AudioTwin

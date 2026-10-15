@@ -1,0 +1,185 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\Newlabel{anon}{a}
+\citation{shahriari2016}
+\citation{gonzalez2017}
+\citation{chu2005,rasmussen2006}
+\citation{keidser2011}
+\citation{dreschler2008,boothroyd2017,mackersie2019,sabin2020}
+\citation{birlutiu2010,nielsen2015,vyas2022,akbarzadeh2022,ni2024}
+\citation{astudillo2023}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{1}{2}{Introduction}{section.1}{}}
+\citation{sui2015}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Closed-loop AudioTwin architecture. An estimated audiogram defines the feasible hearing-aid processing space. The controller presents a pair of feasible settings, receives a binary preference from the simulated listener, updates the preference model and recommends the setting with the highest posterior mean utility. The hidden oracle is used only to generate simulated feedback and evaluate recommendations.}}{4}{figure.1}\protected@file@percent }
+\newlabel{fig:framework}{{1}{4}{Closed-loop AudioTwin architecture. An estimated audiogram defines the feasible hearing-aid processing space. The controller presents a pair of feasible settings, receives a binary preference from the simulated listener, updates the preference model and recommends the setting with the highest posterior mean utility. The hidden oracle is used only to generate simulated feedback and evaluate recommendations}{figure.1}{}}
+\citation{chu2005}
+\citation{gonzalez2017}
+\citation{houlsby2011}
+\citation{ignatenko2025}
+\citation{lin2022}
+\citation{astudillo2023}
+\citation{sui2015}
+\citation{keidser2011}
+\citation{dreschler2008}
+\citation{boothroyd2017,mackersie2019}
+\citation{sabin2020}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related work}{5}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{5}{Related work}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Preferential Bayesian optimisation}{5}{subsection.2.1}\protected@file@percent }
+\citation{birlutiu2010}
+\citation{nielsen2015}
+\citation{korzepa2020}
+\citation{alamdari2020}
+\citation{akbarzadeh2022}
+\citation{vyas2022}
+\citation{ni2024}
+\citation{birlutiu2010}
+\citation{nielsen2015}
+\citation{korzepa2020}
+\citation{alamdari2020}
+\citation{akbarzadeh2022}
+\citation{vyas2022}
+\citation{ni2024}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Adaptive hearing-aid signal processing and personalisation}{6}{subsection.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Representative machine-learning approaches to hearing-aid personalisation from user feedback.}}{7}{table.1}\protected@file@percent }
+\newlabel{tab:prior}{{1}{7}{Representative machine-learning approaches to hearing-aid personalisation from user feedback}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Closed-loop problem formulation}{7}{section.3}\protected@file@percent }
+\newlabel{sec:problem}{{3}{7}{Closed-loop problem formulation}{section.3}{}}
+\newlabel{eq:recommend}{{2}{7}{Closed-loop problem formulation}{equation.2}{}}
+\newlabel{eq:regret}{{3}{8}{Closed-loop problem formulation}{equation.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}AudioTwin closed-loop framework}{8}{section.4}\protected@file@percent }
+\newlabel{sec:framework}{{4}{8}{AudioTwin closed-loop framework}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Biomedical input: listener audiogram and uncertainty}{8}{subsection.4.1}\protected@file@percent }
+\newlabel{eq:audiogram-noise}{{5}{8}{Biomedical input: listener audiogram and uncertainty}{equation.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Controlled variables: six-dimensional hearing-aid DSP space}{9}{subsection.4.2}\protected@file@percent }
+\newlabel{eq:gain}{{6}{9}{Controlled variables: six-dimensional hearing-aid DSP space}{equation.6}{}}
+\newlabel{eq:halfgain}{{7}{9}{Controlled variables: six-dimensional hearing-aid DSP space}{equation.7}{}}
+\newlabel{eq:compression}{{8}{9}{Controlled variables: six-dimensional hearing-aid DSP space}{equation.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Deterministic feasible set}{9}{subsection.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Core simulator parameters used in the reported study. These are synthetic modelling assumptions rather than clinical prescription constants. The complete inventory, distributions and oracle equations are given in Appendix~\ref {app:oracle} and \texttt  {docs/simulator\_parameters.md}.}}{10}{table.2}\protected@file@percent }
+\newlabel{tab:simparams}{{2}{10}{Core simulator parameters used in the reported study. These are synthetic modelling assumptions rather than clinical prescription constants. The complete inventory, distributions and oracle equations are given in Appendix~\ref {app:oracle} and \texttt {docs/simulator\_parameters.md}}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Hidden preference oracle}{11}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:oracle}{{4.4}{11}{Hidden preference oracle}{subsection.4.4}{}}
+\newlabel{eq:oracle}{{9}{11}{Hidden preference oracle}{equation.9}{}}
+\newlabel{eq:oracle-choice}{{10}{11}{Hidden preference oracle}{equation.10}{}}
+\citation{houlsby2011}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Preference model and acquisition}{12}{section.5}\protected@file@percent }
+\newlabel{sec:model}{{5}{12}{Preference model and acquisition}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Laplace GP preference model}{12}{subsection.5.1}\protected@file@percent }
+\newlabel{eq:matern}{{13}{12}{Laplace GP preference model}{equation.13}{}}
+\newlabel{eq:probit}{{14}{12}{Laplace GP preference model}{equation.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}qEUBO}{12}{subsection.5.2}\protected@file@percent }
+\newlabel{eq:eubo}{{15}{12}{qEUBO}{equation.15}{}}
+\newlabel{eq:eubo-closed}{{17}{12}{qEUBO}{equation.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}BALD and GP-random controls}{13}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Candidate pools and recommendation}{13}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experimental protocol}{13}{section.6}\protected@file@percent }
+\newlabel{sec:protocol}{{6}{13}{Experimental protocol}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Contexts, preference families and methods}{13}{subsection.6.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces One AudioTwin episode for listener $l$, context $c$ and family $F$}}{14}{algorithm.1}\protected@file@percent }
+\newlabel{alg:loop}{{1}{14}{Candidate pools and recommendation}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Frozen development/final separation}{14}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Primary and secondary estimands}{15}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Reproducibility}{16}{subsection.6.4}\protected@file@percent }
+\newlabel{sec:repro}{{6.4}{16}{Reproducibility}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Results}{16}{section.7}\protected@file@percent }
+\newlabel{sec:results}{{7}{16}{Results}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Primary outcome}{16}{subsection.7.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Primary final-evaluation result. Lower normalised regret is better. The static value is the mean of the per-cell minimum over the three recorded rows; default and slow are utility-identical in the primary families, leaving two distinct static utility behaviours.}}{16}{table.3}\protected@file@percent }
+\newlabel{tab:primary}{{3}{16}{Primary final-evaluation result. Lower normalised regret is better. The static value is the mean of the per-cell minimum over the three recorded rows; default and slow are utility-identical in the primary families, leaving two distinct static utility behaviours}{table.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Mean normalised regret across the nine pre-specified cells as a function of pairwise preference budget, with 95\% listener-level bootstrap bands ($N=128$). The dashed line and grey band show the best static comparator (mean 0.3212). All learned policies share the same Laplace GP preference model.}}{17}{figure.2}\protected@file@percent }
+\newlabel{fig:learning}{{2}{17}{Mean normalised regret across the nine pre-specified cells as a function of pairwise preference budget, with 95\% listener-level bootstrap bands ($N=128$). The dashed line and grey band show the best static comparator (mean 0.3212). All learned policies share the same Laplace GP preference model}{figure.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Paired listener-level differences in normalised regret relative to the best static comparator. Negative values favour the learned method.}}{17}{table.4}\protected@file@percent }
+\newlabel{tab:curve}{{4}{17}{Paired listener-level differences in normalised regret relative to the best static comparator. Negative values favour the learned method}{table.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Acquisition efficiency}{17}{subsection.7.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Matched acquisition differences in normalised regret (listener-level 95\% bootstrap CIs; pre-specified families). Only qEUBO$-$GP-random at $T=5$ and $T=10$ was pre-specified; other entries are exploratory. The last row counts listeners for whom qEUBO had lower regret than GP-random.}}{18}{table.5}\protected@file@percent }
+\newlabel{tab:acq}{{5}{18}{Matched acquisition differences in normalised regret (listener-level 95\% bootstrap CIs; pre-specified families). Only qEUBO$-$GP-random at $T=5$ and $T=10$ was pre-specified; other entries are exploratory. The last row counts listeners for whom qEUBO had lower regret than GP-random}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Heterogeneity across contexts and preference families}{18}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Context-by-family analysis}{18}{subsection.7.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces qEUBO ($T=20$) minus per-cell best static regret by listening context (left) and preference family (right). Error bars are 95\% listener-level bootstrap intervals. Negative values favour qEUBO.}}{19}{figure.3}\protected@file@percent }
+\newlabel{fig:effects}{{3}{19}{qEUBO ($T=20$) minus per-cell best static regret by listening context (left) and preference family (right). Error bars are 95\% listener-level bootstrap intervals. Negative values favour qEUBO}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Context-by-family mean paired difference for qEUBO at $T=20$ versus best static. Negative values (blue) favour qEUBO; positive values (red) favour static fitting.}}{19}{figure.4}\protected@file@percent }
+\newlabel{fig:heatmap}{{4}{19}{Context-by-family mean paired difference for qEUBO at $T=20$ versus best static. Negative values (blue) favour qEUBO; positive values (red) favour static fitting}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Post-hoc noise-sensitive robustness family}{19}{subsection.7.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Context-by-family qEUBO $T=20$ differences versus best static.}}{20}{table.6}\protected@file@percent }
+\newlabel{tab:cells}{{6}{20}{Context-by-family qEUBO $T=20$ differences versus best static}{table.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Post-hoc exploratory analyses}{20}{section.8}\protected@file@percent }
+\newlabel{sec:exploratory}{{8}{20}{Post-hoc exploratory analyses}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}A simple interactive baseline}{20}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Query geometry}{20}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Why music--intelligibility favours static fitting}{21}{subsection.8.3}\protected@file@percent }
+\newlabel{sec:nrse}{{8.3}{21}{Why music--intelligibility favours static fitting}{subsection.8.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Robustness to oracle and observation assumptions}{21}{subsection.8.4}\protected@file@percent }
+\newlabel{sec:robust}{{8.4}{21}{Robustness to oracle and observation assumptions}{subsection.8.4}{}}
+\citation{birlutiu2010,nielsen2015,vyas2022,ni2024}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Development-seed diagnostic of the noise-reduction/speech-enhancement controls (32 listeners, intelligibility family, qEUBO at $T=20$). Stake: median loss of hidden utility when $z_4,z_5$ are reset to 0 at the optimum, in units of the listener's choice-noise standard deviation. Regrets are means; $z_4$ columns give the mean recommended and optimal noise-reduction coordinate.}}{22}{table.7}\protected@file@percent }
+\newlabel{tab:nrse}{{7}{22}{Development-seed diagnostic of the noise-reduction/speech-enhancement controls (32 listeners, intelligibility family, qEUBO at $T=20$). Stake: median loss of hidden utility when $z_4,z_5$ are reset to 0 at the optimum, in units of the listener's choice-noise standard deviation. Regrets are means; $z_4$ columns give the mean recommended and optimal noise-reduction coordinate}{table.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Development-only robustness sweep (seed 424242; qEUBO and GP-random at $T=20$; listener-level 95\% bootstrap CIs). $n$: listeners with a feasible low-gain anchor. Negative differences favour qEUBO.}}{22}{table.8}\protected@file@percent }
+\newlabel{tab:robust}{{8}{22}{Development-only robustness sweep (seed 424242; qEUBO and GP-random at $T=20$; listener-level 95\% bootstrap CIs). $n$: listeners with a feasible low-gain anchor. Negative differences favour qEUBO}{table.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Discussion}{23}{section.9}\protected@file@percent }
+\newlabel{sec:discussion}{{9}{23}{Discussion}{section.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Main finding: decision-theoretic feedback selection improves low-budget closed-loop control}{23}{subsection.9.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Strength of the static comparator}{23}{subsection.9.2}\protected@file@percent }
+\citation{dreschler2008,sabin2020}
+\citation{birlutiu2010}
+\citation{whitmer2022}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Why comfort is easier to improve than intelligibility}{24}{subsection.9.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Contexts and low-stake controls}{24}{subsection.9.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}Response reliability}{24}{subsection.9.5}\protected@file@percent }
+\citation{nielsen2015}
+\citation{korzepa2020}
+\citation{alamdari2020,akbarzadeh2022}
+\citation{vyas2022}
+\citation{ni2024}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.6}Relation to recent hearing-aid ML}{25}{subsection.9.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.7}Feasibility constraints and the rejected listener}{25}{subsection.9.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.8}Protocol discipline as part of applied ML evaluation}{25}{subsection.9.8}\protected@file@percent }
+\citation{vyas2022,akbarzadeh2022,ni2024}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Limitations}{26}{section.10}\protected@file@percent }
+\newlabel{sec:limitations}{{10}{26}{Limitations}{section.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Simulation is not clinical validation}{26}{subsection.10.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.2}The oracle and learner share structural assumptions}{26}{subsection.10.2}\protected@file@percent }
+\citation{sui2015}
+\citation{whitmer2022}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3}Sensitivity to response noise}{27}{subsection.10.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.4}Approximate optimum and normalised regret}{27}{subsection.10.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5}Known rather than learned constraints}{27}{subsection.10.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.6}Limited signal-processing and context model}{27}{subsection.10.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.7}No computational-time or human-fatigue outcome}{27}{subsection.10.7}\protected@file@percent }
+\citation{birlutiu2010}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Future work}{28}{section.11}\protected@file@percent }
+\newlabel{sec:future}{{11}{28}{Future work}{section.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {12}Conclusion}{28}{section.12}\protected@file@percent }
+\newlabel{sec:conclusion}{{12}{28}{Conclusion}{section.12}{}}
+\@writefile{toc}{\let\numberline\tmptocnumberline}
+\@writefile{toc}{\contentsline {section}{\numberline {Appendix~A}Oracle equations}{30}{appendix.A}\protected@file@percent }
+\newlabel{app:oracle}{{Appendix~A}{30}{Oracle equations}{appendix.A}{}}
+\bibstyle{elsarticle-num}
+\bibdata{references}
+\bibcite{shahriari2016}{{1}{}{{}}{{}}}
+\bibcite{gonzalez2017}{{2}{}{{}}{{}}}
+\bibcite{chu2005}{{3}{}{{}}{{}}}
+\bibcite{rasmussen2006}{{4}{}{{}}{{}}}
+\bibcite{keidser2011}{{5}{}{{}}{{}}}
+\bibcite{dreschler2008}{{6}{}{{}}{{}}}
+\bibcite{boothroyd2017}{{7}{}{{}}{{}}}
+\bibcite{mackersie2019}{{8}{}{{}}{{}}}
+\bibcite{sabin2020}{{9}{}{{}}{{}}}
+\bibcite{birlutiu2010}{{10}{}{{}}{{}}}
+\bibcite{nielsen2015}{{11}{}{{}}{{}}}
+\bibcite{vyas2022}{{12}{}{{}}{{}}}
+\bibcite{akbarzadeh2022}{{13}{}{{}}{{}}}
+\bibcite{ni2024}{{14}{}{{}}{{}}}
+\bibcite{astudillo2023}{{15}{}{{}}{{}}}
+\bibcite{sui2015}{{16}{}{{}}{{}}}
+\bibcite{houlsby2011}{{17}{}{{}}{{}}}
+\bibcite{ignatenko2025}{{18}{}{{}}{{}}}
+\bibcite{lin2022}{{19}{}{{}}{{}}}
+\bibcite{korzepa2020}{{20}{}{{}}{{}}}
+\bibcite{alamdari2020}{{21}{}{{}}{{}}}
+\bibcite{whitmer2022}{{22}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\gdef \@abspage@last{34}
