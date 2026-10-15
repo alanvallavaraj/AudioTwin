@@ -1,3 +1,9 @@
+# Current manuscript submission
+
+The current submission package targets **Results in Engineering (Elsevier)** and is stored in `manuscript_rie/`. It was prepared after transfer from BSPC manuscript `BSPC-D-26-20436`. The abstract, introduction and conclusion have been retargeted to emphasise the engineering contribution and the potential real-world benefit of reducing unnecessary hearing-aid fine-tuning, while clearly stating that the present evidence is simulation-based and requires human-listener validation.
+
+The four upload-ready files are in `manuscript_rie/submission_files/`: Declaration of Interests Statement, Highlights, Manuscript, and editable Title Page.
+
 # AudioTwin
 
 **AudioTwin** is a reproducible simulation framework for preference-guided, context-aware hearing calibration. It models listener-specific hearing profiles, safe DSP parameterisation, pairwise preference feedback, and active Bayesian optimisation for rapid personalisation.
