@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use AudioTwin, please cite the associated publication and this software repository."
 title: "AudioTwin"
 type: software
-version: "manuscript-rineng-v1.0"
+version: "manuscript-array-v1.0"
 date-released: "2026-10-15"
 authors:
   - family-names: "Vallavaraj"
