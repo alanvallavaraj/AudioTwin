@@ -1,20 +1,19 @@
 # Fdb version 4
-["bibtex main"] 1792055690.47186 "main.aux" "main.bbl" "main" 1792055692.49013 0
+["bibtex main"] 1792055948.55103 "main.aux" "main.bbl" "main" 1792055976.8034 0
   "./references.bib" 1792055675.00748 7785 6e5ecd24cbc8c9f6a01d81c2dbf231fb ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/bibtex/bst/elsarticle/elsarticle-num.bst" 1741388039 29462 3b2a1af2ce1e224a3b46ee048ffd4b98 ""
-  "main.aux" 1792055692.23443 19392 9c667601cb3cfb787d86f0fbddb74ee4 "pdflatex"
+  "main.aux" 1792055976.53287 19279 deea91a0e627e1d66c389fd8bdcf9558 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1792055691.51114 "main.tex" "main.pdf" "main" 1792055692.49027 0
+["pdflatex"] 1792055975.7065 "main.tex" "main.pdf" "main" 1792055976.80354 0
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1741388039 2971 def0b6c1f0b107b3b936def894055589 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1741388039 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/fontname/texfonts.map" 1741388039 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map" 1741388039 5466553 2748998d7db8078826afa1f272036265 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1741388039 3584 402da0b29eafbad07963b1224b222f18 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm0600.tfm" 1741388039 3584 291a5713401683441e0a8c8f4417b17b ""
-  "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm0700.tfm" 1741388039 3584 cf973739aac7ab6247f9150296af7954 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm0800.tfm" 1741388039 3584 49064b465390a8e316a3c8417a050403 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm1000.tfm" 1741388039 3584 adb004a0c8e7c46ee66cad73671f37b4 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm1095.tfm" 1741388039 3584 929cdff2b7a8c11bd4d49fd68cb0ae70 ""
@@ -159,11 +158,11 @@
   "fig2_learning_curves.pdf" 1792055675.00602 14906 e1254a6ed6fe94691a030291d7be0bd7 ""
   "fig3_effects.pdf" 1792055675.00626 19206 42d669e12b1e14d8d91bd1fd4ed15c57 ""
   "fig4_context_family_heatmap.pdf" 1792055675.00653 19232 6f1bac47088bd1350939b9fdae21559f ""
-  "main.aux" 1792055692.23443 19392 9c667601cb3cfb787d86f0fbddb74ee4 "pdflatex"
-  "main.bbl" 1792055690.54019 6991 3c3e3523863273fe984ff348428ef362 "bibtex main"
-  "main.out" 1792055692.23537 11440 776bd065a296ee4cb058520269aa36e3 "pdflatex"
-  "main.spl" 1792055692.23562 43 2928c360112602ef4e96605f60652299 "pdflatex"
-  "main.tex" 1792055675.06563 70755 bdbfaf77ec10c9e7d4706dca33a48640 ""
+  "main.aux" 1792055976.53287 19279 deea91a0e627e1d66c389fd8bdcf9558 "pdflatex"
+  "main.bbl" 1792055948.64148 6991 3c3e3523863273fe984ff348428ef362 "bibtex main"
+  "main.out" 1792055976.53385 11440 776bd065a296ee4cb058520269aa36e3 "pdflatex"
+  "main.spl" 1792055976.53406 43 2928c360112602ef4e96605f60652299 "pdflatex"
+  "main.tex" 1792055975.59847 70596 474a7e9045a59ee2ea0b08f723dbdc9e ""
   (generated)
   "main.aux"
   "main.log"

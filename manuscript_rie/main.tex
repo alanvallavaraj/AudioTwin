@@ -32,10 +32,8 @@
 
 \title{AudioTwin: Preference-Guided Personalisation of Hearing-Aid Signal Processing with Constrained Bayesian Optimisation}
 
-\author[west]{Alan Immanuel Benjamin Vallavaraj\corref{cor1}}
-\ead{A.Vallavaraj@westminster.ac.uk}
-\cortext[cor1]{Corresponding author}
-\address[west]{School of Computer Science and Engineering, University of Westminster, London, United Kingdom}
+\author[anon]{Anonymous Author}
+\address[anon]{Anonymous Institution}
 
 \begin{abstract}
 A practical problem in hearing-aid fitting is that a clinically reasonable starting setting may still not match what an individual listener finds clear, comfortable and acceptable in daily use. Fine-tuning can therefore require repeated manual adjustments, while each extra listening judgement adds time and effort for the user. This study presents \textit{AudioTwin}, a simulation framework that treats hearing-aid personalisation as a constrained engineering optimisation problem. The system starts from audiogram information, asks the listener to choose between pairs of feasible settings, learns from these choices using a Gaussian-process preference model, and uses expected utility of the best option (qEUBO) to select the next comparison. The processing space covers gain, spectral tilt, compression, noise reduction, speech enhancement and compression speed. In a frozen evaluation of 128 simulated listeners across three listening contexts and three pre-specified preference families, qEUBO reduced mean normalised regret from 0.321 for the best static fitting to 0.240 after 20 comparisons, a 25.1\% reduction; 94 of 128 listeners improved. Targeted query selection also outperformed matched random querying after only five comparisons. The engineering contribution is a reproducible way to combine measured hearing information, individual preference and constrained device control in one loop. If confirmed with human listeners, this approach could reduce unnecessary fine-tuning steps, support more individualised fittings and help hearing devices adapt more efficiently to different listening needs. The present evidence is computational and does not establish clinical benefit or medical-device safety.
@@ -672,7 +670,7 @@ The matched random comparison shows why the query-selection policy matters. Usin
 For real-world hearing technology, the potential benefit is a fitting process that learns personal preference with fewer unnecessary adjustments. Such a system could support clinicians by narrowing the search for a preferred setting, and it could provide a basis for guided self-fitting where appropriate. It may also help a device adapt settings to different listening contexts instead of relying on one fixed configuration. These benefits remain prospective. The current study is simulation-based, the constraints are model-based engineering guardrails rather than certified safety limits, and human-listener studies with measured acoustic outputs are required before clinical benefit can be claimed.
 
 \section*{CRediT authorship contribution statement}
-Alan Immanuel Benjamin Vallavaraj: Conceptualisation, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualisation, Writing -- original draft, Writing -- review \& editing, Project administration.
+Anonymous Author: Conceptualisation, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Visualisation, Writing -- original draft, Writing -- review \& editing, Project administration.
 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
@@ -684,7 +682,7 @@ The author declares no known competing financial interests or personal relations
 The reported evaluation is a computational simulation and did not recruit human participants or use identifiable participant data. Human-participant ethics approval was therefore not required for the experiments reported here. Any prospective human-listener validation will require appropriate institutional ethics review and informed consent.
 
 \section*{Data and code availability}
-The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are provided through the public AudioTwin repository under the MIT License; the Results in Engineering submission snapshot corresponds to tag \path{manuscript-rineng-v1.0}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
+The AudioTwin source code, released final dataset, analysis scripts, protocol records and LaTeX manuscript sources are provided through an anonymised supplementary repository for peer review under the MIT License; the Results in Engineering submission snapshot corresponds to tag \path{manuscript-rineng-v1.1}. The file \path{publication/data/final_v1.parquet} contains all 32,256 final analysis rows. \path{scripts/analyze_final.py} recomputes the primary and pre-specified secondary results from it, \path{scripts/make_publication_summaries.py} regenerates the context/family summaries and figure inputs, and \path{scripts/analyze_exploratory_final.py} produces the exploratory final-cohort analyses. Development-seed diagnostic scripts and outputs are in \path{scripts/} and \path{publication/postfinal_diagnostics/}. Exact package versions from the final-run environment are pinned in \path{requirements-final.txt}. The curated \path{main} history is post-experiment; the original development lineage and annotated protocol tags are published on the \path{protocol-history} branch and documented in \path{PROTOCOL_PROVENANCE.md}.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 During the preparation of this work, the author used ChatGPT (OpenAI) solely to improve
@@ -695,7 +693,7 @@ edited the content as needed and takes full responsibility for the content of th
 
 
 \section*{Acknowledgements}
-The author acknowledges the computational resources and institutional research support used for the final simulation experiments and the University of Westminster for institutional research support.
+The author acknowledges the computational resources and institutional research support used for the final simulation experiments. Identifying institutional details have been withheld for anonymous peer review.
 
 \appendix
 

@@ -20,3 +20,7 @@ Core files:
 The abstract, introduction and conclusion use simple academic English and emphasise the engineering and real-world problem: a valid hearing-aid prescription may still require repeated manual fine-tuning because individual preferences differ. AudioTwin is framed as a way to learn those preferences from a small number of targeted comparisons, with the potential to reduce unnecessary adjustment steps after human validation.
 
 The paper remains explicit that all reported listeners are simulated and that clinical benefit, human usability and medical-device safety have not yet been established.
+
+## Anonymous review
+
+The manuscript itself is anonymised as **Anonymous Author / Anonymous Institution**. The separate editable title page retains the author and affiliation details for the editorial office and should not be included in the blinded manuscript sent to reviewers.

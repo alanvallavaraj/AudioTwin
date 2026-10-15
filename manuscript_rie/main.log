@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  15 OCT 2026 10:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  15 OCT 2026 10:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -638,7 +638,7 @@ Package hyperref Info: Link coloring OFF on input line 29.
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 48.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 46.
 
 
 (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/amsfonts/um
@@ -649,7 +649,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 t-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 48.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 46.
 
 
 (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/amsfonts/um
@@ -660,27 +660,6 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 t-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `cmtt' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\<def>-command' on input line 48.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\cnotenum' on input line 48.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\<def>-command' on input line 48.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\@corref' on input line 48.
 
 [1
 
@@ -690,10 +669,10 @@ ap/pdftex.map}{/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/e
 nc/dvips/cm-super/cm-super-t1.enc}]
 
 [2]
-<fig1_framework.pdf, id=250, 444.97443pt x 226.2031pt>
+<fig1_framework.pdf, id=247, 444.97443pt x 226.2031pt>
 File: fig1_framework.pdf Graphic file (type pdf)
 <use fig1_framework.pdf>
-Package pdftex.def Info: fig1_framework.pdf  used on input line 69.
+Package pdftex.def Info: fig1_framework.pdf  used on input line 67.
 (pdftex.def)             Requested size: 390.0pt x 198.25856pt.
 
 
@@ -709,7 +688,12 @@ super/cm-super-ts1.enc} <./fig1_framework.pdf>]
 [7]
 
 [8]
-Underfull \hbox (badness 1688) in paragraph at lines 221--222
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `cmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+
+Underfull \hbox (badness 1688) in paragraph at lines 219--220
 []|\T1/cmr/m/n/10.95 (+20) 20,000 lis-tener re-sam-ples; seed
  []
 
@@ -723,7 +707,7 @@ Underfull \hbox (badness 1688) in paragraph at lines 221--222
 
 [12]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 315.
+put line 313.
 
 
 [13]
@@ -731,31 +715,31 @@ put line 315.
 [14]
 
 [15]
-Underfull \hbox (badness 3646) in paragraph at lines 375--376
+Underfull \hbox (badness 3646) in paragraph at lines 373--374
 \T1/cmr/m/n/12 (+20) manuscript sources are avail-able in an anonymised sup-ple
 -men-tary
  []
 
-<fig2_learning_curves.pdf, id=475, 474.19916pt x 266.16023pt>
+<fig2_learning_curves.pdf, id=473, 474.19916pt x 266.16023pt>
 File: fig2_learning_curves.pdf Graphic file (type pdf)
 <use fig2_learning_curves.pdf>
-Package pdftex.def Info: fig2_learning_curves.pdf  used on input line 406.
+Package pdftex.def Info: fig2_learning_curves.pdf  used on input line 404.
 (pdftex.def)             Requested size: 358.79929pt x 201.3904pt.
 
 
 [16]
 
 [17 <./fig2_learning_curves.pdf>]
-<fig3_effects.pdf, id=503, 508.78674pt x 221.00719pt>
+<fig3_effects.pdf, id=501, 508.78674pt x 221.00719pt>
 File: fig3_effects.pdf Graphic file (type pdf)
 <use fig3_effects.pdf>
-Package pdftex.def Info: fig3_effects.pdf  used on input line 465.
+Package pdftex.def Info: fig3_effects.pdf  used on input line 463.
 (pdftex.def)             Requested size: 390.0pt x 169.40717pt.
-<fig4_context_family_heatmap.pdf, id=507, 451.36768pt x 193.95045pt>
+<fig4_context_family_heatmap.pdf, id=505, 451.36768pt x 193.95045pt>
 File: fig4_context_family_heatmap.pdf Graphic file (type pdf)
 <use fig4_context_family_heatmap.pdf>
 Package pdftex.def Info: fig4_context_family_heatmap.pdf  used on input line 47
-6.
+4.
 (pdftex.def)             Requested size: 327.59857pt x 140.77176pt.
 
 
@@ -780,6 +764,12 @@ Package pdftex.def Info: fig4_context_family_heatmap.pdf  used on input line 47
 [27]
 
 [28]
+Underfull \hbox (badness 1270) in paragraph at lines 685--686
+\T1/cmtt/m/n/12 publication _ summaries . py$ \T1/cmr/m/n/12 (+20) re-gen-er-at
+es the con-text/family sum-maries
+ []
+
+
 
 [29]
 
@@ -800,11 +790,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 776BD065A296EE4CB058520269AA36E3;11440.
  ) 
 Here is how much of TeX's memory you used:
- 18818 strings out of 473190
- 356291 string characters out of 5704335
- 764714 words of memory out of 5000000
- 41471 multiletter control sequences out of 15000+600000
- 582964 words of font info for 194 fonts, out of 8000000 for 9000
+ 18805 strings out of 473190
+ 356149 string characters out of 5704335
+ 764615 words of memory out of 5000000
+ 41468 multiletter control sequences out of 15000+600000
+ 581831 words of font info for 189 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,12n,80p,1773b,1224s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/
@@ -845,10 +835,10 @@ t/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/cm-sup
 er/sftt1200.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts
 /type1/urw/helvetic/uhvb8a.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/t
 exmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb>
-Output written on main.pdf (34 pages, 615338 bytes).
+Output written on main.pdf (34 pages, 595062 bytes).
 PDF statistics:
- 829 PDF objects out of 1000 (max. 8388607)
- 691 compressed objects within 7 object streams
- 161 named destinations out of 1000 (max. 500000)
- 40365 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 825 PDF objects out of 1000 (max. 8388607)
+ 688 compressed objects within 7 object streams
+ 160 named destinations out of 1000 (max. 500000)
+ 38317 words of extra memory for PDF output out of 42996 (max. 10000000)
 
