@@ -1,0 +1,14 @@
+RESULTS IN ENGINEERING SUBMISSION FILES
+
+1. Declaration of Interests Statement: DECLARATION_OF_INTERESTS.txt
+2. Highlights: highlights.txt
+3. Manuscript: main.pdf (source: main.tex)
+4. Title Page (Editable version): TITLE_PAGE.txt
+
+Supporting manuscript files:
+- references.bib
+- main.bbl
+- fig1_framework.pdf
+- fig2_learning_curves.pdf
+- fig3_effects.pdf
+- fig4_context_family_heatmap.pdf
